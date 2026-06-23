@@ -1,8 +1,8 @@
 {
-  "key.categories.cistiertagger.main": "CisTierTagger",
+  "key.categories.cistiertagger.main": "CISTierTagger",
   "key.cistiertagger.open_search": "Открыть поиск",
 
-  "cistiertagger.screen.config.title": "Настройки CisTierTagger",
+  "cistiertagger.screen.config.title": "Настройки CISTierTagger",
   "cistiertagger.screen.search.title": "Поиск игрока CISTiers",
   "cistiertagger.screen.search.hint": "Введите никнейм...",
   "cistiertagger.screen.profile.title": "Профиль CISTiers",

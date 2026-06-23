@@ -1,8 +1,8 @@
 {
-  "key.categories.cistiertagger.main": "CisTierTagger",
+  "key.categories.cistiertagger.main": "CISTierTagger",
   "key.cistiertagger.open_search": "Open Search",
 
-  "cistiertagger.screen.config.title": "CisTierTagger Settings",
+  "cistiertagger.screen.config.title": "CISTierTagger Settings",
   "cistiertagger.screen.search.title": "CISTiers Search",
   "cistiertagger.screen.search.hint": "Enter nickname...",
   "cistiertagger.screen.profile.title": "CISTiers Profile",
