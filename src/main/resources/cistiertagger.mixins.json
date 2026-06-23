@@ -8,7 +8,8 @@
     "AvatarRendererStateMixin",
     "PlayerTabOverlayMixin",
     "ChatComponentMixin",
-    "TextDisplayRendererMixin"
+    "TextDisplayRendererMixin",
+    "TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

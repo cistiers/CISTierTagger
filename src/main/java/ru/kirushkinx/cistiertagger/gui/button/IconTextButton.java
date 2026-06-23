@@ -42,8 +42,7 @@ public class IconTextButton extends Button {
         int startX = getX() + (getWidth() - total) / 2;
         int iconY = getY() + (getHeight() - ICON) / 2;
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, startX, iconY, 0f, 0f, ICON, ICON, texW, texH, texW, texH);
-        graphics.drawString(font, getMessage(), startX + ICON + GAP,
-                getY() + (getHeight() - font.lineHeight) / 2 + 1, textColor, false);
+        graphics.drawString(font, getMessage(), startX + ICON + GAP, getY() + (getHeight() - font.lineHeight) / 2 + 1, textColor, true);
     }
 
     private void ensureTextureSize() {

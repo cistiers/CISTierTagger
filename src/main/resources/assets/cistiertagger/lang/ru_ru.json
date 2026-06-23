@@ -67,5 +67,10 @@
   "cistiertagger.profile.rank": "Место: #%s",
   "cistiertagger.profile.points": "Очки: %s",
   "cistiertagger.profile.tiers_header": "Тиры",
-  "cistiertagger.profile.history_header": "История"
+  "cistiertagger.profile.history_header": "История",
+
+  "cistiertagger.update.toast.description": "Доступна версия %s",
+  "cistiertagger.update.button": "Обновить CISTierTagger",
+  "cistiertagger.update.info.title": "CISTierTagger обновился!",
+  "cistiertagger.update.info.subtitle": "Пожалуйста, обновитесь до последней версии для корректной работы мода."
 }

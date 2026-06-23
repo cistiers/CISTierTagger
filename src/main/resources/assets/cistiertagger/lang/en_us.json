@@ -67,5 +67,10 @@
   "cistiertagger.profile.rank": "Rank: #%s",
   "cistiertagger.profile.points": "Points: %s",
   "cistiertagger.profile.tiers_header": "Tiers",
-  "cistiertagger.profile.history_header": "History"
+  "cistiertagger.profile.history_header": "History",
+
+  "cistiertagger.update.toast.description": "Version %s available",
+  "cistiertagger.update.button": "Update CISTierTagger",
+  "cistiertagger.update.info.title": "CISTierTagger has been updated!",
+  "cistiertagger.update.info.subtitle": "Please update to the latest version to ensure the mod works properly."
 }
