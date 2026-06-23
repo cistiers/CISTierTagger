@@ -44,6 +44,8 @@ public class ModConfig {
 
     private boolean showInChat = false;
 
+    private boolean checkForUpdates = true;
+
     public boolean isGamemodeEnabled(@NotNull Gamemode gamemode) {
         return enabledGamemodes.contains(gamemode);
     }

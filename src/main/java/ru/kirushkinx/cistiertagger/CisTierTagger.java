@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kirushkinx.cistiertagger.api.CisTiersClient;
+import ru.kirushkinx.cistiertagger.api.UpdateChecker;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.cache.ProfileCache;
 import ru.kirushkinx.cistiertagger.cache.SkinCache;
@@ -42,6 +43,9 @@ public final class CisTierTagger implements ClientModInitializer {
     @Getter
     private static ConfigManager configManager;
 
+    @Getter
+    private static UpdateChecker updateChecker;
+
     public static @NotNull ModConfig config() {
         return configManager.get();
     }
@@ -59,8 +63,10 @@ public final class CisTierTagger implements ClientModInitializer {
         dumpCache = new DumpCache(httpClient);
         profileCache = new ProfileCache(httpClient);
         skinCache = new SkinCache();
+        updateChecker = new UpdateChecker();
 
         dumpCache.start(DUMP_REFRESH);
+        updateChecker.checkAsync();
 
         CisTierCommand.register();
 
@@ -71,6 +77,7 @@ public final class CisTierTagger implements ClientModInitializer {
 
     private void shutdown() {
         if (dumpCache != null) dumpCache.shutdown();
+        if (updateChecker != null) updateChecker.shutdown();
         if (httpClient != null) httpClient.shutdown();
         if (configManager != null) configManager.save();
     }
