@@ -1,0 +1,83 @@
+package ru.kirushkinx.cistiertagger.decorate;
+
+import lombok.experimental.UtilityClass;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.contents.PlainTextContents;
+import org.jetbrains.annotations.NotNull;
+import ru.kirushkinx.cistiertagger.CisTierTagger;
+import ru.kirushkinx.cistiertagger.cache.DumpCache;
+import ru.kirushkinx.cistiertagger.config.ModConfig;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+@UtilityClass
+public class Chat {
+
+    private static final Pattern NICKNAME_PATTERN = Pattern.compile("[A-Za-z0-9_]{3,16}");
+
+    public static @NotNull Component decorate(@NotNull Component original) {
+        ModConfig cfg = configOrNull();
+        if (cfg == null || !cfg.isEnabled() || !cfg.isShowInChat()) return original;
+        DumpCache cache = CisTierTagger.getDumpCache();
+        if (cache == null || cache.size() == 0) return original;
+        return processComponent(original);
+    }
+
+    private static @NotNull Component processComponent(@NotNull Component component) {
+        Style style = component.getStyle();
+        MutableComponent rebuilt;
+
+        if (component.getContents() instanceof PlainTextContents.LiteralContents literal) {
+            rebuilt = decorateLiteral(literal.text(), style);
+        } else {
+            rebuilt = MutableComponent.create(component.getContents()).setStyle(style);
+        }
+
+        for (Component sibling : component.getSiblings()) {
+            rebuilt.append(processComponent(sibling));
+        }
+        return rebuilt;
+    }
+
+    private static @NotNull MutableComponent decorateLiteral(@NotNull String text, @NotNull Style baseStyle) {
+        DumpCache cache = CisTierTagger.getDumpCache();
+        if (cache == null || text.isEmpty()) {
+            return Component.literal(text).setStyle(baseStyle);
+        }
+
+        Matcher matcher = NICKNAME_PATTERN.matcher(text);
+        MutableComponent result = null;
+        int cursor = 0;
+
+        while (matcher.find()) {
+            String word = matcher.group();
+            if (!cache.contains(word)) continue;
+            Component badge = Badge.decorate(word, Component.literal(word).setStyle(baseStyle),
+                    Badge.DisplaySurface.CHAT);
+            if (badge == null) continue;
+
+            if (result == null) result = Component.empty().setStyle(Style.EMPTY);
+            if (matcher.start() > cursor) {
+                result.append(Component.literal(text.substring(cursor, matcher.start())).setStyle(baseStyle));
+            }
+            result.append(badge);
+            cursor = matcher.end();
+        }
+
+        if (result == null) {
+            return Component.literal(text).setStyle(baseStyle);
+        }
+        if (cursor < text.length()) {
+            result.append(Component.literal(text.substring(cursor)).setStyle(baseStyle));
+        }
+        return result;
+    }
+
+    private static ModConfig configOrNull() {
+        var manager = CisTierTagger.getConfigManager();
+        return manager == null ? null : manager.get();
+    }
+}

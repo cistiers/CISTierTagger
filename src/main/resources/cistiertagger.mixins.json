@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ru.kirushkinx.cistiertagger.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "AvatarRendererStateMixin",
+    "PlayerTabOverlayMixin",
+    "ChatComponentMixin",
+    "TextDisplayRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "${archives_base_name}",
+  "version": "${version}",
+  "name": "CISTierTagger",
+  "description": "Displays player tiers from CISTiers within the game.",
+  "authors": ["kirushkinx"],
+  "contact": {
+  },
+  "license": "MIT",
+  "icon": "assets/cistiertagger/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "ru.kirushkinx.cistiertagger.CisTierTagger"
+    ],
+    "modmenu": [
+      "ru.kirushkinx.cistiertagger.modmenu.ModMenuImpl"
+    ]
+  },
+  "mixins": [
+    "cistiertagger.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

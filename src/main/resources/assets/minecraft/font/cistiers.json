@@ -1,0 +1,60 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:tier/vanilla.png",
+      "ascent": 10,
+      "height": 12,
+      "chars": ["✦"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:tier/sword.png",
+      "ascent": 10,
+      "height": 12,
+      "chars": ["\uD83D\uDDE1"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:tier/netherite.png",
+      "ascent": 10,
+      "height": 12,
+      "chars": ["☠"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:tier/dpot.png",
+      "ascent": 10,
+      "height": 12,
+      "chars": ["⚗"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:tier/uhc.png",
+      "ascent": 10,
+      "height": 12,
+      "chars": ["❤"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:tier/smp.png",
+      "ascent": 10,
+      "height": 12,
+      "chars": ["⛨"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:tier/op.png",
+      "ascent": 10,
+      "height": 12,
+      "chars": ["☄"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:tier/mace.png",
+      "ascent": 10,
+      "height": 12,
+      "chars": ["\uD83D\uDD28"]
+    }
+  ]
+}
