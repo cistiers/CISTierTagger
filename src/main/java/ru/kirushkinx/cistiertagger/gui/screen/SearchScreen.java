@@ -349,7 +349,7 @@ public class SearchScreen extends CisTierScreen {
             return NO_TIER.copy().withStyle(ChatFormatting.DARK_GRAY);
         }
         return Badge.build(selection.get().getKey(), selection.get().getValue(),
-                true, cfg.getIconMode());
+                true, cfg.getBadgeMode());
     }
 
     private static @NotNull PlayerTierData toPlayerTierData(@NotNull String nickname,

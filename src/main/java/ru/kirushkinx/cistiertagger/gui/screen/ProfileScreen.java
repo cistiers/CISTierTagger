@@ -185,7 +185,7 @@ public class ProfileScreen extends CisTierScreen {
 
             for (Map.Entry<Gamemode, Tier> entry : cached.tiers().entrySet()) {
                 Component badge = Badge.build(entry.getKey(), entry.getValue(), true,
-                        CisTierTagger.config().getIconMode());
+                        CisTierTagger.config().getBadgeMode());
                 StringWidget tierWidget = new StringWidget(badge, this.font);
                 tierWidget.setX(paneX);
                 tierWidget.setY(rowY);
@@ -215,7 +215,7 @@ public class ProfileScreen extends CisTierScreen {
                 Component line;
                 if (gm != null && tier != null) {
                     line = Badge.build(gm, tier, true,
-                                CisTierTagger.config().getIconMode())
+                                CisTierTagger.config().getBadgeMode())
                             .copy()
                             .append(Component.literal(" " + shortDate(h.date()))
                                     .withStyle(ChatFormatting.DARK_GRAY));

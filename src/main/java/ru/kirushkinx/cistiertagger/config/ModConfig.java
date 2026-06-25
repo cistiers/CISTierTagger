@@ -22,8 +22,8 @@ public class ModConfig {
         PRIORITY, HIGHEST
     }
 
-    public enum IconMode {
-        IMAGES, SYMBOLS, OFF
+    public enum BadgeMode {
+        IMAGE, TEXT
     }
 
     private boolean enabled = true;
@@ -32,7 +32,7 @@ public class ModConfig {
 
     private @NotNull DisplayMode displayMode = DisplayMode.PRIORITY;
 
-    private @NotNull IconMode iconMode = IconMode.IMAGES;
+    private @NotNull BadgeMode badgeMode = BadgeMode.IMAGE;
 
     private @NotNull List<Gamemode> priorityOrder = new ArrayList<>(EnumSet.allOf(Gamemode.class));
 

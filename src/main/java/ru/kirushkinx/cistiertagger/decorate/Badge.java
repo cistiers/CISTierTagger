@@ -29,6 +29,9 @@ public class Badge {
 
     public static final @NotNull FontDescription ICON_FONT = new FontDescription.Resource(
             Identifier.fromNamespaceAndPath("minecraft", "cistiers"));
+    private static final @NotNull FontDescription BADGE_FONT = new FontDescription.Resource(
+            Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "badges"));
+    private static final int BADGE_CHAR_BASE = 0xE000; // PUA, range of U+E000 to U+F8FF
 
     /** Per-frame selection cache for the hot mixin render path. */
     private static final @NotNull ConcurrentHashMap<String, CachedSelection> SELECTION_CACHE = new ConcurrentHashMap<>();
@@ -42,15 +45,13 @@ public class Badge {
     private record CachedSelection(long generation, @Nullable Map.Entry<Gamemode, Tier> selection) {}
 
     public static @NotNull Component gamemodeLabel(@NotNull Gamemode gamemode) {
-        return gamemodeLabel(gamemode, ModConfig.IconMode.IMAGES);
+        return gamemodeLabel(gamemode, ModConfig.BadgeMode.IMAGE);
     }
 
-    public static @NotNull Component gamemodeLabel(@NotNull Gamemode gamemode, @NotNull ModConfig.IconMode iconMode) {
+    public static @NotNull Component gamemodeLabel(@NotNull Gamemode gamemode, @NotNull ModConfig.BadgeMode mode) {
         Component name = Component.literal(gamemode.getDisplayName())
                 .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(gamemode.getColor())));
-        Component icon = renderIcon(gamemode, iconMode);
-        if (icon == null) return name;
-        return Component.empty().append(icon).append(Component.literal(" ")).append(name);
+        return Component.empty().append(modeIcon(gamemode, mode)).append(Component.literal(" ")).append(name);
     }
 
     public static @Nullable Component decorate(@NotNull String nickname, @NotNull Component original) {
@@ -110,77 +111,83 @@ public class Badge {
     }
 
     public static @NotNull Component build(@NotNull Gamemode gamemode, @NotNull Tier tier,
-                                           boolean iconFirst, @NotNull ModConfig.IconMode iconMode) {
+                                           boolean iconFirst, @NotNull ModConfig.BadgeMode mode) {
         MutableComponent out = Component.empty();
-        append(out, gamemode, tier, iconMode, iconFirst);
+        append(out, gamemode, tier, mode, iconFirst);
         return out;
     }
 
     public static @NotNull Component preview(@NotNull Gamemode gamemode, @NotNull Tier tier,
-                                             boolean leftSide, @NotNull ModConfig.IconMode iconMode,
+                                             boolean leftSide, @NotNull ModConfig.BadgeMode mode,
                                              @NotNull Component name) {
         MutableComponent out = Component.empty();
         if (leftSide) {
-            append(out, gamemode, tier, iconMode, true);
-            out.append(separator(true, true));
+            append(out, gamemode, tier, mode, true);
+            out.append(divider(mode, true, true));
             out.append(name);
         } else {
             out.append(name);
-            out.append(separator(true, true));
-            append(out, gamemode, tier, iconMode, false);
+            out.append(divider(mode, true, true));
+            append(out, gamemode, tier, mode, false);
         }
         return out;
     }
 
     private static @NotNull Component assembleLeft(@NotNull Gamemode gamemode, @NotNull Tier tier,
                                                    @NotNull ModConfig cfg, @NotNull Component original) {
+        ModConfig.BadgeMode mode = cfg.getBadgeMode();
         MutableComponent out = Component.empty();
-        append(out, gamemode, tier, cfg.getIconMode(), true);
+        append(out, gamemode, tier, mode, true);
         boolean leadingSpace = original.getString().startsWith(" ");
-        out.append(separator(true, !leadingSpace));
+        out.append(divider(mode, true, !leadingSpace));
         out.append(original);
         return out;
     }
 
     private static @NotNull Component assembleRight(@NotNull Gamemode gamemode, @NotNull Tier tier,
                                                     @NotNull ModConfig cfg, @NotNull Component original) {
+        ModConfig.BadgeMode mode = cfg.getBadgeMode();
         MutableComponent out = Component.empty();
         out.append(original);
         boolean trailingSpace = original.getString().endsWith(" ");
-        out.append(separator(!trailingSpace, true));
-        append(out, gamemode, tier, cfg.getIconMode(), false);
+        out.append(divider(mode, !trailingSpace, true));
+        append(out, gamemode, tier, mode, false);
         return out;
     }
 
     private static void append(@NotNull MutableComponent target, @NotNull Gamemode gamemode,
-                               @NotNull Tier tier, @NotNull ModConfig.IconMode iconMode, boolean iconFirst) {
-        Style tierStyle = Style.EMPTY.withColor(TextColor.fromRgb(tier.getColor()));
-        Component icon = renderIcon(gamemode, iconMode);
-        Component tierText = Component.literal(tier.displayName()).setStyle(tierStyle);
-
+                               @NotNull Tier tier, @NotNull ModConfig.BadgeMode mode, boolean iconFirst) {
+        if (mode == ModConfig.BadgeMode.IMAGE) {
+            target.append(badgeImage(gamemode, tier));
+            return;
+        }
+        Component icon = modeIcon(gamemode, mode);
+        Component tierText = Component.literal(tier.displayName())
+                .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(tier.getColor())));
         if (iconFirst) {
-            if (icon != null) {
-                target.append(icon);
-                target.append(Component.literal(" "));
-            }
-            target.append(tierText);
+            target.append(icon).append(Component.literal(" ")).append(tierText);
         } else {
-            target.append(tierText);
-            if (icon != null) {
-                target.append(Component.literal(" "));
-                target.append(icon);
-            }
+            target.append(tierText).append(Component.literal(" ")).append(icon);
         }
     }
 
-    private static @Nullable Component renderIcon(@NotNull Gamemode gamemode, @NotNull ModConfig.IconMode mode) {
+    private static @NotNull Component badgeImage(@NotNull Gamemode gamemode, @NotNull Tier tier) {
+        int code = BADGE_CHAR_BASE + gamemode.ordinal() * Tier.values().length + tier.ordinal();
+        return Component.literal(new String(Character.toChars(code))).setStyle(Style.EMPTY.withFont(BADGE_FONT));
+    }
+
+    private static @NotNull Component modeIcon(@NotNull Gamemode gamemode, @NotNull ModConfig.BadgeMode mode) {
         return switch (mode) {
-            case IMAGES -> Component.literal(gamemode.getIconString())
-                    .setStyle(Style.EMPTY.withFont(ICON_FONT));
-            case SYMBOLS -> Component.literal(gamemode.getIconString())
+            case IMAGE -> Component.literal(gamemode.getIconString()).setStyle(Style.EMPTY.withFont(ICON_FONT));
+            case TEXT -> Component.literal(gamemode.getIconString())
                     .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(gamemode.getColor())));
-            case OFF -> null;
         };
+    }
+
+    private static @NotNull Component divider(@NotNull ModConfig.BadgeMode mode, boolean leadingSpace, boolean trailingSpace) {
+        return mode == ModConfig.BadgeMode.IMAGE
+                ? Component.literal(" ")
+                : separator(leadingSpace, trailingSpace);
     }
 
     private static @NotNull Component separator(boolean leadingSpace, boolean trailingSpace) {

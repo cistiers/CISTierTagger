@@ -48,7 +48,7 @@ public class ConfigScreen extends CisTierScreen {
     private static final Component LBL_NAMETAG = Component.translatable("cistiertagger.button.nametag");
     private static final Component LBL_TAB = Component.translatable("cistiertagger.button.tab");
     private static final Component LBL_CHAT = Component.translatable("cistiertagger.button.chat");
-    private static final Component LBL_ICON = Component.translatable("cistiertagger.button.icon");
+    private static final Component LBL_BADGE = Component.translatable("cistiertagger.button.badge");
     private static final Component LBL_POSITION = Component.translatable("cistiertagger.button.position");
     private static final Component LBL_MODE = Component.translatable("cistiertagger.button.mode");
     private static final Component LBL_PRIORITY = Component.translatable("cistiertagger.button.priority");
@@ -60,7 +60,7 @@ public class ConfigScreen extends CisTierScreen {
     private static final Component TIP_NAMETAG = Component.translatable("cistiertagger.tooltip.nametag");
     private static final Component TIP_TAB = Component.translatable("cistiertagger.tooltip.tab");
     private static final Component TIP_CHAT = Component.translatable("cistiertagger.tooltip.chat");
-    private static final Component TIP_ICON = Component.translatable("cistiertagger.tooltip.icon");
+    private static final Component TIP_BADGE = Component.translatable("cistiertagger.tooltip.badge");
     private static final Component TIP_POSITION = Component.translatable("cistiertagger.tooltip.position");
     private static final Component TIP_MODE = Component.translatable("cistiertagger.tooltip.mode");
     private static final Component TIP_PRIORITY = Component.translatable("cistiertagger.tooltip.priority");
@@ -162,14 +162,9 @@ public class ConfigScreen extends CisTierScreen {
         y += Layout.BUTTON_HEIGHT + Layout.GAP_SMALL;
 
         int halfW = (PANE_W - Layout.GAP_SMALL) / 2;
-        addCycleEnum(paneX, y, halfW, LBL_ICON, TIP_ICON,
-                ModConfig.IconMode.class, cfg.getIconMode(), cfg::setIconMode,
-                mode -> {
-                    Component name = Component.translatable("cistiertagger.enum.icon_mode." + mode.name().toLowerCase());
-                    return mode == ModConfig.IconMode.OFF
-                            ? name.copy().withStyle(ChatFormatting.RED)
-                            : name;
-                });
+        addCycleEnum(paneX, y, halfW, LBL_BADGE, TIP_BADGE,
+                ModConfig.BadgeMode.class, cfg.getBadgeMode(), cfg::setBadgeMode,
+                mode -> Component.translatable("cistiertagger.enum.badge_mode." + mode.name().toLowerCase()));
         addCycleEnum(paneX + halfW + Layout.GAP_SMALL, y, halfW, LBL_POSITION, TIP_POSITION,
                 ModConfig.Position.class, cfg.getPosition(), cfg::setPosition,
                 pos -> Component.translatable("cistiertagger.enum.position." + pos.name().toLowerCase()));
@@ -371,7 +366,7 @@ public class ConfigScreen extends CisTierScreen {
             Component idx = Component.literal((i + 1) + ".").withStyle(ChatFormatting.DARK_GRAY);
             graphics.drawString(this.font, idx, labelX, rowY + 7, 0xFFAAAAAA, false);
             graphics.drawString(this.font,
-                    Badge.gamemodeLabel(gm, CisTierTagger.config().getIconMode()),
+                    Badge.gamemodeLabel(gm, CisTierTagger.config().getBadgeMode()),
                     labelX + 16, rowY + 7, Layout.COLOR_TEXT, false);
         }
     }
@@ -386,7 +381,7 @@ public class ConfigScreen extends CisTierScreen {
         for (int i = 0; i < all.length; i++) {
             int rowY = y + i * (Layout.BUTTON_HEIGHT + Layout.GAP_SMALL);
             graphics.drawString(this.font,
-                    Badge.gamemodeLabel(all[i], CisTierTagger.config().getIconMode()),
+                    Badge.gamemodeLabel(all[i], CisTierTagger.config().getBadgeMode()),
                     paneX + 6, rowY + 7, Layout.COLOR_TEXT, false);
         }
     }
@@ -426,7 +421,7 @@ public class ConfigScreen extends CisTierScreen {
 
         return Badge.preview(Gamemode.VANILLA, Tier.LT3,
                 cfg.getPosition() == ModConfig.Position.LEFT,
-                cfg.getIconMode(), base);
+                cfg.getBadgeMode(), base);
     }
 
     private void closeAndSave() {
