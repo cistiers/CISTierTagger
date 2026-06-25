@@ -2,56 +2,56 @@
   "providers": [
     {
       "type": "bitmap",
-      "file": "cistiertagger:tier/vanilla.png",
+      "file": "cistiertagger:icons/vanilla.png",
       "ascent": 10,
       "height": 12,
       "chars": ["✦"]
     },
     {
       "type": "bitmap",
-      "file": "cistiertagger:tier/sword.png",
+      "file": "cistiertagger:icons/sword.png",
       "ascent": 10,
       "height": 12,
       "chars": ["\uD83D\uDDE1"]
     },
     {
       "type": "bitmap",
-      "file": "cistiertagger:tier/netherite.png",
+      "file": "cistiertagger:icons/netherite.png",
       "ascent": 10,
       "height": 12,
       "chars": ["☠"]
     },
     {
       "type": "bitmap",
-      "file": "cistiertagger:tier/dpot.png",
+      "file": "cistiertagger:icons/dpot.png",
       "ascent": 10,
       "height": 12,
       "chars": ["⚗"]
     },
     {
       "type": "bitmap",
-      "file": "cistiertagger:tier/uhc.png",
+      "file": "cistiertagger:icons/uhc.png",
       "ascent": 10,
       "height": 12,
       "chars": ["❤"]
     },
     {
       "type": "bitmap",
-      "file": "cistiertagger:tier/smp.png",
+      "file": "cistiertagger:icons/smp.png",
       "ascent": 10,
       "height": 12,
       "chars": ["⛨"]
     },
     {
       "type": "bitmap",
-      "file": "cistiertagger:tier/op.png",
+      "file": "cistiertagger:icons/op.png",
       "ascent": 10,
       "height": 12,
       "chars": ["☄"]
     },
     {
       "type": "bitmap",
-      "file": "cistiertagger:tier/mace.png",
+      "file": "cistiertagger:icons/mace.png",
       "ascent": 10,
       "height": 12,
       "chars": ["\uD83D\uDD28"]

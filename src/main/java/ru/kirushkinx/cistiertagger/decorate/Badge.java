@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Badge {
 
     public static final @NotNull FontDescription ICON_FONT = new FontDescription.Resource(
-            Identifier.fromNamespaceAndPath("minecraft", "cistiers"));
+            Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "icons"));
     private static final @NotNull FontDescription BADGE_FONT = new FontDescription.Resource(
             Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "badges"));
     private static final int BADGE_CHAR_BASE = 0xE000; // PUA, range of U+E000 to U+F8FF
