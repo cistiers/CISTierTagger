@@ -32,6 +32,7 @@ public class ProfileScreen extends CisTierScreen {
     private static final Component LOADING = Component.translatable("cistiertagger.status.loading");
     private static final Component TIERS_HEADER = Component.translatable("cistiertagger.profile.tiers_header");
     private static final Component HISTORY_HEADER = Component.translatable("cistiertagger.profile.history_header");
+    private static final Component TIP_OPEN_PROFILE = Component.translatable("cistiertagger.tooltip.open_profile");
 
     private static final int SKIN_WIDTH = 80;
     private static final int SKIN_HEIGHT = 168;
@@ -107,7 +108,8 @@ public class ProfileScreen extends CisTierScreen {
         );
 
         addCornerSiteButton(this.width - Layout.CORNER_BUTTON_INSET,
-                this.height - Layout.CORNER_BUTTON_INSET);
+                this.height - Layout.CORNER_BUTTON_INSET,
+                CisTierTagger.URL + "?profile=" + nickname, TIP_OPEN_PROFILE);
 
         int paneX = comboLeft + SKIN_WIDTH + Layout.INNER_GAP;
         int paneY = skinY;

@@ -37,13 +37,17 @@ public abstract class CisTierScreen extends Screen {
 
     /** Adds the corner logo button that opens cistiers.com through the link-confirm screen. */
     protected void addCornerSiteButton(int x, int y) {
+        addCornerSiteButton(x, y, CisTierTagger.URL, TIP_OPEN_SITE);
+    }
+
+    protected void addCornerSiteButton(int x, int y, @NotNull String url, @NotNull Component tooltip) {
         TextureIconButton button = new TextureIconButton(
                 x, y,
                 Layout.CORNER_BUTTON_SIZE, Layout.CORNER_BUTTON_ICON_SIZE,
                 Layout.LOGO_TEXTURE,
-                btn -> ConfirmLinkScreen.confirmLinkNow(this, URI.create(CisTierTagger.URL)),
-                TIP_OPEN_SITE);
-        button.setTooltip(Tooltip.create(TIP_OPEN_SITE));
+                btn -> ConfirmLinkScreen.confirmLinkNow(this, URI.create(url)),
+                tooltip);
+        button.setTooltip(Tooltip.create(tooltip));
         this.addRenderableWidget(button);
     }
 

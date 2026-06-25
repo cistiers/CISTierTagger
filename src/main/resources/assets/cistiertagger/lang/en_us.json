@@ -42,6 +42,7 @@
   "cistiertagger.tooltip.open_search": "Search player",
   "cistiertagger.tooltip.open_settings": "Settings",
   "cistiertagger.tooltip.open_site": "Open cistiers.com",
+  "cistiertagger.tooltip.open_profile": "Open profile on cistiers.com",
 
   "cistiertagger.enum.position.left": "Left",
   "cistiertagger.enum.position.right": "Right",

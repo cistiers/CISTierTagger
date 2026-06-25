@@ -42,6 +42,7 @@
   "cistiertagger.tooltip.open_search": "Поиск игрока",
   "cistiertagger.tooltip.open_settings": "Настройки",
   "cistiertagger.tooltip.open_site": "Открыть cistiers.com",
+  "cistiertagger.tooltip.open_profile": "Открыть профиль на cistiers.com",
 
   "cistiertagger.enum.position.left": "Слева",
   "cistiertagger.enum.position.right": "Справа",
