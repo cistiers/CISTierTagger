@@ -1,6 +1,8 @@
 package ru.kirushkinx.cistiertagger.decorate;
 
 import lombok.experimental.UtilityClass;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -9,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
+import ru.kirushkinx.cistiertagger.util.Nickname;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,6 +58,7 @@ public class Chat {
         while (matcher.find()) {
             String word = matcher.group();
             if (!cache.contains(word)) continue;
+            if (!isOnlinePlayer(word)) continue;
             Component badge = Badge.decorate(word, Component.literal(word).setStyle(baseStyle),
                     Badge.DisplaySurface.CHAT);
             if (badge == null) continue;
@@ -74,6 +78,17 @@ public class Chat {
             result.append(Component.literal(text.substring(cursor)).setStyle(baseStyle));
         }
         return result;
+    }
+
+    private static boolean isOnlinePlayer(@NotNull String word) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.getConnection() == null) return false;
+        String key = Nickname.normalize(word);
+        for (PlayerInfo info : mc.getConnection().getOnlinePlayers()) {
+            String name = info.getProfile().name();
+            if (name != null && Nickname.normalize(name).equals(key)) return true;
+        }
+        return false;
     }
 
     private static ModConfig configOrNull() {
