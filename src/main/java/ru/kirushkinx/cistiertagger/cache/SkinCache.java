@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.PlayerSkin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
+import ru.kirushkinx.cistiertagger.util.Async;
 import ru.kirushkinx.cistiertagger.util.Nickname;
 
 import java.io.ByteArrayInputStream;
@@ -28,6 +29,7 @@ import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -39,10 +41,14 @@ public class SkinCache {
     private static final String HEAD_URL = "https://mc-heads.net/avatar/";
     private static final int HEAD_SIZE = 16;
     private static final Duration DISK_TTL = Duration.ofHours(6); // cache-control: public, max-age=21600
+    private static final String FALLBACK_PROBE = "00000000-0000-0000-0000-000000000000"; // nil uuid
 
     private final @NotNull ConcurrentHashMap<String, SkinEntry> skins = new ConcurrentHashMap<>();
     private final @NotNull ConcurrentHashMap<String, HeadEntry> heads = new ConcurrentHashMap<>();
+    private final @NotNull ExecutorService io = Async.daemonExecutor(4, "cistiers-skin");
     private volatile @Nullable SkinTextureDownloader downloader;
+    private volatile @Nullable CompletableFuture<@Nullable Long> fallbackSkinHash;
+    private volatile @Nullable CompletableFuture<@Nullable Long> fallbackHeadHash;
 
     public @NotNull AtomicReference<Supplier<PlayerSkin>> forNickname(@NotNull String nickname) {
         Minecraft mc = Minecraft.getInstance();
@@ -89,17 +95,20 @@ public class SkinCache {
         String url = SKIN_URL + URLEncoder.encode(nickname, StandardCharsets.UTF_8);
         Identifier textureId = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/" + key);
 
-        Minecraft mc = Minecraft.getInstance();
         getDownloader().downloadAndRegisterSkin(textureId, cachePath, url, true)
                 .whenCompleteAsync((texture, err) -> {
                     if (err != null) {
                         entry.dispatched.set(false);
                         return;
                     }
+                    if (isFallbackSkin(cachePath)) {
+                        deleteQuietly(cachePath);
+                        return;
+                    }
                     PlayerModelType model = detectModel(cachePath);
                     PlayerSkin skin = new PlayerSkin(texture, null, null, model, false);
                     entry.ref.set(() -> skin);
-                }, mc::execute);
+                }, io);
     }
 
     /** Detects slim/wide by sampling back-face left-arm pixels (x=46-47, y=52-53). */
@@ -142,15 +151,22 @@ public class SkinCache {
         Identifier textureId = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "head/" + key);
 
         Minecraft mc = Minecraft.getInstance();
-        CompletableFuture.supplyAsync(() -> fetchHeadImage(url, cachePath))
-                .whenCompleteAsync((image, err) -> {
-                    if (err != null || image == null) {
-                        entry.dispatched.set(false);
-                        return;
-                    }
-                    mc.getTextureManager().register(textureId, new DynamicTexture(textureId::toString, image));
-                    entry.id.set(textureId);
-                }, mc::execute);
+        CompletableFuture.runAsync(() -> {
+            NativeImage image = fetchHeadImage(url, cachePath);
+            if (image == null) {
+                entry.dispatched.set(false);
+                return;
+            }
+            if (isFallbackHead(image)) {
+                image.close();
+                deleteQuietly(cachePath);
+                return;
+            }
+            mc.execute(() -> {
+                mc.getTextureManager().register(textureId, new DynamicTexture(textureId::toString, image));
+                entry.id.set(textureId);
+            });
+        }, io);
     }
 
     private static @Nullable NativeImage fetchHeadImage(@NotNull String url, @NotNull Path cachePath) {
@@ -174,6 +190,98 @@ public class SkinCache {
             Files.createDirectories(cachePath.getParent());
             Files.write(cachePath, bytes);
             return bytes;
+        }
+    }
+
+    private boolean isFallbackSkin(@NotNull Path file) {
+        Long fallback = fallbackSkinSignature().join();
+        return fallback != null && fallback.equals(hashImageFile(file));
+    }
+
+    private boolean isFallbackHead(@NotNull NativeImage head) {
+        Long fallback = fallbackHeadSignature().join();
+        return fallback != null && fallback.equals(pixelHash(head));
+    }
+
+    /** Pixel hash of the Steve skin mc-heads serves for unknown players, captured once. */
+    private @NotNull CompletableFuture<@Nullable Long> fallbackSkinSignature() {
+        var local = fallbackSkinHash;
+        if (local != null) return local;
+        synchronized (this) {
+            if (fallbackSkinHash == null) {
+                Path probe = CisTierTagger.cacheDir().resolve("skins").resolve("__cistier_fallback__.png");
+                Identifier id = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/__cistier_fallback__");
+                fallbackSkinHash = getDownloader()
+                        .downloadAndRegisterSkin(id, probe, SKIN_URL + FALLBACK_PROBE, true)
+                        .handle((tex, err) -> {
+                            Long hash = err != null ? null : hashImageFile(probe);
+                            deleteQuietly(probe);
+                            return hash;
+                        });
+            }
+            return fallbackSkinHash;
+        }
+    }
+
+    /** Pixel hash of the Steve avatar mc-heads serves for unknown players, captured once. */
+    private @NotNull CompletableFuture<@Nullable Long> fallbackHeadSignature() {
+        var local = fallbackHeadHash;
+        if (local != null) return local;
+        synchronized (this) {
+            if (fallbackHeadHash == null) {
+                String url = HEAD_URL + FALLBACK_PROBE + "/" + HEAD_SIZE;
+                fallbackHeadHash = CompletableFuture.supplyAsync(() -> hashImageBytes(httpGetBytes(url)));
+            }
+            return fallbackHeadHash;
+        }
+    }
+
+    private static @Nullable Long hashImageFile(@NotNull Path file) {
+        try (InputStream in = Files.newInputStream(file);
+             NativeImage img = NativeImage.read(in)) {
+            return pixelHash(img);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private static @Nullable Long hashImageBytes(byte @Nullable [] bytes) {
+        if (bytes == null) return null;
+        try (NativeImage img = NativeImage.read(new ByteArrayInputStream(bytes))) {
+            return pixelHash(img);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private static long pixelHash(@NotNull NativeImage img) {
+        long hash = img.getWidth() * 31L + img.getHeight();
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                hash = hash * 31 + img.getPixel(x, y);
+            }
+        }
+        return hash;
+    }
+
+    private static byte @Nullable [] httpGetBytes(@NotNull String url) {
+        try {
+            HttpURLConnection conn = (HttpURLConnection) URI.create(url).toURL()
+                    .openConnection(Minecraft.getInstance().getProxy());
+            conn.setConnectTimeout(5_000);
+            conn.setReadTimeout(10_000);
+            try (InputStream is = conn.getInputStream()) {
+                return is.readAllBytes();
+            }
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private static void deleteQuietly(@NotNull Path path) {
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException ignored) {
         }
     }
 
