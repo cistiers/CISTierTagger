@@ -180,7 +180,8 @@ public class Badge {
 
     private static @NotNull Component badgeImage(@NotNull Gamemode gamemode, @NotNull Tier tier) {
         int code = BADGE_CHAR_BASE + gamemode.ordinal() * Tier.values().length + tier.ordinal();
-        return Component.literal(new String(Character.toChars(code))).setStyle(Style.EMPTY.withFont(BADGE_FONT));
+        return Component.literal(new String(Character.toChars(code)))
+                .setStyle(Style.EMPTY.withFont(BADGE_FONT).withColor(ChatFormatting.WHITE));
     }
 
     private static @NotNull Component modeIcon(@NotNull Gamemode gamemode, @NotNull ModConfig.BadgeMode mode) {
