@@ -72,5 +72,9 @@
   "cistiertagger.update.toast.description": "Доступна версия %s",
   "cistiertagger.update.button": "Обновить CISTierTagger",
   "cistiertagger.update.info.title": "CISTierTagger обновился!",
-  "cistiertagger.update.info.subtitle": "Пожалуйста, обновитесь до последней версии для корректной работы мода."
+  "cistiertagger.update.info.subtitle": "Пожалуйста, обновитесь до последней версии для корректной работы мода.",
+
+  "cistiertagger.restriction.chat": "Этот сервер ограничил работу CISTierTagger.",
+  "cistiertagger.restriction.hover": "Отключено на этом сервере:",
+  "cistiertagger.restriction.config": "Ограничено этим сервером"
 }

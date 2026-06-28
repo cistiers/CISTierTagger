@@ -26,6 +26,7 @@ import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
 import ru.kirushkinx.cistiertagger.model.Tier;
 import ru.kirushkinx.cistiertagger.decorate.Badge;
+import ru.kirushkinx.cistiertagger.network.ServerRestrictions;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -39,6 +40,7 @@ import java.util.function.Supplier;
 public class ConfigScreen extends CisTierScreen {
 
     private static final Component TITLE = Component.translatable("cistiertagger.screen.config.title");
+    private static final Component RESTRICTED = Component.translatable("cistiertagger.restriction.config");
     private static final Component HEADER_VISIBILITY = Component.translatable("cistiertagger.section.visibility");
     private static final Component HEADER_GAMEMODES = Component.translatable("cistiertagger.section.gamemodes");
     private static final Component HEADER_PRIORITY_SUB = Component.translatable("cistiertagger.subview.priority");
@@ -332,6 +334,10 @@ public class ConfigScreen extends CisTierScreen {
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
         graphics.drawCenteredString(this.font, TITLE, this.width / 2, 14, Layout.COLOR_TEXT);
+        if (ServerRestrictions.isAnyRestricted()) {
+            int noticeY = (14 + this.font.lineHeight + paneTop) / 2 - this.font.lineHeight / 2;
+            graphics.drawCenteredString(this.font, RESTRICTED, this.width / 2, noticeY, Layout.COLOR_WARN);
+        }
 
         renderPreviewNametag(graphics);
         switch (view) {
@@ -415,7 +421,7 @@ public class ConfigScreen extends CisTierScreen {
                 : CisTierTagger.getDumpCache().lookup(selfName).orElse(null);
 
         if (realData != null) {
-            Component decorated = Badge.decorate(selfName, base, Badge.DisplaySurface.NAMETAG);
+            Component decorated = Badge.decorate(selfName, base, Badge.DisplaySurface.NAMETAG, false);
             return decorated != null ? decorated : base;
         }
 

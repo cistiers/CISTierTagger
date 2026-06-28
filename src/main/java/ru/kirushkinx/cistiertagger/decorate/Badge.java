@@ -16,6 +16,7 @@ import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
 import ru.kirushkinx.cistiertagger.model.Tier;
+import ru.kirushkinx.cistiertagger.network.ServerRestrictions;
 import ru.kirushkinx.cistiertagger.util.Nickname;
 
 import java.util.List;
@@ -59,10 +60,16 @@ public class Badge {
     }
 
     public static @Nullable Component decorate(@NotNull String nickname, @NotNull Component original, @NotNull DisplaySurface surface) {
+        return decorate(nickname, original, surface, true);
+    }
+
+    public static @Nullable Component decorate(@NotNull String nickname, @NotNull Component original,
+                                               @NotNull DisplaySurface surface, boolean serverRestrictable) {
         ModConfig cfg = configOrNull();
         if (cfg == null) return null;
         if (!cfg.isEnabled()) return null;
         if (!surfaceEnabled(cfg, surface)) return null;
+        if (serverRestrictable && serverRestricted(surface)) return null;
 
         DumpCache cache = CisTierTagger.getDumpCache();
         if (cache == null) return null;
@@ -203,6 +210,14 @@ public class Badge {
             case NAMETAG -> cfg.isShowInNametag();
             case TAB -> cfg.isShowInTabList();
             case CHAT -> cfg.isShowInChat();
+        };
+    }
+
+    private static boolean serverRestricted(@NotNull DisplaySurface surface) {
+        return switch (surface) {
+            case NAMETAG -> ServerRestrictions.isNametagRestricted();
+            case TAB -> ServerRestrictions.isTabRestricted();
+            case CHAT -> ServerRestrictions.isChatRestricted();
         };
     }
 

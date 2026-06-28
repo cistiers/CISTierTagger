@@ -15,6 +15,7 @@ import ru.kirushkinx.cistiertagger.cache.SkinCache;
 import ru.kirushkinx.cistiertagger.command.CisTierCommand;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
+import ru.kirushkinx.cistiertagger.network.RestrictionNetworking;
 
 import java.nio.file.Path;
 import java.time.Duration;
@@ -69,6 +70,7 @@ public final class CisTierTagger implements ClientModInitializer {
         updateChecker.checkAsync();
 
         CisTierCommand.register();
+        RestrictionNetworking.register();
 
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> shutdown());
 

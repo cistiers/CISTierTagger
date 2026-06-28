@@ -72,5 +72,9 @@
   "cistiertagger.update.toast.description": "Version %s available",
   "cistiertagger.update.button": "Update CISTierTagger",
   "cistiertagger.update.info.title": "CISTierTagger has been updated!",
-  "cistiertagger.update.info.subtitle": "Please update to the latest version to ensure the mod works properly."
+  "cistiertagger.update.info.subtitle": "Please update to the latest version to ensure the mod works properly.",
+
+  "cistiertagger.restriction.chat": "This server has restricted CISTierTagger.",
+  "cistiertagger.restriction.hover": "Disabled on this server:",
+  "cistiertagger.restriction.config": "Restricted by this server"
 }
