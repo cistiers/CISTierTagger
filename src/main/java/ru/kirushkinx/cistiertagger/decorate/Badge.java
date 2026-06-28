@@ -165,7 +165,7 @@ public class Badge {
     private static void append(@NotNull MutableComponent target, @NotNull Gamemode gamemode,
                                @NotNull Tier tier, @NotNull ModConfig.BadgeMode mode, boolean iconFirst) {
         if (mode == ModConfig.BadgeMode.IMAGE) {
-            target.append(badgeImage(gamemode, tier));
+            target.append(badgeImage(gamemode, tier).withStyle(style -> style.withShadowColor(0)));
             return;
         }
         Component icon = modeIcon(gamemode, mode);
@@ -178,7 +178,7 @@ public class Badge {
         }
     }
 
-    private static @NotNull Component badgeImage(@NotNull Gamemode gamemode, @NotNull Tier tier) {
+    private static @NotNull MutableComponent badgeImage(@NotNull Gamemode gamemode, @NotNull Tier tier) {
         int code = BADGE_CHAR_BASE + gamemode.ordinal() * Tier.values().length + tier.ordinal();
         return Component.literal(new String(Character.toChars(code)))
                 .setStyle(Style.EMPTY.withFont(BADGE_FONT).withColor(ChatFormatting.WHITE));
