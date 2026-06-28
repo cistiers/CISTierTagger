@@ -3,785 +3,785 @@
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/ht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE000"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/lt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE001"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/ht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE002"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/lt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE003"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/ht3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE004"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/lt3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE005"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/ht4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE006"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/lt4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE007"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/ht5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE008"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/lt5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE009"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/rht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE00A"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/rlt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE00B"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/rht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE00C"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/vanilla/rlt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE00D"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/ht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE00E"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/lt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE00F"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/ht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE010"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/lt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE011"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/ht3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE012"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/lt3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE013"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/ht4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE014"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/lt4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE015"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/ht5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE016"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/lt5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE017"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/rht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE018"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/rlt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE019"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/rht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE01A"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/sword/rlt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE01B"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/ht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE01C"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/lt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE01D"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/ht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE01E"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/lt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE01F"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/ht3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE020"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/lt3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE021"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/ht4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE022"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/lt4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE023"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/ht5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE024"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/lt5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE025"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/rht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE026"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/rlt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE027"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/rht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE028"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/netherite/rlt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE029"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/ht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE02A"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/lt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE02B"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/ht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE02C"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/lt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE02D"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/ht3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE02E"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/lt3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE02F"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/ht4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE030"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/lt4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE031"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/ht5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE032"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/lt5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE033"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/rht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE034"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/rlt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE035"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/rht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE036"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/dpot/rlt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE037"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/ht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE038"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/lt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE039"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/ht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE03A"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/lt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE03B"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/ht3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE03C"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/lt3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE03D"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/ht4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE03E"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/lt4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE03F"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/ht5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE040"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/lt5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE041"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/rht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE042"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/rlt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE043"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/rht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE044"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/uhc/rlt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE045"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/ht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE046"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/lt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE047"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/ht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE048"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/lt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE049"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/ht3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE04A"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/lt3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE04B"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/ht4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE04C"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/lt4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE04D"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/ht5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE04E"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/lt5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE04F"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/rht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE050"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/rlt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE051"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/rht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE052"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/smp/rlt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE053"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/ht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE054"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/lt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE055"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/ht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE056"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/lt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE057"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/ht3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE058"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/lt3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE059"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/ht4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE05A"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/lt4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE05B"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/ht5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE05C"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/lt5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE05D"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/rht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE05E"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/rlt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE05F"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/rht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE060"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/op/rlt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE061"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/ht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE062"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/lt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE063"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/ht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE064"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/lt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE065"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/ht3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE066"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/lt3.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE067"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/ht4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE068"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/lt4.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE069"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/ht5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE06A"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/lt5.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE06B"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/rht1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE06C"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/rlt1.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE06D"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/rht2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE06E"]
     },
     {
       "type": "bitmap",
       "file": "cistiertagger:badges/mace/rlt2.png",
-      "ascent": 8,
-      "height": 10,
+      "ascent": 7,
+      "height": 8,
       "chars": ["\uE06F"]
     }
   ]
