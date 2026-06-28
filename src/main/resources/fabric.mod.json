@@ -6,8 +6,11 @@
   "description": "Displays player tiers from CISTiers within the game.",
   "authors": ["kirushkinx"],
   "contact": {
+    "homepage": "https://modrinth.com/mod/cistiertagger",
+    "sources": "https://github.com/cistiers/cistiertagger",
+    "issues": "https://github.com/cistiers/cistiertagger/issues"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "icon": "assets/cistiertagger/icon.png",
   "environment": "client",
   "entrypoints": {
