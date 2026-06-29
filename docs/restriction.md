@@ -1,3 +1,5 @@
+English | [Русский](restriction_ru.md)
+
 ## Server-side restriction
 A server can tell the CISTierTagger client to hide its badges - all of them, or one surface at a time.
 
