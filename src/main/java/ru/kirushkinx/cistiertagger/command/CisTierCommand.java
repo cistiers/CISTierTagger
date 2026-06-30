@@ -6,11 +6,12 @@ import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import ru.kirushkinx.cistiertagger.gui.screen.ProfileScreen;
 import ru.kirushkinx.cistiertagger.gui.screen.SearchScreen;
 import ru.kirushkinx.cistiertagger.util.Nickname;
+
+import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 @UtilityClass
 public class CisTierCommand {
@@ -19,21 +20,20 @@ public class CisTierCommand {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(ClientCommandManager.literal("cistier")
                     .executes(ctx -> {
-                        Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(new SearchScreen()));
+                        mc.execute(() -> mc.setScreen(new SearchScreen()));
                         return 1;
                     })
                     .then(ClientCommandManager.argument("nickname", StringArgumentType.word())
                             .suggests(ONLINE_PLAYERS)
                             .executes(ctx -> {
                                 String nick = StringArgumentType.getString(ctx, "nickname");
-                                Minecraft.getInstance().execute(() -> ProfileScreen.openFor(nick));
+                                mc.execute(() -> ProfileScreen.openFor(nick));
                                 return 1;
                             })));
         });
     }
 
     private static final SuggestionProvider<FabricClientCommandSource> ONLINE_PLAYERS = (ctx, builder) -> {
-        Minecraft mc = Minecraft.getInstance();
         if (mc.getConnection() != null) {
             String remaining = Nickname.normalize(builder.getRemaining());
             for (PlayerInfo info : mc.getConnection().getOnlinePlayers()) {

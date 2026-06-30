@@ -1,6 +1,5 @@
 package ru.kirushkinx.cistiertagger.mixin;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.DisplayRenderer;
 import net.minecraft.client.renderer.entity.state.TextDisplayEntityRenderState;
 import net.minecraft.network.chat.Component;
@@ -10,18 +9,19 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import ru.kirushkinx.cistiertagger.CisTierTagger;
+import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.decorate.Badge;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 @Mixin(DisplayRenderer.TextDisplayRenderer.class)
 public class TextDisplayRendererMixin {
@@ -32,8 +32,8 @@ public class TextDisplayRendererMixin {
                                           TextDisplayEntityRenderState state,
                                           float partialTick,
                                           CallbackInfo ci) {
-        ModConfig cfg = configOrNull();
-        if (cfg == null || !cfg.isEnabled() || !cfg.isShowInNametag()) return;
+        ModConfig cfg = ConfigManager.get();
+        if (!cfg.isEnabled() || !cfg.isShowInNametag()) return;
         if (state.cachedInfo == null) return;
         if (!(entity.getVehicle() instanceof Player player)) return;
 
@@ -51,7 +51,7 @@ public class TextDisplayRendererMixin {
             if (decorated == null) return;
 
             FormattedCharSequence newContents = decorated.getVisualOrderText();
-            int newWidth = Minecraft.getInstance().font.width(decorated);
+            int newWidth = mc.font.width(decorated);
 
             List<Display.TextDisplay.CachedLine> newLines = new ArrayList<>(lines);
             newLines.set(i, new Display.TextDisplay.CachedLine(newContents, newWidth));
@@ -97,11 +97,5 @@ public class TextDisplayRendererMixin {
             result.append(Component.literal(buffer.toString()).setStyle(currentStyle[0]));
         }
         return result;
-    }
-
-    @Unique
-    private static @Nullable ModConfig configOrNull() {
-        var manager = CisTierTagger.getConfigManager();
-        return manager == null ? null : manager.get();
     }
 }

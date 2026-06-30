@@ -1,7 +1,6 @@
 package ru.kirushkinx.cistiertagger.gui.screen;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -15,10 +14,12 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
-import ru.kirushkinx.cistiertagger.CisTierTagger;
+import ru.kirushkinx.cistiertagger.api.CisTiersClient;
 import ru.kirushkinx.cistiertagger.api.dto.LeaderboardEntry;
 import ru.kirushkinx.cistiertagger.api.dto.SearchResultEntry;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
+import ru.kirushkinx.cistiertagger.cache.SkinCache;
+import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.gui.CisTierScreen;
 import ru.kirushkinx.cistiertagger.gui.Layout;
@@ -41,6 +42,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_ENTER;
+import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 public class SearchScreen extends CisTierScreen {
 
@@ -55,7 +57,7 @@ public class SearchScreen extends CisTierScreen {
 
     private static final long DEBOUNCE_MS = 250L;
     private static final int MAX_RESULTS = 100;
-    private static final int HEAD_SIZE = 16;
+    private static final int HEAD_SIZE = SkinCache.HEAD_SIZE;
     private static final int HEAD_PADDING = 4;
 
     private EditBox nicknameField;
@@ -92,7 +94,7 @@ public class SearchScreen extends CisTierScreen {
         ItemIconButton settingsButton = new ItemIconButton(
                 this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET, Layout.CORNER_BUTTON_SIZE,
                 new ItemStack(Items.COMPARATOR),
-                btn -> Minecraft.getInstance().setScreen(new ConfigScreen(this)),
+                btn -> mc.setScreen(new ConfigScreen(this)),
                 TIP_SETTINGS);
         settingsButton.setTooltip(Tooltip.create(TIP_SETTINGS));
         this.addRenderableWidget(settingsButton);
@@ -105,14 +107,12 @@ public class SearchScreen extends CisTierScreen {
     }
 
     private void loadTopLeaderboard() {
-        var client = CisTierTagger.getHttpClient();
-        if (client == null) return;
         long requestedAt = System.currentTimeMillis();
         lastQueryAt.set(requestedAt);
         loading = true;
         showingTop = true;
-        client.fetchLeaderboard(1).whenComplete((response, error) ->
-                Minecraft.getInstance().execute(() -> applyTopLeaderboard(requestedAt, response, error)));
+        CisTiersClient.fetchLeaderboard(1).whenComplete((response, error) ->
+                mc.execute(() -> applyTopLeaderboard(requestedAt, response, error)));
     }
 
     private void applyTopLeaderboard(long requestedAt, Map<Integer, List<LeaderboardEntry>> response, Throwable error) {
@@ -163,13 +163,12 @@ public class SearchScreen extends CisTierScreen {
 
         CompletableFuture.delayedExecutor(DEBOUNCE_MS, TimeUnit.MILLISECONDS).execute(() -> {
             if (lastQueryAt.get() != requestedAt) return;
-            DumpCache cache = CisTierTagger.getDumpCache();
-            if (cache == null || cache.size() == 0) {
-                Minecraft.getInstance().execute(() -> applyDumpSearchResult(requestedAt, List.of()));
+            if (DumpCache.size() == 0) {
+                mc.execute(() -> applyDumpSearchResult(requestedAt, List.of()));
                 return;
             }
-            List<PlayerTierData> matches = cache.searchByNickname(value);
-            Minecraft.getInstance().execute(() -> applyDumpSearchResult(requestedAt, matches));
+            List<PlayerTierData> matches = DumpCache.searchByNickname(value);
+            mc.execute(() -> applyDumpSearchResult(requestedAt, matches));
         });
     }
 
@@ -312,13 +311,12 @@ public class SearchScreen extends CisTierScreen {
     }
 
     private void drawHead(@NotNull GuiGraphics graphics, @NotNull String nickname, int x, int y) {
-        var skins = CisTierTagger.getSkinCache();
-        Identifier id = skins.headFor(nickname).get();
+        Identifier id = SkinCache.headFor(nickname).get();
         if (id != null) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0f, 0f,
                     HEAD_SIZE, HEAD_SIZE, HEAD_SIZE, HEAD_SIZE);
         } else {
-            PlayerFaceRenderer.draw(graphics, skins.defaultSkinFor(nickname), x, y, HEAD_SIZE);
+            PlayerFaceRenderer.draw(graphics, SkinCache.defaultSkinFor(nickname), x, y, HEAD_SIZE);
         }
     }
 
@@ -328,7 +326,7 @@ public class SearchScreen extends CisTierScreen {
             return NO_TIER.copy().withStyle(ChatFormatting.DARK_GRAY);
         }
 
-        ModConfig cfg = CisTierTagger.config();
+        ModConfig cfg = ConfigManager.get();
         PlayerTierData data = toPlayerTierData(entry.nickname(), rawTiers);
         if (data.isEmpty()) {
             return NO_TIER.copy().withStyle(ChatFormatting.DARK_GRAY);

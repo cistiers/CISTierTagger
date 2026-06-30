@@ -1,5 +1,6 @@
 package ru.kirushkinx.cistiertagger.cache;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import ru.kirushkinx.cistiertagger.api.CisTiersClient;
 import ru.kirushkinx.cistiertagger.api.dto.ProfileResponse;
@@ -13,20 +14,16 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
+@UtilityClass
 public class ProfileCache {
 
     private static final Duration POSITIVE_TTL = Duration.ofMinutes(5);
     private static final Duration NEGATIVE_TTL = Duration.ofMinutes(15);
     private static final int CACHE_CAPACITY = 256;
 
-    private final @NotNull CisTiersClient client;
-    private final @NotNull Map<String, Entry> positives = boundedLru();
-    private final @NotNull Map<String, Instant> negatives = boundedLru();
-    private final @NotNull Map<String, CompletableFuture<ProfileResponse>> inflight = new ConcurrentHashMap<>();
-
-    public ProfileCache(@NotNull CisTiersClient client) {
-        this.client = client;
-    }
+    private static final @NotNull Map<String, Entry> positives = boundedLru();
+    private static final @NotNull Map<String, Instant> negatives = boundedLru();
+    private static final @NotNull Map<String, CompletableFuture<ProfileResponse>> inflight = new ConcurrentHashMap<>();
 
     private static <V> @NotNull Map<String, V> boundedLru() {
         return Collections.synchronizedMap(new LinkedHashMap<>(64, 0.75f, true) {
@@ -37,7 +34,7 @@ public class ProfileCache {
         });
     }
 
-    public @NotNull CompletableFuture<ProfileResponse> fetch(@NotNull String nickname) {
+    public static @NotNull CompletableFuture<ProfileResponse> fetch(@NotNull String nickname) {
         String key = Nickname.normalize(nickname);
         Entry cached = positives.get(key);
         if (cached != null && cached.expiresAt.isAfter(Instant.now())) {
@@ -47,7 +44,7 @@ public class ProfileCache {
         if (negativeUntil != null && negativeUntil.isAfter(Instant.now())) {
             return CompletableFuture.failedFuture(new ProfileNotFoundException(nickname));
         }
-        return inflight.computeIfAbsent(key, k -> client.fetchProfile(nickname)
+        return inflight.computeIfAbsent(key, k -> CisTiersClient.fetchProfile(nickname)
                 .whenComplete((response, error) -> {
                     inflight.remove(k);
                     if (error != null) {
@@ -61,7 +58,7 @@ public class ProfileCache {
                 }));
     }
 
-    public void invalidate(@NotNull String nickname) {
+    public static void invalidate(@NotNull String nickname) {
         String key = Nickname.normalize(nickname);
         positives.remove(key);
         negatives.remove(key);

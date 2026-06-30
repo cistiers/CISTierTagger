@@ -1,6 +1,5 @@
 package ru.kirushkinx.cistiertagger.mixin;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,13 +11,14 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.api.UpdateChecker;
-import ru.kirushkinx.cistiertagger.config.ModConfig;
+import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.gui.button.IconTextButton;
 
 import java.net.URI;
+
+import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
@@ -50,16 +50,14 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void cistiertagger$renderInfo(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        if (cistiertagger$infoY <= 0 || Minecraft.getInstance().getWindow().getGuiScale() >= 4) return;
+        if (cistiertagger$infoY <= 0 || mc.getWindow().getGuiScale() >= 4) return;
         graphics.drawCenteredString(this.font, INFO_TITLE, this.width / 2, cistiertagger$infoY, Layout.COLOR_WARN);
         graphics.drawCenteredString(this.font, INFO_SUBTITLE, this.width / 2, cistiertagger$infoY + 11, Layout.COLOR_DIM);
     }
 
     @Unique
     private static UpdateChecker.@Nullable Update cistiertagger$update() {
-        ModConfig cfg = CisTierTagger.getConfigManager() == null ? null : CisTierTagger.config();
-        if (cfg == null || !cfg.isCheckForUpdates()) return null;
-        UpdateChecker checker = CisTierTagger.getUpdateChecker();
-        return checker == null ? null : checker.available();
+        if (!ConfigManager.get().isCheckForUpdates()) return null;
+        return UpdateChecker.available();
     }
 }

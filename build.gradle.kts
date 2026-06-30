@@ -21,7 +21,6 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 repositories {
-    maven("https://maven.isxander.dev/releases/")
     maven("https://maven.terraformersmc.com/releases/")
 }
 

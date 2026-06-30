@@ -4,7 +4,6 @@ import com.terraformersmc.modmenu.api.UpdateChannel;
 import com.terraformersmc.modmenu.api.UpdateInfo;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
-import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.api.UpdateChecker;
 
 public class UpdateInfoImpl implements UpdateInfo {
@@ -32,7 +31,6 @@ public class UpdateInfoImpl implements UpdateInfo {
     }
 
     private static UpdateChecker.@Nullable Update current() {
-        UpdateChecker checker = CisTierTagger.getUpdateChecker();
-        return checker == null ? null : checker.available();
+        return UpdateChecker.available();
     }
 }

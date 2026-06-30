@@ -4,12 +4,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
+import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.util.Async;
 
 import java.io.InputStream;
@@ -26,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Checking for mod updates by parsing github releases.*/
+@UtilityClass
 public class UpdateChecker {
 
     public record Update(@NotNull String version, @NotNull String url) {}
@@ -35,31 +38,21 @@ public class UpdateChecker {
     private static final Duration TIMEOUT = Duration.ofSeconds(8);
     private static final Pattern ASSET = Pattern.compile("^" + Pattern.quote(CisTierTagger.MOD_ID) + "-(.+)\\+(.+)\\.jar$");
 
-    private static final boolean TEST = false; // temp
+    private static final ExecutorService executor = Async.daemonExecutor(1, "cistiers-update");
+    private static final HttpClient http = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(5))
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .executor(executor)
+            .build();
 
-    private final @NotNull HttpClient http;
-    private final @NotNull ExecutorService executor;
     private volatile @Nullable Update available;
 
-    public UpdateChecker() {
-        this.executor = Async.daemonExecutor(1, "cistiers-update");
-        this.http = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(5))
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .executor(executor)
-                .build();
-    }
-
-    public @Nullable Update available() {
+    public static @Nullable Update available() {
         return available;
     }
 
-    public void checkAsync() {
-        if (TEST) {
-            available = new Update("9.9.9", "https://github.com/cistiers/CISTierTagger/releases");
-            return;
-        }
-        if (!CisTierTagger.config().isCheckForUpdates()) return; // skip if false
+    public static void checkAsync() {
+        if (!ConfigManager.get().isCheckForUpdates()) return; // skip if false
         String[] current = currentVersion();
         if (current == null) return;
         String currentMod = current[0];
@@ -82,11 +75,11 @@ public class UpdateChecker {
                 });
     }
 
-    public void shutdown() {
+    public static void shutdown() {
         executor.shutdownNow();
     }
 
-    private @Nullable Update findUpdate(@NotNull HttpResponse<InputStream> response, @NotNull String currentMod, @NotNull String currentMc) {
+    private static @Nullable Update findUpdate(@NotNull HttpResponse<InputStream> response, @NotNull String currentMod, @NotNull String currentMc) {
         if (response.statusCode() / 100 != 2) {
             LOGGER.debug("GitHub releases returned HTTP {}", response.statusCode());
             return null;

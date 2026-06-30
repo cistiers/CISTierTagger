@@ -1,7 +1,7 @@
 package ru.kirushkinx.cistiertagger.config;
 
 import com.google.gson.JsonSyntaxException;
-import lombok.Getter;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
@@ -18,26 +18,22 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 @Slf4j
+@UtilityClass
 public class ConfigManager {
 
     private static final String FILE_NAME = "config.json";
 
-    private final @NotNull Path file;
+    private static final Path file = FabricLoader.getInstance().getConfigDir()
+            .resolve(CisTierTagger.MOD_ID)
+            .resolve(FILE_NAME);
 
-    @Getter
     private @NotNull ModConfig config = new ModConfig();
 
-    public ConfigManager() {
-        this.file = FabricLoader.getInstance().getConfigDir()
-                .resolve(CisTierTagger.MOD_ID)
-                .resolve(FILE_NAME);
-    }
-
-    public @NotNull ModConfig get() {
+    public static @NotNull ModConfig get() {
         return config;
     }
 
-    public synchronized void load() {
+    public static synchronized void load() {
         if (!Files.exists(file)) {
             log.info("Config not found at {}, using defaults", file);
             save();
@@ -53,7 +49,7 @@ public class ConfigManager {
         }
     }
 
-    public synchronized void save() {
+    public static synchronized void save() {
         Badge.bumpGeneration();
         try {
             Files.createDirectories(file.getParent());

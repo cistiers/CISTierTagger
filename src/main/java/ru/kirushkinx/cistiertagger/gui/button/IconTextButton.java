@@ -1,7 +1,6 @@
 package ru.kirushkinx.cistiertagger.gui.button;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -14,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
+
+import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 public class IconTextButton extends Button {
 
@@ -37,7 +38,7 @@ public class IconTextButton extends Button {
     protected void renderContents(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderDefaultSprite(graphics);
         ensureTextureSize();
-        Font font = Minecraft.getInstance().font;
+        Font font = mc.font;
         int total = ICON + GAP + font.width(getMessage());
         int startX = getX() + (getWidth() - total) / 2;
         int iconY = getY() + (getHeight() - ICON) / 2;
@@ -47,7 +48,7 @@ public class IconTextButton extends Button {
 
     private void ensureTextureSize() {
         if (texW > 0) return;
-        Optional<Resource> resource = Minecraft.getInstance().getResourceManager().getResource(texture);
+        Optional<Resource> resource = mc.getResourceManager().getResource(texture);
         if (resource.isEmpty()) {
             texW = texH = FALLBACK;
             return;

@@ -4,7 +4,6 @@ import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import ru.kirushkinx.cistiertagger.api.dto.DumpResponse;
-import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.util.Json;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class PersistentCache {
     private final @NotNull Path file;
 
     public PersistentCache() {
-        this.file = CisTierTagger.cacheDir().resolve(FILE_NAME);
+        this.file = CacheDir.root().resolve(FILE_NAME);
     }
 
     public @NotNull Optional<DumpResponse> load() {

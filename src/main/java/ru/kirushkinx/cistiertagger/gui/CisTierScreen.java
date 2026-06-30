@@ -1,6 +1,5 @@
 package ru.kirushkinx.cistiertagger.gui;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -14,6 +13,8 @@ import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
 import ru.kirushkinx.cistiertagger.gui.button.TextureIconButton;
 
 import java.net.URI;
+
+import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 /** Base screen with shared helpers for corner buttons and parent navigation. */
 public abstract class CisTierScreen extends Screen {
@@ -32,7 +33,7 @@ public abstract class CisTierScreen extends Screen {
     }
 
     protected void returnToParent() {
-        Minecraft.getInstance().setScreen(parent);
+        mc.setScreen(parent);
     }
 
     /** Adds the corner logo button that opens cistiers.com through the link-confirm screen. */

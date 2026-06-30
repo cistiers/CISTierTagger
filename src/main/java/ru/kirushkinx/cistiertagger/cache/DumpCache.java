@@ -1,8 +1,10 @@
 package ru.kirushkinx.cistiertagger.cache;
 
 import lombok.Getter;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.api.CisTiersClient;
 import ru.kirushkinx.cistiertagger.api.dto.DumpResponse;
 import ru.kirushkinx.cistiertagger.decorate.Badge;
@@ -27,15 +29,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
+@UtilityClass
 public class DumpCache {
 
+    private static final Duration REFRESH_INTERVAL = Duration.ofMinutes(10);
     private static final Duration MIN_REFRESH_INTERVAL = Duration.ofMinutes(2);
 
-    private final @NotNull CisTiersClient client;
-    private final @NotNull PersistentCache disk;
-    private final @NotNull ScheduledExecutorService scheduler;
-
-    private final @NotNull AtomicReference<Map<String, PlayerTierData>> store = new AtomicReference<>(Map.of());
+    private static final @NotNull ScheduledExecutorService scheduler = Async.daemonScheduler(1, "cistiers-cache");
+    private static final @NotNull PersistentCache disk = new PersistentCache();
+    private static final @NotNull AtomicReference<Map<String, PlayerTierData>> store = new AtomicReference<>(Map.of());
 
     @Getter
     private volatile @NotNull RefreshState state = RefreshState.IDLE;
@@ -46,17 +48,11 @@ public class DumpCache {
     @Getter
     private volatile int lastEntryCount;
 
-    private @org.jetbrains.annotations.Nullable ScheduledFuture<?> refreshTask;
+    private @Nullable ScheduledFuture<?> refreshTask;
 
-    public DumpCache(@NotNull CisTiersClient client) {
-        this.client = client;
-        this.disk = new PersistentCache();
-        this.scheduler = Async.daemonScheduler(1, "cistiers-cache");
-    }
-
-    public synchronized void start(@NotNull Duration refreshInterval) {
-        Duration clamped = refreshInterval.compareTo(MIN_REFRESH_INTERVAL) < 0
-                ? MIN_REFRESH_INTERVAL : refreshInterval;
+    public static synchronized void init() {
+        Duration clamped = REFRESH_INTERVAL.compareTo(MIN_REFRESH_INTERVAL) < 0
+                ? MIN_REFRESH_INTERVAL : REFRESH_INTERVAL;
         disk.load().ifPresent(dump -> {
             applyDump(dump);
             log.info("Loaded persistent cache: {} players", store.get().size());
@@ -64,27 +60,27 @@ public class DumpCache {
         stopRefresh();
         long seconds = Math.max(1, clamped.toSeconds());
         refreshTask = scheduler.scheduleWithFixedDelay(
-                this::refreshSilently, 0L, seconds, TimeUnit.SECONDS);
+                DumpCache::refreshSilently, 0L, seconds, TimeUnit.SECONDS);
     }
 
-    public synchronized void shutdown() {
+    public static synchronized void shutdown() {
         stopRefresh();
         scheduler.shutdownNow();
     }
 
-    public @NotNull Optional<PlayerTierData> lookup(@NotNull String nickname) {
+    public static @NotNull Optional<PlayerTierData> lookup(@NotNull String nickname) {
         return Optional.ofNullable(store.get().get(Nickname.normalize(nickname)));
     }
 
-    public boolean contains(@NotNull String nickname) {
+    public static boolean contains(@NotNull String nickname) {
         return store.get().containsKey(Nickname.normalize(nickname));
     }
 
-    public int size() {
+    public static int size() {
         return store.get().size();
     }
 
-    public @NotNull List<PlayerTierData> searchByNickname(@NotNull String query) {
+    public static @NotNull List<PlayerTierData> searchByNickname(@NotNull String query) {
         String needle = Nickname.normalize(query);
         return store.get().values().stream()
                 .filter(data -> Nickname.normalize(data.nickname()).contains(needle))
@@ -94,10 +90,10 @@ public class DumpCache {
                 .toList();
     }
 
-    public @NotNull CompletableFuture<Void> refresh() {
+    public static @NotNull CompletableFuture<Void> refresh() {
         state = RefreshState.REFRESHING;
-        return client.fetchDump()
-                .thenAccept(this::onDumpReceived)
+        return CisTiersClient.fetchDump()
+                .thenAccept(DumpCache::onDumpReceived)
                 .exceptionally(err -> {
                     state = RefreshState.FAILED;
                     log.warn("Dump refresh failed", err);
@@ -105,7 +101,7 @@ public class DumpCache {
                 });
     }
 
-    private void onDumpReceived(@NotNull DumpResponse dump) {
+    private static void onDumpReceived(@NotNull DumpResponse dump) {
         applyDump(dump);
         lastRefresh = Instant.now();
         lastEntryCount = store.get().size();
@@ -114,14 +110,14 @@ public class DumpCache {
         disk.save(dump);
     }
 
-    private void refreshSilently() {
+    private static void refreshSilently() {
         try {
             refresh().get(60, TimeUnit.SECONDS);
         } catch (Exception ignored) {
         }
     }
 
-    private void applyDump(@NotNull DumpResponse dump) {
+    private static void applyDump(@NotNull DumpResponse dump) {
         Map<String, PlayerTierData> next = new HashMap<>(Math.max(16, dump.data().size()));
         for (Map.Entry<String, DumpResponse.RawPlayer> entry : dump.data().entrySet()) {
             String nickname = entry.getKey();
@@ -146,7 +142,7 @@ public class DumpCache {
         Badge.bumpGeneration();
     }
 
-    private void stopRefresh() {
+    private static void stopRefresh() {
         if (refreshTask != null) {
             refreshTask.cancel(false);
             refreshTask = null;

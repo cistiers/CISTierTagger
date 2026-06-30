@@ -1,7 +1,6 @@
 package ru.kirushkinx.cistiertagger.gui.button;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -14,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
+
+import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 public class TextureIconButton extends Button {
 
@@ -47,7 +48,7 @@ public class TextureIconButton extends Button {
 
     private void ensureTextureSize() {
         if (texW > 0) return;
-        ResourceManager rm = Minecraft.getInstance().getResourceManager();
+        ResourceManager rm = mc.getResourceManager();
         Optional<Resource> resource = rm.getResource(texture);
         if (resource.isEmpty()) {
             texW = FALLBACK_SIZE;

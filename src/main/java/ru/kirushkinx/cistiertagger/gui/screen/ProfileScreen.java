@@ -1,7 +1,6 @@
 package ru.kirushkinx.cistiertagger.gui.screen;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.PlayerSkinWidget;
@@ -13,15 +12,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.api.dto.ProfileResponse;
+import ru.kirushkinx.cistiertagger.cache.DumpCache;
+import ru.kirushkinx.cistiertagger.cache.ProfileCache;
+import ru.kirushkinx.cistiertagger.cache.SkinCache;
+import ru.kirushkinx.cistiertagger.config.ConfigManager;
+import ru.kirushkinx.cistiertagger.decorate.Badge;
 import ru.kirushkinx.cistiertagger.gui.CisTierScreen;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
 import ru.kirushkinx.cistiertagger.model.Tier;
-import ru.kirushkinx.cistiertagger.decorate.Badge;
 
 import java.util.List;
 import java.util.Map;
+
+import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 public class ProfileScreen extends CisTierScreen {
 
@@ -56,18 +61,13 @@ public class ProfileScreen extends CisTierScreen {
     }
 
     public static void openFor(@NotNull String nickname, @Nullable Screen parent) {
-        Minecraft mc = Minecraft.getInstance();
-
         PlayerSkinWidget widget = new PlayerSkinWidget(SKIN_WIDTH, SKIN_HEIGHT, mc.getEntityModels(),
-                () -> CisTierTagger.getSkinCache().forNickname(nickname).get().get());
+                () -> SkinCache.forNickname(nickname).get().get());
         ProfileScreen screen = new ProfileScreen(nickname, widget, parent);
         mc.setScreen(screen);
 
-        var profileCache = CisTierTagger.getProfileCache();
-        if (profileCache != null) {
-            profileCache.fetch(nickname).whenComplete((response, error) ->
-                    mc.execute(() -> screen.applyProfile(response, error)));
-        }
+        ProfileCache.fetch(nickname).whenComplete((response, error) ->
+                mc.execute(() -> screen.applyProfile(response, error)));
     }
 
     private void applyProfile(@Nullable ProfileResponse response, @Nullable Throwable error) {
@@ -172,9 +172,7 @@ public class ProfileScreen extends CisTierScreen {
         this.addRenderableWidget(pointsWidget);
         rowY += 18;
 
-        PlayerTierData cached = CisTierTagger.getDumpCache() == null
-                ? null
-                : CisTierTagger.getDumpCache().lookup(nickname).orElse(null);
+        PlayerTierData cached = DumpCache.lookup(nickname).orElse(null);
 
         if (cached != null && !cached.tiers().isEmpty()) {
             StringWidget tiersHeader = new StringWidget(
@@ -187,7 +185,7 @@ public class ProfileScreen extends CisTierScreen {
 
             for (Map.Entry<Gamemode, Tier> entry : cached.tiers().entrySet()) {
                 Component badge = Badge.build(entry.getKey(), entry.getValue(), true,
-                        CisTierTagger.config().getBadgeMode());
+                        ConfigManager.get().getBadgeMode());
                 StringWidget tierWidget = new StringWidget(badge, this.font);
                 tierWidget.setX(paneX);
                 tierWidget.setY(rowY);
@@ -217,7 +215,7 @@ public class ProfileScreen extends CisTierScreen {
                 Component line;
                 if (gm != null && tier != null) {
                     line = Badge.build(gm, tier, true,
-                                CisTierTagger.config().getBadgeMode())
+                                ConfigManager.get().getBadgeMode())
                             .copy()
                             .append(Component.literal(" " + shortDate(h.date()))
                                     .withStyle(ChatFormatting.DARK_GRAY));

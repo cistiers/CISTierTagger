@@ -1,7 +1,6 @@
 package ru.kirushkinx.cistiertagger.gui.screen;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
@@ -17,7 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.kirushkinx.cistiertagger.CisTierTagger;
+import ru.kirushkinx.cistiertagger.cache.DumpCache;
+import ru.kirushkinx.cistiertagger.cache.SkinCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.gui.CisTierScreen;
@@ -36,6 +36,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 public class ConfigScreen extends CisTierScreen {
 
@@ -94,8 +96,7 @@ public class ConfigScreen extends CisTierScreen {
     @Override
     protected void init() {
         if (skinWidget == null) {
-            skinSupplierRef = CisTierTagger.getSkinCache().forClientPlayer();
-            Minecraft mc = Minecraft.getInstance();
+            skinSupplierRef = SkinCache.forClientPlayer();
             skinWidget = new PlayerSkinWidget(SKIN_W, SKIN_H, mc.getEntityModels(),
                     () -> skinSupplierRef.get().get());
         }
@@ -143,7 +144,7 @@ public class ConfigScreen extends CisTierScreen {
         addCornerItemButton(
                 this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET,
                 new ItemStack(Items.SPYGLASS),
-                btn -> Minecraft.getInstance().setScreen(new SearchScreen()),
+                btn -> mc.setScreen(new SearchScreen()),
                 TIP_OPEN_SEARCH);
 
         addCornerSiteButton(this.width - Layout.CORNER_BUTTON_INSET,
@@ -151,7 +152,7 @@ public class ConfigScreen extends CisTierScreen {
     }
 
     private void buildMain() {
-        ModConfig cfg = CisTierTagger.config();
+        ModConfig cfg = ConfigManager.get();
         int y = paneTop;
 
         addToggle(paneX, y, PANE_W, LBL_ENABLED, TIP_ENABLED, cfg.isEnabled(), cfg::setEnabled);
@@ -187,7 +188,7 @@ public class ConfigScreen extends CisTierScreen {
     }
 
     private void buildPriority() {
-        editingOrder = new ArrayList<>(CisTierTagger.config().getPriorityOrder());
+        editingOrder = new ArrayList<>(ConfigManager.get().getPriorityOrder());
         for (Gamemode gm : Gamemode.values()) {
             if (!editingOrder.contains(gm)) editingOrder.add(gm);
         }
@@ -226,7 +227,7 @@ public class ConfigScreen extends CisTierScreen {
 
         int doneY = y + editingOrder.size() * (Layout.BUTTON_HEIGHT + Layout.GAP_SMALL) + Layout.GAP_MEDIUM;
         this.addRenderableWidget(Button.builder(LBL_DONE, b -> {
-            CisTierTagger.config().setPriorityOrder(new ArrayList<>(editingOrder));
+            ConfigManager.get().setPriorityOrder(new ArrayList<>(editingOrder));
             Badge.bumpGeneration();
             switchTo(View.MAIN);
         }).bounds(paneX, doneY, PANE_W, Layout.BUTTON_HEIGHT).build());
@@ -235,7 +236,7 @@ public class ConfigScreen extends CisTierScreen {
     }
 
     private void buildGamemodes() {
-        ModConfig cfg = CisTierTagger.config();
+        ModConfig cfg = ConfigManager.get();
         Gamemode[] all = Gamemode.values();
         int y = paneTop + Layout.HEADER_OFFSET;
         int toggleW = 80;
@@ -262,7 +263,7 @@ public class ConfigScreen extends CisTierScreen {
     }
 
     private void applyEnabled(@NotNull Gamemode gm, boolean value) {
-        ModConfig config = CisTierTagger.config();
+        ModConfig config = ConfigManager.get();
         Set<Gamemode> current = config.getEnabledGamemodes();
         Set<Gamemode> next = current.isEmpty() ? EnumSet.noneOf(Gamemode.class) : EnumSet.copyOf(current);
         if (value) next.add(gm); else next.remove(gm);
@@ -372,7 +373,7 @@ public class ConfigScreen extends CisTierScreen {
             Component idx = Component.literal((i + 1) + ".").withStyle(ChatFormatting.DARK_GRAY);
             graphics.drawString(this.font, idx, labelX, rowY + 7, 0xFFAAAAAA, false);
             graphics.drawString(this.font,
-                    Badge.gamemodeLabel(gm, CisTierTagger.config().getBadgeMode()),
+                    Badge.gamemodeLabel(gm, ConfigManager.get().getBadgeMode()),
                     labelX + 16, rowY + 7, Layout.COLOR_TEXT, false);
         }
     }
@@ -387,7 +388,7 @@ public class ConfigScreen extends CisTierScreen {
         for (int i = 0; i < all.length; i++) {
             int rowY = y + i * (Layout.BUTTON_HEIGHT + Layout.GAP_SMALL);
             graphics.drawString(this.font,
-                    Badge.gamemodeLabel(all[i], CisTierTagger.config().getBadgeMode()),
+                    Badge.gamemodeLabel(all[i], ConfigManager.get().getBadgeMode()),
                     paneX + 6, rowY + 7, Layout.COLOR_TEXT, false);
         }
     }
@@ -409,16 +410,13 @@ public class ConfigScreen extends CisTierScreen {
     }
 
     private @NotNull Component buildPreviewName() {
-        Minecraft mc = Minecraft.getInstance();
         String selfName = mc.getGameProfile().name();
         Component base = Component.literal(selfName).withStyle(ChatFormatting.WHITE);
 
-        ModConfig cfg = CisTierTagger.config();
+        ModConfig cfg = ConfigManager.get();
         if (!cfg.isEnabled() || !cfg.isShowInNametag()) return base;
 
-        PlayerTierData realData = CisTierTagger.getDumpCache() == null
-                ? null
-                : CisTierTagger.getDumpCache().lookup(selfName).orElse(null);
+        PlayerTierData realData = DumpCache.lookup(selfName).orElse(null);
 
         if (realData != null) {
             Component decorated = Badge.decorate(selfName, base, Badge.DisplaySurface.NAMETAG, false);
@@ -431,8 +429,7 @@ public class ConfigScreen extends CisTierScreen {
     }
 
     private void closeAndSave() {
-        ConfigManager manager = CisTierTagger.getConfigManager();
-        if (manager != null) manager.save();
+        ConfigManager.save();
         returnToParent();
     }
 

@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
+import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
@@ -65,16 +66,12 @@ public class Badge {
 
     public static @Nullable Component decorate(@NotNull String nickname, @NotNull Component original,
                                                @NotNull DisplaySurface surface, boolean serverRestrictable) {
-        ModConfig cfg = configOrNull();
-        if (cfg == null) return null;
+        ModConfig cfg = ConfigManager.get();
         if (!cfg.isEnabled()) return null;
         if (!surfaceEnabled(cfg, surface)) return null;
         if (serverRestrictable && serverRestricted(surface)) return null;
 
-        DumpCache cache = CisTierTagger.getDumpCache();
-        if (cache == null) return null;
-
-        Map.Entry<Gamemode, Tier> selection = resolveSelection(cfg, cache, nickname);
+        Map.Entry<Gamemode, Tier> selection = resolveSelection(cfg, nickname);
         if (selection == null) return null;
 
         Gamemode gamemode = selection.getKey();
@@ -86,22 +83,20 @@ public class Badge {
     }
 
     private static @Nullable Map.Entry<Gamemode, Tier> resolveSelection(@NotNull ModConfig cfg,
-                                                                        @NotNull DumpCache cache,
                                                                         @NotNull String nickname) {
         String key = Nickname.normalize(nickname);
         long gen = GENERATION.get();
         CachedSelection cached = SELECTION_CACHE.get(key);
         if (cached != null && cached.generation == gen) return cached.selection;
 
-        Map.Entry<Gamemode, Tier> computed = computeSelection(cfg, cache, nickname);
+        Map.Entry<Gamemode, Tier> computed = computeSelection(cfg, nickname);
         SELECTION_CACHE.put(key, new CachedSelection(gen, computed));
         return computed;
     }
 
     private static @Nullable Map.Entry<Gamemode, Tier> computeSelection(@NotNull ModConfig cfg,
-                                                                        @NotNull DumpCache cache,
                                                                         @NotNull String nickname) {
-        Optional<PlayerTierData> dataOpt = cache.lookup(nickname);
+        Optional<PlayerTierData> dataOpt = DumpCache.lookup(nickname);
         if (dataOpt.isEmpty()) return null;
 
         PlayerTierData data = dataOpt.get();
@@ -220,11 +215,6 @@ public class Badge {
             case TAB -> ServerRestrictions.isTabRestricted();
             case CHAT -> ServerRestrictions.isChatRestricted();
         };
-    }
-
-    private static @Nullable ModConfig configOrNull() {
-        var manager = CisTierTagger.getConfigManager();
-        return manager == null ? null : manager.get();
     }
 
     public enum DisplaySurface {
