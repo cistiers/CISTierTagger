@@ -3,7 +3,6 @@ package ru.kirushkinx.cistiertagger.decorate;
 import lombok.experimental.UtilityClass;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -12,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
+import ru.kirushkinx.cistiertagger.util.TextCompat;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
@@ -29,10 +29,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @UtilityClass
 public class Badge {
 
-    public static final @NotNull FontDescription ICON_FONT = new FontDescription.Resource(
-            Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "icons"));
-    private static final @NotNull FontDescription BADGE_FONT = new FontDescription.Resource(
-            Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "badges"));
+    public static final @NotNull Identifier ICON_FONT = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "icons");
+    private static final @NotNull Identifier BADGE_FONT = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "badges");
     private static final int BADGE_CHAR_BASE = 0xE000; // PUA, range of U+E000 to U+F8FF
 
     /** Per-frame selection cache for the hot mixin render path. */
@@ -160,7 +158,7 @@ public class Badge {
     private static void append(@NotNull MutableComponent target, @NotNull Gamemode gamemode,
                                @NotNull Tier tier, @NotNull ModConfig.BadgeMode mode, boolean iconFirst) {
         if (mode == ModConfig.BadgeMode.IMAGE) {
-            target.append(badgeImage(gamemode, tier).withStyle(style -> style.withShadowColor(0)));
+            target.append(badgeImage(gamemode, tier).withStyle(TextCompat::noShadow));
             return;
         }
         Component icon = modeIcon(gamemode, mode);
@@ -176,12 +174,12 @@ public class Badge {
     private static @NotNull MutableComponent badgeImage(@NotNull Gamemode gamemode, @NotNull Tier tier) {
         int code = BADGE_CHAR_BASE + gamemode.ordinal() * Tier.values().length + tier.ordinal();
         return Component.literal(new String(Character.toChars(code)))
-                .setStyle(Style.EMPTY.withFont(BADGE_FONT).withColor(ChatFormatting.WHITE));
+                .setStyle(TextCompat.applyFont(Style.EMPTY, BADGE_FONT).withColor(ChatFormatting.WHITE));
     }
 
     private static @NotNull Component modeIcon(@NotNull Gamemode gamemode, @NotNull ModConfig.BadgeMode mode) {
         return switch (mode) {
-            case IMAGE -> Component.literal(gamemode.getIconString()).setStyle(Style.EMPTY.withFont(ICON_FONT));
+            case IMAGE -> Component.literal(gamemode.getIconString()).setStyle(TextCompat.applyFont(Style.EMPTY, ICON_FONT));
             case TEXT -> Component.literal(gamemode.getIconString())
                     .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(gamemode.getColor())));
         };
