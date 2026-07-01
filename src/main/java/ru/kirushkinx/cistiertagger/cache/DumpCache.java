@@ -33,7 +33,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DumpCache {
 
     private static final Duration REFRESH_INTERVAL = Duration.ofMinutes(10);
-    private static final Duration MIN_REFRESH_INTERVAL = Duration.ofMinutes(2);
 
     private static final @NotNull ScheduledExecutorService scheduler = Async.daemonScheduler(1, "cistiers-cache");
     private static final @NotNull PersistentCache disk = new PersistentCache();
@@ -51,16 +50,13 @@ public class DumpCache {
     private @Nullable ScheduledFuture<?> refreshTask;
 
     public static synchronized void init() {
-        Duration clamped = REFRESH_INTERVAL.compareTo(MIN_REFRESH_INTERVAL) < 0
-                ? MIN_REFRESH_INTERVAL : REFRESH_INTERVAL;
         disk.load().ifPresent(dump -> {
             applyDump(dump);
             log.info("Loaded persistent cache: {} players", store.get().size());
         });
         stopRefresh();
-        long seconds = Math.max(1, clamped.toSeconds());
         refreshTask = scheduler.scheduleWithFixedDelay(
-                DumpCache::refreshSilently, 0L, seconds, TimeUnit.SECONDS);
+                DumpCache::refreshSilently, 0L, REFRESH_INTERVAL.toSeconds(), TimeUnit.SECONDS);
     }
 
     public static synchronized void shutdown() {
