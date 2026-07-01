@@ -10,7 +10,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.NotNull;
-import ru.kirushkinx.cistiertagger.decorate.Badge;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.network.payload.HandshakePayload;
 import ru.kirushkinx.cistiertagger.network.payload.RestrictionPayload;
@@ -27,18 +26,13 @@ public class RestrictionNetworking {
 
         ClientPlayNetworking.registerGlobalReceiver(RestrictionPayload.TYPE, (payload, context) -> {
             ServerRestrictions.apply(payload.nametag(), payload.tab(), payload.chat());
-            Badge.bumpGeneration();
             if (ServerRestrictions.isAnyRestricted() && context.player() != null) {
                 context.player().displayClientMessage(message(), false);
             }
         });
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> sender.sendPacket(HandshakePayload.INSTANCE));
-
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            ServerRestrictions.clear();
-            Badge.bumpGeneration();
-        });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ServerRestrictions.clear());
     }
 
     private static Component message() {
