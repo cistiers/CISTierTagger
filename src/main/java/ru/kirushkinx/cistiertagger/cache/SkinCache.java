@@ -4,11 +4,10 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.NativeImage;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.SkinTextureDownloader;
+import net.minecraft.client.renderer.texture.HttpTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.PlayerModelType;
-import net.minecraft.world.entity.player.PlayerSkin;
+import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
@@ -50,7 +49,6 @@ public class SkinCache {
     private static final @NotNull ConcurrentHashMap<String, SkinEntry> skins = new ConcurrentHashMap<>();
     private static final @NotNull ConcurrentHashMap<String, HeadEntry> heads = new ConcurrentHashMap<>();
     private static final @NotNull ExecutorService io = Async.daemonExecutor(4, "cistiers-skin");
-    private volatile @Nullable SkinTextureDownloader downloader;
     private volatile @Nullable CompletableFuture<@Nullable Long> fallbackSkinHash;
     private volatile @Nullable CompletableFuture<@Nullable Long> fallbackHeadHash;
 
@@ -70,13 +68,14 @@ public class SkinCache {
     public static @NotNull AtomicReference<Supplier<PlayerSkin>> forClientPlayer() {
         GameProfile profile = mc.getGameProfile();
         if (hasTextures(profile)) {
-            return new AtomicReference<>(mc.getSkinManager().createLookup(profile, true));
+            PlayerSkin skin = mc.getSkinManager().getInsecureSkin(profile);
+            return new AtomicReference<>(() -> skin);
         }
-        return forNickname(profile.name());
+        return forNickname(profile.getName());
     }
 
     /** 16x16 head texture id, or null while still loading. */
-    public static @NotNull AtomicReference<@Nullable Identifier> headFor(@NotNull String nickname) {
+    public static @NotNull AtomicReference<@Nullable ResourceLocation> headFor(@NotNull String nickname) {
         String key = Nickname.normalize(nickname);
         HeadEntry entry = heads.computeIfAbsent(key, k -> new HeadEntry());
         maybeDownloadHead(entry, key, nickname);
@@ -95,51 +94,42 @@ public class SkinCache {
         expireIfStale(cachePath);
 
         String url = SKIN_URL + URLEncoder.encode(nickname, StandardCharsets.UTF_8);
-        Identifier textureId = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/" + key);
+        ResourceLocation textureId = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/" + key);
+        ResourceLocation fallback = DefaultPlayerSkin.get(offlineUuidFor(key)).texture();
 
-        getDownloader().downloadAndRegisterSkin(textureId, cachePath, url, true)
-                .whenCompleteAsync((texture, err) -> {
-                    if (err != null) {
-                        entry.dispatched.set(false);
-                        return;
-                    }
-                    if (isFallbackSkin(cachePath)) {
-                        deleteQuietly(cachePath);
-                        return;
-                    }
-                    PlayerModelType model = detectModel(cachePath);
-                    PlayerSkin skin = new PlayerSkin(texture, null, null, model, false);
-                    entry.ref.set(() -> skin);
-                }, io);
+        mc.execute(() -> {
+            HttpTexture texture = new HttpTexture(cachePath.toFile(), url, fallback, true,
+                    () -> io.execute(() -> onSkinReady(entry, cachePath, textureId)));
+            mc.getTextureManager().register(textureId, texture);
+        });
+    }
+
+    private static void onSkinReady(@NotNull SkinEntry entry, @NotNull Path cachePath, @NotNull ResourceLocation textureId) {
+        if (isFallbackSkin(cachePath)) {
+            deleteQuietly(cachePath);
+            return;
+        }
+        PlayerSkin.Model model = detectModel(cachePath);
+        PlayerSkin skin = new PlayerSkin(textureId, null, null, null, model, false);
+        entry.ref.set(() -> skin);
     }
 
     /** Detects slim/wide by sampling back-face left-arm pixels (x=46-47, y=52-53). */
-    private static @NotNull PlayerModelType detectModel(@NotNull Path cachePath) {
+    private static @NotNull PlayerSkin.Model detectModel(@NotNull Path cachePath) {
         try (InputStream in = Files.newInputStream(cachePath);
              NativeImage img = NativeImage.read(in)) {
-            if (img.getWidth() != 64 || img.getHeight() != 64) return PlayerModelType.WIDE;
+            if (img.getWidth() != 64 || img.getHeight() != 64) return PlayerSkin.Model.WIDE;
             return isTransparent(img, 46, 52) && isTransparent(img, 47, 52)
                     && isTransparent(img, 46, 53) && isTransparent(img, 47, 53)
-                    ? PlayerModelType.SLIM
-                    : PlayerModelType.WIDE;
+                    ? PlayerSkin.Model.SLIM
+                    : PlayerSkin.Model.WIDE;
         } catch (IOException e) {
-            return PlayerModelType.WIDE;
+            return PlayerSkin.Model.WIDE;
         }
     }
 
     private static boolean isTransparent(@NotNull NativeImage img, int x, int y) {
-        return ((img.getPixel(x, y) >>> 24) & 0xFF) == 0;
-    }
-
-    private static @NotNull SkinTextureDownloader getDownloader() {
-        SkinTextureDownloader local = downloader;
-        if (local != null) return local;
-        synchronized (SkinCache.class) {
-            if (downloader == null) {
-                downloader = new SkinTextureDownloader(mc.getProxy(), mc.getTextureManager(), mc::execute);
-            }
-            return downloader;
-        }
+        return ((img.getPixelRGBA(x, y) >>> 24) & 0xFF) == 0;
     }
 
     private static void maybeDownloadHead(@NotNull HeadEntry entry, @NotNull String key, @NotNull String nickname) {
@@ -149,7 +139,7 @@ public class SkinCache {
         expireIfStale(cachePath);
 
         String url = HEAD_URL + URLEncoder.encode(nickname, StandardCharsets.UTF_8) + "/" + HEAD_SIZE;
-        Identifier textureId = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "head/" + key);
+        ResourceLocation textureId = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "head/" + key);
 
         CompletableFuture.runAsync(() -> {
             NativeImage image = fetchHeadImage(url, cachePath);
@@ -163,7 +153,7 @@ public class SkinCache {
                 return;
             }
             mc.execute(() -> {
-                mc.getTextureManager().register(textureId, new DynamicTexture(textureId::toString, image));
+                mc.getTextureManager().register(textureId, new DynamicTexture(image));
                 entry.id.set(textureId);
             });
         }, io);
@@ -209,15 +199,8 @@ public class SkinCache {
         if (local != null) return local;
         synchronized (SkinCache.class) {
             if (fallbackSkinHash == null) {
-                Path probe = CacheDir.skins().resolve("__cistier_fallback__.png");
-                Identifier id = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/__cistier_fallback__");
-                fallbackSkinHash = getDownloader()
-                        .downloadAndRegisterSkin(id, probe, SKIN_URL + FALLBACK_PROBE, true)
-                        .handle((tex, err) -> {
-                            Long hash = err != null ? null : hashImageFile(probe);
-                            deleteQuietly(probe);
-                            return hash;
-                        });
+                fallbackSkinHash = CompletableFuture.supplyAsync(
+                        () -> hashImageBytes(httpGetBytes(SKIN_URL + FALLBACK_PROBE)));
             }
             return fallbackSkinHash;
         }
@@ -258,7 +241,7 @@ public class SkinCache {
         long hash = img.getWidth() * 31L + img.getHeight();
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) {
-                hash = hash * 31 + img.getPixel(x, y);
+                hash = hash * 31 + img.getPixelRGBA(x, y);
             }
         }
         return hash;
@@ -306,7 +289,7 @@ public class SkinCache {
     }
 
     private static boolean hasTextures(@NotNull GameProfile profile) {
-        return profile.properties() != null && !profile.properties().get("textures").isEmpty();
+        return profile.getProperties() != null && !profile.getProperties().get("textures").isEmpty();
     }
 
     private static final class SkinEntry {
@@ -319,7 +302,7 @@ public class SkinCache {
     }
 
     private static final class HeadEntry {
-        final AtomicReference<@Nullable Identifier> id = new AtomicReference<>(null);
+        final AtomicReference<@Nullable ResourceLocation> id = new AtomicReference<>(null);
         final AtomicBoolean dispatched = new AtomicBoolean(false);
     }
 }

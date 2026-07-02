@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
@@ -29,8 +29,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @UtilityClass
 public class Badge {
 
-    public static final @NotNull Identifier ICON_FONT = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "icons");
-    private static final @NotNull Identifier BADGE_FONT = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "badges");
+    public static final @NotNull ResourceLocation ICON_FONT = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "icons");
+    private static final @NotNull ResourceLocation BADGE_FONT = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "badges");
     private static final int BADGE_CHAR_BASE = 0xE000; // PUA, range of U+E000 to U+F8FF
 
     /** Per-frame selection cache for the hot mixin render path. */

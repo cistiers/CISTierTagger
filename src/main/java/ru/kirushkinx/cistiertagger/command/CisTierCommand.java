@@ -37,7 +37,7 @@ public class CisTierCommand {
         if (mc.getConnection() != null) {
             String remaining = Nickname.normalize(builder.getRemaining());
             for (PlayerInfo info : mc.getConnection().getOnlinePlayers()) {
-                String name = info.getProfile().name();
+                String name = info.getProfile().getName();
                 if (name == null) continue;
                 if (Nickname.normalize(name).startsWith(remaining)) {
                     builder.suggest(name);

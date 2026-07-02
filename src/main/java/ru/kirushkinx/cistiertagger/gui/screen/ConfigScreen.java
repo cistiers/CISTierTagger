@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.world.entity.player.PlayerSkin;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -247,7 +247,7 @@ public class ConfigScreen extends ModScreen {
         for (int i = 0; i < all.length; i++) {
             Gamemode gm = all[i];
             int rowY = y + i * (Layout.BUTTON_HEIGHT + Layout.GAP_SMALL);
-            CycleButton<Boolean> toggle = CycleButton.<Boolean>builder(formatter, cfg.isGamemodeEnabled(gm))
+            CycleButton<Boolean> toggle = CycleButton.<Boolean>builder(formatter).withInitialValue(cfg.isGamemodeEnabled(gm))
                     .withValues(true, false)
                     .displayOnlyValue()
                     .create(paneX + PANE_W - toggleW, rowY, toggleW, Layout.BUTTON_HEIGHT,
@@ -287,7 +287,7 @@ public class ConfigScreen extends ModScreen {
                         .append(value ? ON.copy().withStyle(ChatFormatting.GREEN)
                                       : OFF.copy().withStyle(ChatFormatting.RED));
         Tooltip tip = Tooltip.create(tooltip);
-        CycleButton<Boolean> button = CycleButton.<Boolean>builder(formatter, initial)
+        CycleButton<Boolean> button = CycleButton.<Boolean>builder(formatter).withInitialValue(initial)
                 .withValues(true, false)
                 .withTooltip(value -> tip)
                 .displayOnlyValue()
@@ -319,7 +319,7 @@ public class ConfigScreen extends ModScreen {
                     .append(valueComp);
         };
         Tooltip tip = Tooltip.create(tooltip);
-        CycleButton<E> button = CycleButton.<E>builder(formatter, initial)
+        CycleButton<E> button = CycleButton.<E>builder(formatter).withInitialValue(initial)
                 .withValues(constants)
                 .withTooltip(value -> tip)
                 .displayOnlyValue()
@@ -401,15 +401,15 @@ public class ConfigScreen extends ModScreen {
         float scale = 1.4f;
 
         var pose = graphics.pose();
-        pose.pushMatrix();
-        pose.translate(previewCenterX, previewY);
-        pose.scale(scale, scale);
+        pose.pushPose();
+        pose.translate(previewCenterX, previewY, 0.0);
+        pose.scale(scale, scale, 1.0F);
         graphics.drawString(this.font, preview, -textWidth / 2, 0, Layout.COLOR_TEXT, true);
-        pose.popMatrix();
+        pose.popPose();
     }
 
     private @NotNull Component buildPreviewName() {
-        String selfName = mc.getGameProfile().name();
+        String selfName = mc.getGameProfile().getName();
         Component base = Component.literal(selfName).withStyle(ChatFormatting.WHITE);
 
         ModConfig cfg = ConfigManager.get();

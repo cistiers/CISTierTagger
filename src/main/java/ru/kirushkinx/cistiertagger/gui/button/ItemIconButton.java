@@ -16,8 +16,8 @@ public class ItemIconButton extends Button {
     }
 
     @Override
-    protected void renderContents(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderDefaultSprite(graphics);
+    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.renderWidget(graphics, mouseX, mouseY, partialTick);
         int iconSize = 16;
         int iconX = getX() + (getWidth() - iconSize) / 2;
         int iconY = getY() + (getHeight() - iconSize) / 2;

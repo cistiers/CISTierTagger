@@ -6,11 +6,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -310,9 +307,9 @@ public class SearchScreen extends ModScreen {
     }
 
     private void drawHead(@NotNull GuiGraphics graphics, @NotNull String nickname, int x, int y) {
-        Identifier id = SkinCache.headFor(nickname).get();
+        ResourceLocation id = SkinCache.headFor(nickname).get();
         if (id != null) {
-            graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0f, 0f,
+            graphics.blit(id, x, y, HEAD_SIZE, HEAD_SIZE, 0.0F, 0.0F,
                     HEAD_SIZE, HEAD_SIZE, HEAD_SIZE, HEAD_SIZE);
         } else {
             PlayerFaceRenderer.draw(graphics, SkinCache.defaultSkinFor(nickname), x, y, HEAD_SIZE);
@@ -363,24 +360,24 @@ public class SearchScreen extends ModScreen {
     }
 
     @Override
-    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubleClicked) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         List<SearchResultEntry> snapshot = this.results;
-        if (event.button() == 0 && !snapshot.isEmpty()) {
-            if (handleScrollbarClick(event.x(), event.y(), snapshot)) return true;
+        if (button == 0 && !snapshot.isEmpty()) {
+            if (handleScrollbarClick(mouseX, mouseY, snapshot)) return true;
 
             int x = Layout.LIST_HORIZONTAL_MARGIN;
             int rowWidth = this.width - Layout.LIST_HORIZONTAL_MARGIN * 2;
             int visible = Math.min(maxVisibleRows(), snapshot.size() - scrollOffset);
             for (int i = 0; i < visible; i++) {
                 int rowY = Layout.LIST_TOP_OFFSET + i * Layout.LIST_ROW_HEIGHT;
-                if (event.x() >= x && event.x() <= x + rowWidth
-                        && event.y() >= rowY && event.y() <= rowY + Layout.LIST_ROW_HEIGHT - 2) {
+                if (mouseX >= x && mouseX <= x + rowWidth
+                        && mouseY >= rowY && mouseY <= rowY + Layout.LIST_ROW_HEIGHT - 2) {
                     openProfile(snapshot.get(scrollOffset + i).nickname());
                     return true;
                 }
             }
         }
-        return super.mouseClicked(event, doubleClicked);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private boolean handleScrollbarClick(double mouseX, double mouseY,
@@ -409,21 +406,21 @@ public class SearchScreen extends ModScreen {
     }
 
     @Override
-    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (draggingScrollbar) {
-            setScrollFromY(event.y(), this.results);
+            setScrollFromY(mouseY, this.results);
             return true;
         }
-        return super.mouseDragged(event, dragX, dragY);
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
-        if (draggingScrollbar && event.button() == 0) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (draggingScrollbar && button == 0) {
             draggingScrollbar = false;
             return true;
         }
-        return super.mouseReleased(event);
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -438,13 +435,12 @@ public class SearchScreen extends ModScreen {
     }
 
     @Override
-    public boolean keyPressed(@NotNull KeyEvent event) {
-        int keyCode = event.key();
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW_KEY_ENTER || keyCode == GLFW_KEY_KP_ENTER) {
             submit();
             return true;
         }
-        return super.keyPressed(event);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     private void submit() {

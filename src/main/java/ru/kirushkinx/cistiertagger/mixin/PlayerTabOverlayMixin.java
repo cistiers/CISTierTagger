@@ -24,8 +24,8 @@ public abstract class PlayerTabOverlayMixin {
 
     @Unique
     private static String nicknameOf(@NotNull PlayerInfo entry) {
-        if (entry.getProfile() != null && entry.getProfile().name() != null) {
-            return entry.getProfile().name();
+        if (entry.getProfile() != null && entry.getProfile().getName() != null) {
+            return entry.getProfile().getName();
         }
         return null;
     }

@@ -83,7 +83,7 @@ public class Chat {
         if (mc.getConnection() == null) return false;
         String key = Nickname.normalize(word);
         for (PlayerInfo info : mc.getConnection().getOnlinePlayers()) {
-            String name = info.getProfile().name();
+            String name = info.getProfile().getName();
             if (name != null && Nickname.normalize(name).equals(key)) return true;
         }
         return false;

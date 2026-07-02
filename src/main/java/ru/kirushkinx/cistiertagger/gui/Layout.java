@@ -1,7 +1,7 @@
 package ru.kirushkinx.cistiertagger.gui;
 
 import lombok.experimental.UtilityClass;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 
 /** Shared spacing, size and color constants to stay screens visually consistent. */
@@ -33,7 +33,7 @@ public class Layout {
     public static final int SCROLLBAR_GAP = 4;
     public static final int SCROLLBAR_MIN_THUMB_H = 16;
 
-    public static final Identifier LOGO_TEXTURE = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "textures/logo.png");
+    public static final ResourceLocation LOGO_TEXTURE = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "textures/logo.png");
 
     public static final int COLOR_TEXT = 0xFFFFFFFF;
     public static final int COLOR_HEADER = 0xFFCCCCCC;
