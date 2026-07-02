@@ -1,4 +1,4 @@
-package ru.kirushkinx.cistiertagger.gui;
+package ru.kirushkinx.cistiertagger.gui.screen;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
+import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
 import ru.kirushkinx.cistiertagger.gui.button.TextureIconButton;
 
@@ -17,17 +18,17 @@ import java.net.URI;
 import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
 /** Base screen with shared helpers for corner buttons and parent navigation. */
-public abstract class CisTierScreen extends Screen {
+public abstract class ModScreen extends Screen {
 
     protected static final Component TIP_OPEN_SITE = Component.translatable("cistiertagger.tooltip.open_site");
 
     protected final @Nullable Screen parent;
 
-    protected CisTierScreen(@NotNull Component title) {
+    protected ModScreen(@NotNull Component title) {
         this(title, null);
     }
 
-    protected CisTierScreen(@NotNull Component title, @Nullable Screen parent) {
+    protected ModScreen(@NotNull Component title, @Nullable Screen parent) {
         super(title);
         this.parent = parent;
     }

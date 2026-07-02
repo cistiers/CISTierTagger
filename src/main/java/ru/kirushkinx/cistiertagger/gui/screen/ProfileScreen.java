@@ -17,7 +17,6 @@ import ru.kirushkinx.cistiertagger.cache.ProfileCache;
 import ru.kirushkinx.cistiertagger.cache.SkinCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.decorate.Badge;
-import ru.kirushkinx.cistiertagger.gui.CisTierScreen;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
@@ -28,7 +27,7 @@ import java.util.Map;
 
 import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
-public class ProfileScreen extends CisTierScreen {
+public class ProfileScreen extends ModScreen {
 
     private static final Component TITLE = Component.translatable("cistiertagger.screen.profile.title");
     private static final Component BACK = Component.translatable("cistiertagger.button.back");

@@ -21,7 +21,6 @@ import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.cache.SkinCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
-import ru.kirushkinx.cistiertagger.gui.CisTierScreen;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
@@ -44,7 +43,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_ENTER;
 import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
-public class SearchScreen extends CisTierScreen {
+public class SearchScreen extends ModScreen {
 
     private static final Component TITLE = Component.translatable("cistiertagger.screen.search.title");
     private static final Component HINT = Component.translatable("cistiertagger.screen.search.hint");

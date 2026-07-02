@@ -20,7 +20,6 @@ import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.cache.SkinCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
-import ru.kirushkinx.cistiertagger.gui.CisTierScreen;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
@@ -39,7 +38,7 @@ import java.util.function.Supplier;
 
 import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
-public class ConfigScreen extends CisTierScreen {
+public class ConfigScreen extends ModScreen {
 
     private static final Component TITLE = Component.translatable("cistiertagger.screen.config.title");
     private static final Component RESTRICTED = Component.translatable("cistiertagger.restriction.config");
