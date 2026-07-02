@@ -23,7 +23,7 @@ public class IconTextButton extends IconButton {
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(graphics, mouseX, mouseY, partialTick);
+        renderButtonBackground(graphics, this);
         Font font = mc.font;
         int total = ICON + GAP + font.width(getMessage());
         int startX = getX() + (getWidth() - total) / 2;

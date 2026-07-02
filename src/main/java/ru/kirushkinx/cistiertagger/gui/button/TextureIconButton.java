@@ -18,7 +18,7 @@ public class TextureIconButton extends IconButton {
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(graphics, mouseX, mouseY, partialTick);
+        renderButtonBackground(graphics, this);
         int iconX = getX() + (getWidth() - iconSize) / 2;
         int iconY = getY() + (getHeight() - iconSize) / 2;
         blitIcon(graphics, iconX, iconY, iconSize);

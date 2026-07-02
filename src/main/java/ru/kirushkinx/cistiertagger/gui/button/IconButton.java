@@ -2,6 +2,7 @@ package ru.kirushkinx.cistiertagger.gui.button;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,10 @@ public abstract class IconButton extends Button {
 
     private static final int FALLBACK = 16;
 
+    private static final ResourceLocation BUTTON = ResourceLocation.withDefaultNamespace("widget/button");
+    private static final ResourceLocation BUTTON_DISABLED = ResourceLocation.withDefaultNamespace("widget/button_disabled");
+    private static final ResourceLocation BUTTON_HIGHLIGHTED = ResourceLocation.withDefaultNamespace("widget/button_highlighted");
+
     protected final @NotNull ResourceLocation texture;
     private int texW = -1;
     private int texH = -1;
@@ -31,6 +36,12 @@ public abstract class IconButton extends Button {
     protected void blitIcon(@NotNull GuiGraphics graphics, int x, int y, int size) {
         ensureTextureSize();
         graphics.blit(texture, x, y, size, size, 0.0F, 0.0F, texW, texH, texW, texH);
+    }
+
+    static void renderButtonBackground(@NotNull GuiGraphics graphics, @NotNull AbstractWidget widget) {
+        ResourceLocation sprite = !widget.active ? BUTTON_DISABLED
+                : widget.isHoveredOrFocused() ? BUTTON_HIGHLIGHTED : BUTTON;
+        graphics.blitSprite(sprite, widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
     }
 
     private void ensureTextureSize() {
