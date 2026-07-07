@@ -16,10 +16,10 @@ public class TextCompat {
     }
 
     public static @NotNull Style noShadow(@NotNull Style base) {
-        return base;
+        return base.withShadowColor(0);
     }
 
     public static @NotNull HoverEvent showText(@NotNull Component text) {
-        return new HoverEvent(HoverEvent.Action.SHOW_TEXT, text);
+        return new HoverEvent.ShowText(text);
     }
 }
