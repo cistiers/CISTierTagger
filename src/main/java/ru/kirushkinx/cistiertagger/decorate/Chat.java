@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.PlainTextContents;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.jetbrains.annotations.NotNull;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
@@ -35,6 +36,8 @@ public class Chat {
 
         if (component.getContents() instanceof PlainTextContents.LiteralContents literal) {
             rebuilt = decorateLiteral(literal.text(), style);
+        } else if (component.getContents() instanceof TranslatableContents translatable) {
+            rebuilt = decorateTranslatable(translatable, style);
         } else {
             rebuilt = MutableComponent.create(component.getContents()).setStyle(style);
         }
@@ -43,6 +46,24 @@ public class Chat {
             rebuilt.append(processComponent(sibling));
         }
         return rebuilt;
+    }
+
+    private static @NotNull MutableComponent decorateTranslatable(@NotNull TranslatableContents translatable,
+                                                                  @NotNull Style baseStyle) {
+        Object[] args = translatable.getArgs();
+        Object[] newArgs = new Object[args.length];
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg instanceof Component argComponent) {
+                newArgs[i] = processComponent(argComponent);
+            } else if (arg instanceof String argString) {
+                newArgs[i] = decorateLiteral(argString, baseStyle);
+            } else {
+                newArgs[i] = arg;
+            }
+        }
+        return MutableComponent.create(
+                new TranslatableContents(translatable.getKey(), translatable.getFallback(), newArgs)).setStyle(baseStyle);
     }
 
     private static @NotNull MutableComponent decorateLiteral(@NotNull String text, @NotNull Style baseStyle) {
