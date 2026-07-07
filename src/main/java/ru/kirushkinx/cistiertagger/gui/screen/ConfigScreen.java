@@ -401,11 +401,11 @@ public class ConfigScreen extends ModScreen {
         float scale = 1.4f;
 
         var pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(previewCenterX, previewY, 0.0);
-        pose.scale(scale, scale, 1.0F);
+        pose.pushMatrix();
+        pose.translate(previewCenterX, previewY);
+        pose.scale(scale, scale);
         graphics.drawString(this.font, preview, -textWidth / 2, 0, Layout.COLOR_TEXT, true);
-        pose.popPose();
+        pose.popMatrix();
     }
 
     private @NotNull Component buildPreviewName() {
