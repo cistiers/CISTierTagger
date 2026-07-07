@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -310,7 +310,7 @@ public class SearchScreen extends ModScreen {
     private void drawHead(@NotNull GuiGraphics graphics, @NotNull String nickname, int x, int y) {
         ResourceLocation id = SkinCache.headFor(nickname).get();
         if (id != null) {
-            graphics.blit(RenderType::guiTextured, id, x, y, 0.0F, 0.0F,
+            graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0.0F, 0.0F,
                     HEAD_SIZE, HEAD_SIZE, HEAD_SIZE, HEAD_SIZE);
         } else {
             PlayerFaceRenderer.draw(graphics, SkinCache.defaultSkinFor(nickname), x, y, HEAD_SIZE);

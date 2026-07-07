@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -36,13 +36,13 @@ public abstract class IconButton extends Button {
 
     protected void blitIcon(@NotNull GuiGraphics graphics, int x, int y, int size) {
         ensureTextureSize();
-        graphics.blit(RenderType::guiTextured, texture, x, y, 0.0F, 0.0F, size, size, texW, texH, texW, texH);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0.0F, 0.0F, size, size, texW, texH, texW, texH);
     }
 
     static void renderButtonBackground(@NotNull GuiGraphics graphics, @NotNull AbstractWidget widget) {
         ResourceLocation sprite = !widget.active ? BUTTON_DISABLED
                 : widget.isHoveredOrFocused() ? BUTTON_HIGHLIGHTED : BUTTON;
-        graphics.blitSprite(RenderType::guiTextured, sprite, widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
     }
 
     private void ensureTextureSize() {
