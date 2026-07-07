@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.NativeImage;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.HttpTexture;
+import net.minecraft.client.renderer.texture.SkinTextureDownloader;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
@@ -95,23 +95,21 @@ public class SkinCache {
 
         String url = SKIN_URL + URLEncoder.encode(nickname, StandardCharsets.UTF_8);
         ResourceLocation textureId = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/" + key);
-        ResourceLocation fallback = DefaultPlayerSkin.get(offlineUuidFor(key)).texture();
 
-        mc.execute(() -> {
-            HttpTexture texture = new HttpTexture(cachePath.toFile(), url, fallback, true,
-                    () -> io.execute(() -> onSkinReady(entry, cachePath, textureId)));
-            mc.getTextureManager().register(textureId, texture);
-        });
-    }
-
-    private static void onSkinReady(@NotNull SkinEntry entry, @NotNull Path cachePath, @NotNull ResourceLocation textureId) {
-        if (isFallbackSkin(cachePath)) {
-            deleteQuietly(cachePath);
-            return;
-        }
-        PlayerSkin.Model model = detectModel(cachePath);
-        PlayerSkin skin = new PlayerSkin(textureId, null, null, null, model, false);
-        entry.ref.set(() -> skin);
+        SkinTextureDownloader.downloadAndRegisterSkin(textureId, cachePath, url, true)
+                .whenCompleteAsync((texture, err) -> {
+                    if (err != null) {
+                        entry.dispatched.set(false);
+                        return;
+                    }
+                    if (isFallbackSkin(cachePath)) {
+                        deleteQuietly(cachePath);
+                        return;
+                    }
+                    PlayerSkin.Model model = detectModel(cachePath);
+                    PlayerSkin skin = new PlayerSkin(texture, null, null, null, model, false);
+                    entry.ref.set(() -> skin);
+                }, io);
     }
 
     /** Detects slim/wide by sampling back-face left-arm pixels (x=46-47, y=52-53). */
@@ -129,7 +127,7 @@ public class SkinCache {
     }
 
     private static boolean isTransparent(@NotNull NativeImage img, int x, int y) {
-        return ((img.getPixelRGBA(x, y) >>> 24) & 0xFF) == 0;
+        return ((img.getPixel(x, y) >>> 24) & 0xFF) == 0;
     }
 
     private static void maybeDownloadHead(@NotNull HeadEntry entry, @NotNull String key, @NotNull String nickname) {
@@ -241,7 +239,7 @@ public class SkinCache {
         long hash = img.getWidth() * 31L + img.getHeight();
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) {
-                hash = hash * 31 + img.getPixelRGBA(x, y);
+                hash = hash * 31 + img.getPixel(x, y);
             }
         }
         return hash;
