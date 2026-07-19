@@ -1,6 +1,6 @@
 package ru.kirushkinx.cistiertagger.mixin;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -48,11 +48,11 @@ public abstract class TitleScreenMixin extends Screen {
         cistiertagger$infoY = top - 20;
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
-    private void cistiertagger$renderInfo(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void cistiertagger$renderInfo(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         if (cistiertagger$infoY <= 0 || mc.getWindow().getGuiScale() >= 4) return;
-        graphics.drawCenteredString(this.font, INFO_TITLE, this.width / 2, cistiertagger$infoY, Layout.COLOR_WARN);
-        graphics.drawCenteredString(this.font, INFO_SUBTITLE, this.width / 2, cistiertagger$infoY + 11, Layout.COLOR_DIM);
+        graphics.centeredText(this.font, INFO_TITLE, this.width / 2, cistiertagger$infoY, Layout.COLOR_WARN);
+        graphics.centeredText(this.font, INFO_SUBTITLE, this.width / 2, cistiertagger$infoY + 11, Layout.COLOR_DIM);
     }
 
     @Unique
