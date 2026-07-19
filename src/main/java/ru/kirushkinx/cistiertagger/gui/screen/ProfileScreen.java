@@ -1,7 +1,7 @@
 package ru.kirushkinx.cistiertagger.gui.screen;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.PlayerSkinWidget;
 import net.minecraft.client.gui.components.StringWidget;
@@ -237,9 +237,9 @@ public class ProfileScreen extends ModScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        graphics.drawCenteredString(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
         graphics.fill(20, 38, this.width - 20, 39, Layout.COLOR_ROW_HOVER);
     }
 

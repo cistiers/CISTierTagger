@@ -1,18 +1,15 @@
 package ru.kirushkinx.cistiertagger.gui.screen;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.PlayerFaceRenderer;
-import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.PlayerFaceExtractor;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import ru.kirushkinx.cistiertagger.api.CisTiersClient;
 import ru.kirushkinx.cistiertagger.api.dto.LeaderboardEntry;
@@ -22,7 +19,6 @@ import ru.kirushkinx.cistiertagger.cache.SkinCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.gui.Layout;
-import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
 import ru.kirushkinx.cistiertagger.model.Tier;
@@ -90,13 +86,11 @@ public class SearchScreen extends ModScreen {
                         .bounds(centerX + boxWidth / 2 + 8, 44, 60, 22)
                         .build());
 
-        ItemIconButton settingsButton = new ItemIconButton(
-                this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET, Layout.CORNER_BUTTON_SIZE,
-                new ItemStack(Items.COMPARATOR),
+        addCornerIconButton(
+                this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET,
+                Layout.CONFIG_ICON_TEXTURE,
                 btn -> mc.setScreen(new ConfigScreen(this)),
                 TIP_SETTINGS);
-        settingsButton.setTooltip(Tooltip.create(TIP_SETTINGS));
-        this.addRenderableWidget(settingsButton);
 
         addCornerSiteButton(this.width - Layout.CORNER_BUTTON_INSET,
                 this.height - Layout.CORNER_BUTTON_INSET - Layout.CORNER_BUTTON_STACK);
@@ -190,14 +184,14 @@ public class SearchScreen extends ModScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        graphics.drawCenteredString(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
         renderResults(graphics, mouseX, mouseY);
         renderStatus(graphics);
     }
 
-    private void renderStatus(@NotNull GuiGraphics graphics) {
+    private void renderStatus(@NotNull GuiGraphicsExtractor graphics) {
         Component statusComponent;
         int color;
         if (errorMessage != null) {
@@ -217,10 +211,10 @@ public class SearchScreen extends ModScreen {
             }
             color = Layout.COLOR_DIM;
         }
-        graphics.drawCenteredString(this.font, statusComponent, this.width / 2, this.height - 18, color);
+        graphics.centeredText(this.font, statusComponent, this.width / 2, this.height - 18, color);
     }
 
-    private void renderResults(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+    private void renderResults(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         List<SearchResultEntry> snapshot = this.results;
         if (snapshot.isEmpty()) return;
 
@@ -242,17 +236,17 @@ public class SearchScreen extends ModScreen {
             drawHead(graphics, entry.nickname(), headX, headY);
 
             Component nicknameComp = Component.literal(entry.nickname()).withStyle(ChatFormatting.WHITE);
-            graphics.drawString(this.font, nicknameComp, x + textOffset, rowY + 7, Layout.COLOR_TEXT, false);
+            graphics.text(this.font, nicknameComp, x + textOffset, rowY + 7, Layout.COLOR_TEXT, false);
 
             Component tierLine = topTierComponent(entry);
             int tierX = x + rowWidth - this.font.width(tierLine) - 8;
-            graphics.drawString(this.font, tierLine, tierX, rowY + 7, Layout.COLOR_TEXT, false);
+            graphics.text(this.font, tierLine, tierX, rowY + 7, Layout.COLOR_TEXT, false);
         }
 
         renderScrollbar(graphics, mouseX, mouseY, snapshot);
     }
 
-    private void renderScrollbar(@NotNull GuiGraphics graphics, int mouseX, int mouseY,
+    private void renderScrollbar(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY,
                                  @NotNull List<SearchResultEntry> snapshot) {
         if (snapshot.size() <= maxVisibleRows()) return;
 
@@ -309,13 +303,13 @@ public class SearchScreen extends ModScreen {
         scrollOffset = Math.max(0, Math.min(maxScroll, next));
     }
 
-    private void drawHead(@NotNull GuiGraphics graphics, @NotNull String nickname, int x, int y) {
+    private void drawHead(@NotNull GuiGraphicsExtractor graphics, @NotNull String nickname, int x, int y) {
         Identifier id = SkinCache.headFor(nickname).get();
         if (id != null) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0f, 0f,
                     HEAD_SIZE, HEAD_SIZE, HEAD_SIZE, HEAD_SIZE);
         } else {
-            PlayerFaceRenderer.draw(graphics, SkinCache.defaultSkinFor(nickname), x, y, HEAD_SIZE);
+            PlayerFaceExtractor.extractRenderState(graphics, SkinCache.defaultSkinFor(nickname), x, y, HEAD_SIZE);
         }
     }
 

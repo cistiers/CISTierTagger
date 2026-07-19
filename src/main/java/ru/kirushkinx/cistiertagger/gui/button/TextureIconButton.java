@@ -1,6 +1,6 @@
 package ru.kirushkinx.cistiertagger.gui.button;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +17,8 @@ public class TextureIconButton extends IconButton {
     }
 
     @Override
-    protected void renderContents(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderDefaultSprite(graphics);
+    protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        extractDefaultSprite(graphics);
         int iconX = getX() + (getWidth() - iconSize) / 2;
         int iconY = getY() + (getHeight() - iconSize) / 2;
         blitIcon(graphics, iconX, iconY, iconSize);

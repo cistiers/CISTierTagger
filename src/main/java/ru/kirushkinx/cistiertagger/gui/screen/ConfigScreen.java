@@ -1,7 +1,7 @@
 package ru.kirushkinx.cistiertagger.gui.screen;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.PlayerSkinWidget;
@@ -12,8 +12,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.player.PlayerSkin;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
@@ -140,9 +138,9 @@ public class ConfigScreen extends ModScreen {
         this.addRenderableWidget(Button.builder(LBL_SAVE, btn -> closeAndSave())
                 .bounds(saveX, saveY, Layout.FOOTER_BUTTON_WIDTH, Layout.BUTTON_HEIGHT).build());
 
-        addCornerItemButton(
+        addCornerIconButton(
                 this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET,
-                new ItemStack(Items.SPYGLASS),
+                Layout.SEARCH_ICON_TEXTURE,
                 btn -> mc.setScreen(new SearchScreen()),
                 TIP_OPEN_SEARCH);
 
@@ -331,12 +329,12 @@ public class ConfigScreen extends ModScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        graphics.drawCenteredString(this.font, TITLE, this.width / 2, 14, Layout.COLOR_TEXT);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(this.font, TITLE, this.width / 2, 14, Layout.COLOR_TEXT);
         if (ServerRestrictions.isAnyRestricted()) {
             int noticeY = (14 + this.font.lineHeight + paneTop) / 2 - this.font.lineHeight / 2;
-            graphics.drawCenteredString(this.font, RESTRICTED, this.width / 2, noticeY, Layout.COLOR_WARN);
+            graphics.centeredText(this.font, RESTRICTED, this.width / 2, noticeY, Layout.COLOR_WARN);
         }
 
         renderPreviewNametag(graphics);
@@ -347,20 +345,20 @@ public class ConfigScreen extends ModScreen {
         }
     }
 
-    private void renderMainHeaders(@NotNull GuiGraphics graphics) {
+    private void renderMainHeaders(@NotNull GuiGraphicsExtractor graphics) {
         int y = paneTop + Layout.BUTTON_HEIGHT + Layout.SECTION_GAP - 2;
-        graphics.drawString(this.font,
+        graphics.text(this.font,
                 HEADER_VISIBILITY.copy().withStyle(ChatFormatting.GRAY),
                 paneX, y, Layout.COLOR_HEADER, false);
 
         y += Layout.HEADER_OFFSET + (Layout.BUTTON_HEIGHT + Layout.GAP_SMALL) * 3 + Layout.SECTION_GAP - 2;
-        graphics.drawString(this.font,
+        graphics.text(this.font,
                 HEADER_GAMEMODES.copy().withStyle(ChatFormatting.GRAY),
                 paneX, y, Layout.COLOR_HEADER, false);
     }
 
-    private void renderPriorityList(@NotNull GuiGraphics graphics) {
-        graphics.drawString(this.font,
+    private void renderPriorityList(@NotNull GuiGraphicsExtractor graphics) {
+        graphics.text(this.font,
                 HEADER_PRIORITY_SUB.copy().withStyle(ChatFormatting.GRAY),
                 paneX, paneTop, Layout.COLOR_HEADER, false);
 
@@ -370,15 +368,15 @@ public class ConfigScreen extends ModScreen {
             int rowY = y + i * (Layout.BUTTON_HEIGHT + Layout.GAP_SMALL);
             Gamemode gm = editingOrder.get(i);
             Component idx = Component.literal((i + 1) + ".").withStyle(ChatFormatting.DARK_GRAY);
-            graphics.drawString(this.font, idx, labelX, rowY + 7, 0xFFAAAAAA, false);
-            graphics.drawString(this.font,
+            graphics.text(this.font, idx, labelX, rowY + 7, 0xFFAAAAAA, false);
+            graphics.text(this.font,
                     Badge.gamemodeLabel(gm, ConfigManager.get().getBadgeMode()),
                     labelX + 16, rowY + 7, Layout.COLOR_TEXT, false);
         }
     }
 
-    private void renderGamemodesList(@NotNull GuiGraphics graphics) {
-        graphics.drawString(this.font,
+    private void renderGamemodesList(@NotNull GuiGraphicsExtractor graphics) {
+        graphics.text(this.font,
                 HEADER_GAMEMODES_SUB.copy().withStyle(ChatFormatting.GRAY),
                 paneX, paneTop, Layout.COLOR_HEADER, false);
 
@@ -386,13 +384,13 @@ public class ConfigScreen extends ModScreen {
         int y = paneTop + Layout.HEADER_OFFSET;
         for (int i = 0; i < all.length; i++) {
             int rowY = y + i * (Layout.BUTTON_HEIGHT + Layout.GAP_SMALL);
-            graphics.drawString(this.font,
+            graphics.text(this.font,
                     Badge.gamemodeLabel(all[i], ConfigManager.get().getBadgeMode()),
                     paneX + 6, rowY + 7, Layout.COLOR_TEXT, false);
         }
     }
 
-    private void renderPreviewNametag(@NotNull GuiGraphics graphics) {
+    private void renderPreviewNametag(@NotNull GuiGraphicsExtractor graphics) {
         if (skinWidget == null) return;
         Component preview = buildPreviewName();
         int textWidth = this.font.width(preview);
@@ -404,7 +402,7 @@ public class ConfigScreen extends ModScreen {
         pose.pushMatrix();
         pose.translate(previewCenterX, previewY);
         pose.scale(scale, scale);
-        graphics.drawString(this.font, preview, -textWidth / 2, 0, Layout.COLOR_TEXT, true);
+        graphics.text(this.font, preview, -textWidth / 2, 0, Layout.COLOR_TEXT, true);
         pose.popMatrix();
     }
 

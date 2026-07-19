@@ -83,7 +83,7 @@ public class SkinCache {
         return entry.id;
     }
 
-    /** Default skin to render via PlayerFaceRenderer while {@link #headFor} is loading. */
+    /** Default skin to render via PlayerFaceExtractor while {@link #headFor} is loading. */
     public static @NotNull PlayerSkin defaultSkinFor(@NotNull String nickname) {
         return DefaultPlayerSkin.get(offlineUuidFor(Nickname.normalize(nickname)));
     }

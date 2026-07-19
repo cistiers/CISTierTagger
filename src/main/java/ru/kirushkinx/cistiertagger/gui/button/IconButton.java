@@ -1,7 +1,7 @@
 package ru.kirushkinx.cistiertagger.gui.button;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -29,7 +29,7 @@ public abstract class IconButton extends Button {
         this.texture = texture;
     }
 
-    protected void blitIcon(@NotNull GuiGraphics graphics, int x, int y, int size) {
+    protected void blitIcon(@NotNull GuiGraphicsExtractor graphics, int x, int y, int size) {
         ensureTextureSize();
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0f, 0f, size, size, texW, texH, texW, texH);
     }

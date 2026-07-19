@@ -5,12 +5,11 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.gui.Layout;
-import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
 import ru.kirushkinx.cistiertagger.gui.button.TextureIconButton;
 
 import java.net.URI;
@@ -43,22 +42,19 @@ public abstract class ModScreen extends Screen {
     }
 
     protected void addCornerSiteButton(int x, int y, @NotNull String url, @NotNull Component tooltip) {
+        addCornerIconButton(x, y, Layout.LOGO_TEXTURE,
+                btn -> ConfirmLinkScreen.confirmLinkNow(this, URI.create(url)),
+                tooltip);
+    }
+
+    protected void addCornerIconButton(int x, int y,
+                                       @NotNull Identifier icon,
+                                       @NotNull Button.OnPress onPress,
+                                       @NotNull Component tooltip) {
         TextureIconButton button = new TextureIconButton(
                 x, y,
                 Layout.CORNER_BUTTON_SIZE, Layout.CORNER_BUTTON_ICON_SIZE,
-                Layout.LOGO_TEXTURE,
-                btn -> ConfirmLinkScreen.confirmLinkNow(this, URI.create(url)),
-                tooltip);
-        button.setTooltip(Tooltip.create(tooltip));
-        this.addRenderableWidget(button);
-    }
-
-    protected void addCornerItemButton(int x, int y,
-                                       @NotNull ItemStack icon,
-                                       @NotNull Button.OnPress onPress,
-                                       @NotNull Component tooltip) {
-        ItemIconButton button = new ItemIconButton(
-                x, y, Layout.CORNER_BUTTON_SIZE, icon, onPress, tooltip);
+                icon, onPress, tooltip);
         button.setTooltip(Tooltip.create(tooltip));
         this.addRenderableWidget(button);
     }

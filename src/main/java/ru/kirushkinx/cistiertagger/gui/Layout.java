@@ -34,6 +34,8 @@ public class Layout {
     public static final int SCROLLBAR_MIN_THUMB_H = 16;
 
     public static final Identifier LOGO_TEXTURE = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "textures/logo.png");
+    public static final Identifier SEARCH_ICON_TEXTURE = Identifier.withDefaultNamespace("textures/item/spyglass.png");
+    public static final Identifier CONFIG_ICON_TEXTURE = Identifier.withDefaultNamespace("textures/item/comparator.png");
 
     public static final int COLOR_TEXT = 0xFFFFFFFF;
     public static final int COLOR_HEADER = 0xFFCCCCCC;

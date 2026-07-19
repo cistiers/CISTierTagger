@@ -1,7 +1,7 @@
 package ru.kirushkinx.cistiertagger.gui.button;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -22,13 +22,13 @@ public class IconTextButton extends IconButton {
     }
 
     @Override
-    protected void renderContents(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderDefaultSprite(graphics);
+    protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        extractDefaultSprite(graphics);
         Font font = mc.font;
         int total = ICON + GAP + font.width(getMessage());
         int startX = getX() + (getWidth() - total) / 2;
         int iconY = getY() + (getHeight() - ICON) / 2;
         blitIcon(graphics, startX, iconY, ICON);
-        graphics.drawString(font, getMessage(), startX + ICON + GAP, getY() + (getHeight() - font.lineHeight) / 2 + 1, textColor, true);
+        graphics.text(font, getMessage(), startX + ICON + GAP, getY() + (getHeight() - font.lineHeight) / 2 + 1, textColor, true);
     }
 }
