@@ -11,13 +11,13 @@ base {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
     withSourcesJar()
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    options.release.set(21)
+    options.release.set(25)
 }
 
 repositories {
@@ -26,12 +26,10 @@ repositories {
 
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.layered {
-        officialMojangMappings()
-    })
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.api)
-    modImplementation(libs.modmenu)
+
+    implementation(libs.fabric.loader)
+    implementation(libs.fabric.api)
+    implementation(libs.modmenu)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
