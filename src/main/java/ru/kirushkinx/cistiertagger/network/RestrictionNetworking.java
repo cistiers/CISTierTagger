@@ -11,13 +11,13 @@ import ru.kirushkinx.cistiertagger.network.payload.RestrictionPayload;
 public class RestrictionNetworking {
 
     public void register() {
-        PayloadTypeRegistry.playS2C().register(RestrictionPayload.TYPE, RestrictionPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(HandshakePayload.TYPE, HandshakePayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(RestrictionPayload.TYPE, RestrictionPayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(HandshakePayload.TYPE, HandshakePayload.CODEC);
 
         ClientPlayNetworking.registerGlobalReceiver(RestrictionPayload.TYPE, (payload, context) -> {
             ServerRestrictions.apply(payload.nametag(), payload.tab(), payload.chat());
             if (ServerRestrictions.isAnyRestricted() && context.player() != null) {
-                context.player().displayClientMessage(RestrictionNotice.message(), false);
+                context.player().sendSystemMessage(RestrictionNotice.message());
             }
         });
 

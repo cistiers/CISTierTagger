@@ -3,7 +3,7 @@ package ru.kirushkinx.cistiertagger.command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -18,12 +18,12 @@ public class CisTierCommand {
 
     public static void register() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            dispatcher.register(ClientCommandManager.literal("cistier")
+            dispatcher.register(ClientCommands.literal("cistier")
                     .executes(ctx -> {
                         mc.execute(() -> mc.setScreen(new SearchScreen()));
                         return 1;
                     })
-                    .then(ClientCommandManager.argument("nickname", StringArgumentType.word())
+                    .then(ClientCommands.argument("nickname", StringArgumentType.word())
                             .suggests(ONLINE_PLAYERS)
                             .executes(ctx -> {
                                 String nick = StringArgumentType.getString(ctx, "nickname");
