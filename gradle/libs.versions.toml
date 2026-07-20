@@ -13,7 +13,7 @@ fabric-loader   = { group = "net.fabricmc",              name = "fabric-loader",
 fabric-api      = { group = "net.fabricmc.fabric-api",   name = "fabric-api",                    version.ref = "fabric-api"  }
 lombok          = { group = "org.projectlombok",         name = "lombok",                        version.ref = "lombok"      }
 annotations     = { group = "org.jetbrains",             name = "annotations",                   version.ref = "annotations" }
-modmenu         = { group = "com.terraformersmc",        name = "modmenu",                       version.ref = "modmenu"     }
+modmenu         = { group = "maven.modrinth",            name = "modmenu",                       version.ref = "modmenu"     }
 
 [plugins]
 loom = { id = "fabric-loom", version.ref = "loom" }
