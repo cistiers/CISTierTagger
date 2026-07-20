@@ -89,7 +89,7 @@ public class SearchScreen extends ModScreen {
         addCornerIconButton(
                 this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET,
                 Layout.CONFIG_ICON_TEXTURE,
-                btn -> mc.setScreen(new ConfigScreen(this)),
+                btn -> mc.gui.setScreen(new ConfigScreen(this)),
                 TIP_SETTINGS);
 
         addCornerSiteButton(this.width - Layout.CORNER_BUTTON_INSET,

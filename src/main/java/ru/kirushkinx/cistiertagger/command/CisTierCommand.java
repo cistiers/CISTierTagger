@@ -20,7 +20,7 @@ public class CisTierCommand {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(ClientCommands.literal("cistier")
                     .executes(ctx -> {
-                        mc.execute(() -> mc.setScreen(new SearchScreen()));
+                        mc.execute(() -> mc.gui.setScreen(new SearchScreen()));
                         return 1;
                     })
                     .then(ClientCommands.argument("nickname", StringArgumentType.word())

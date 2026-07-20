@@ -33,7 +33,7 @@ public abstract class ModScreen extends Screen {
     }
 
     protected void returnToParent() {
-        mc.setScreen(parent);
+        mc.gui.setScreen(parent);
     }
 
     /** Adds the corner logo button that opens cistiers.com through the link-confirm screen. */

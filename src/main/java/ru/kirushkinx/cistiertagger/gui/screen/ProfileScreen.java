@@ -63,7 +63,7 @@ public class ProfileScreen extends ModScreen {
         PlayerSkinWidget widget = new PlayerSkinWidget(SKIN_WIDTH, SKIN_HEIGHT, mc.getEntityModels(),
                 () -> SkinCache.forNickname(nickname).get().get());
         ProfileScreen screen = new ProfileScreen(nickname, widget, parent);
-        mc.setScreen(screen);
+        mc.gui.setScreen(screen);
 
         ProfileCache.fetch(nickname).whenComplete((response, error) ->
                 mc.execute(() -> screen.applyProfile(response, error)));
