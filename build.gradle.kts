@@ -29,9 +29,9 @@ dependencies {
     mappings(loom.layered {
         officialMojangMappings()
     })
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.api)
-    modImplementation(libs.modmenu)
+    modApi(libs.fabric.loader)
+    modApi(libs.fabric.api)
+    modApi(libs.modmenu)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
