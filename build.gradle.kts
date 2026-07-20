@@ -21,7 +21,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 repositories {
-    maven("https://maven.terraformersmc.com/releases/")
+    maven("https://api.modrinth.com/maven")
 }
 
 dependencies {
