@@ -27,9 +27,9 @@ repositories {
 dependencies {
     minecraft(libs.minecraft)
 
-    implementation(libs.fabric.loader)
-    implementation(libs.fabric.api)
-    implementation(libs.modmenu)
+    api(libs.fabric.loader)
+    api(libs.fabric.api)
+    api(libs.modmenu)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
