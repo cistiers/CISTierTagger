@@ -43,7 +43,7 @@ public abstract class TitleScreenMixin extends Screen {
         int top = this.height - 45;
         this.addRenderableWidget(new IconTextButton(this.width / 2 - 100, top, 200, 20,
                 UPDATE_BUTTON, 0xFFFFFFFF, Layout.LOGO_TEXTURE,
-                b -> ConfirmLinkScreen.confirmLinkNow(this, update.url())));
+                b -> ConfirmLinkScreen.confirmLinkNow(update.url(), this, false)));
         cistiertagger$infoY = top - 20;
     }
 

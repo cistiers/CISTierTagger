@@ -5,7 +5,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.contents.PlainTextContents;
+import net.minecraft.network.chat.contents.LiteralContents;
 import org.jetbrains.annotations.NotNull;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
@@ -33,7 +33,7 @@ public class Chat {
         Style style = component.getStyle();
         MutableComponent rebuilt;
 
-        if (component.getContents() instanceof PlainTextContents.LiteralContents literal) {
+        if (component.getContents() instanceof LiteralContents literal) {
             rebuilt = decorateLiteral(literal.text(), style);
         } else {
             rebuilt = MutableComponent.create(component.getContents()).setStyle(style);

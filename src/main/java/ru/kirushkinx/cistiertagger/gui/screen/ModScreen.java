@@ -46,7 +46,7 @@ public abstract class ModScreen extends Screen {
                 x, y,
                 Layout.CORNER_BUTTON_SIZE, Layout.CORNER_BUTTON_ICON_SIZE,
                 Layout.LOGO_TEXTURE,
-                btn -> ConfirmLinkScreen.confirmLinkNow(this, url),
+                btn -> ConfirmLinkScreen.confirmLinkNow(url, this, false),
                 tooltip);
         button.setTooltip(Tooltip.create(tooltip));
         this.addRenderableWidget(button);

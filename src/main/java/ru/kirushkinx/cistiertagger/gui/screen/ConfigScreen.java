@@ -121,7 +121,8 @@ public class ConfigScreen extends ModScreen {
             return;
         }
         this.clearWidgets();
-        skinWidget.setSize(SKIN_W, SKIN_H);
+        skinWidget.setWidth(SKIN_W);
+        skinWidget.setHeight(SKIN_H);
         skinWidget.setPosition(skinX, skinY);
         this.addRenderableWidget(skinWidget);
 
@@ -196,7 +197,8 @@ public class ConfigScreen extends ModScreen {
 
     private void rebuildPriorityRows() {
         this.clearWidgets();
-        skinWidget.setSize(SKIN_W, SKIN_H);
+        skinWidget.setWidth(SKIN_W);
+        skinWidget.setHeight(SKIN_H);
         skinWidget.setPosition(skinX, skinY);
         this.addRenderableWidget(skinWidget);
 
