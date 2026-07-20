@@ -29,8 +29,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @UtilityClass
 public class Badge {
 
-    public static final @NotNull ResourceLocation ICON_FONT = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "icons");
-    private static final @NotNull ResourceLocation BADGE_FONT = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "badges");
+    public static final @NotNull ResourceLocation ICON_FONT = new ResourceLocation(CisTierTagger.MOD_ID, "icons");
+    private static final @NotNull ResourceLocation BADGE_FONT = new ResourceLocation(CisTierTagger.MOD_ID, "badges");
     private static final int BADGE_CHAR_BASE = 0xE000; // PUA, range of U+E000 to U+F8FF
 
     /** Per-frame selection cache for the hot mixin render path. */

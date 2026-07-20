@@ -16,7 +16,6 @@ import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.gui.button.IconTextButton;
 
-import java.net.URI;
 
 import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
@@ -44,7 +43,7 @@ public abstract class TitleScreenMixin extends Screen {
         int top = this.height - 45;
         this.addRenderableWidget(new IconTextButton(this.width / 2 - 100, top, 200, 20,
                 UPDATE_BUTTON, 0xFFFFFFFF, Layout.LOGO_TEXTURE,
-                b -> ConfirmLinkScreen.confirmLinkNow(this, URI.create(update.url()))));
+                b -> ConfirmLinkScreen.confirmLinkNow(this, update.url())));
         cistiertagger$infoY = top - 20;
     }
 

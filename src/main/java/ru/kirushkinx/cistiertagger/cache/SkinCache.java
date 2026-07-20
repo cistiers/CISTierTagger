@@ -94,7 +94,7 @@ public class SkinCache {
         expireIfStale(cachePath);
 
         String url = SKIN_URL + URLEncoder.encode(nickname, StandardCharsets.UTF_8);
-        ResourceLocation textureId = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/" + key);
+        ResourceLocation textureId = new ResourceLocation(CisTierTagger.MOD_ID, "skin/" + key);
         ResourceLocation fallback = DefaultPlayerSkin.get(offlineUuidFor(key)).texture();
 
         mc.execute(() -> {
@@ -139,7 +139,7 @@ public class SkinCache {
         expireIfStale(cachePath);
 
         String url = HEAD_URL + URLEncoder.encode(nickname, StandardCharsets.UTF_8) + "/" + HEAD_SIZE;
-        ResourceLocation textureId = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "head/" + key);
+        ResourceLocation textureId = new ResourceLocation(CisTierTagger.MOD_ID, "head/" + key);
 
         CompletableFuture.runAsync(() -> {
             NativeImage image = fetchHeadImage(url, cachePath);

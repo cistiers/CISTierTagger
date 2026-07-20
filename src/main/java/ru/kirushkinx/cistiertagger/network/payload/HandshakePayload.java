@@ -12,7 +12,7 @@ public record HandshakePayload() implements CustomPacketPayload {
 
     public static final @NotNull HandshakePayload INSTANCE = new HandshakePayload();
 
-    public static final @NotNull Type<HandshakePayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "handshake"));
+    public static final @NotNull Type<HandshakePayload> TYPE = new Type<>(new ResourceLocation(CisTierTagger.MOD_ID, "handshake"));
 
     public static final @NotNull StreamCodec<RegistryFriendlyByteBuf, HandshakePayload> CODEC = StreamCodec.unit(INSTANCE);
 

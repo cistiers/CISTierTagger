@@ -33,7 +33,7 @@ public class Layout {
     public static final int SCROLLBAR_GAP = 4;
     public static final int SCROLLBAR_MIN_THUMB_H = 16;
 
-    public static final ResourceLocation LOGO_TEXTURE = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "textures/logo.png");
+    public static final ResourceLocation LOGO_TEXTURE = new ResourceLocation(CisTierTagger.MOD_ID, "textures/logo.png");
 
     public static final int COLOR_TEXT = 0xFFFFFFFF;
     public static final int COLOR_HEADER = 0xFFCCCCCC;

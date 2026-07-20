@@ -13,7 +13,6 @@ import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
 import ru.kirushkinx.cistiertagger.gui.button.TextureIconButton;
 
-import java.net.URI;
 
 import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
@@ -47,7 +46,7 @@ public abstract class ModScreen extends Screen {
                 x, y,
                 Layout.CORNER_BUTTON_SIZE, Layout.CORNER_BUTTON_ICON_SIZE,
                 Layout.LOGO_TEXTURE,
-                btn -> ConfirmLinkScreen.confirmLinkNow(this, URI.create(url)),
+                btn -> ConfirmLinkScreen.confirmLinkNow(this, url),
                 tooltip);
         button.setTooltip(Tooltip.create(tooltip));
         this.addRenderableWidget(button);

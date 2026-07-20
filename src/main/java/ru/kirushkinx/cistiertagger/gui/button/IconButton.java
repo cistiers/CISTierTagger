@@ -19,9 +19,9 @@ public abstract class IconButton extends Button {
 
     private static final int FALLBACK = 16;
 
-    private static final ResourceLocation BUTTON = ResourceLocation.withDefaultNamespace("widget/button");
-    private static final ResourceLocation BUTTON_DISABLED = ResourceLocation.withDefaultNamespace("widget/button_disabled");
-    private static final ResourceLocation BUTTON_HIGHLIGHTED = ResourceLocation.withDefaultNamespace("widget/button_highlighted");
+    private static final ResourceLocation BUTTON = new ResourceLocation("widget/button");
+    private static final ResourceLocation BUTTON_DISABLED = new ResourceLocation("widget/button_disabled");
+    private static final ResourceLocation BUTTON_HIGHLIGHTED = new ResourceLocation("widget/button_highlighted");
 
     protected final @NotNull ResourceLocation texture;
     private int texW = -1;

@@ -10,7 +10,7 @@ import ru.kirushkinx.cistiertagger.CisTierTagger;
 /** Server -> client packet telling the client which display surfaces it must not draw. */
 public record RestrictionPayload(boolean nametag, boolean tab, boolean chat) implements CustomPacketPayload {
 
-    public static final @NotNull Type<RestrictionPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "restrict"));
+    public static final @NotNull Type<RestrictionPayload> TYPE = new Type<>(new ResourceLocation(CisTierTagger.MOD_ID, "restrict"));
 
     public static final @NotNull StreamCodec<RegistryFriendlyByteBuf, RestrictionPayload> CODEC = StreamCodec.of(
             (buf, payload) -> {
