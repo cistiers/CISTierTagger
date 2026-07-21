@@ -22,12 +22,14 @@ tasks.withType<JavaCompile>().configureEach {
 
 repositories {
     maven("https://api.modrinth.com/maven")
+    maven("https://maven.parchmentmc.org")
 }
 
 dependencies {
     minecraft(libs.minecraft)
     mappings(loom.layered {
         officialMojangMappings()
+        parchment("${libs.parchment.get()}@zip")
     })
     modApi(libs.fabric.loader)
     modApi(libs.fabric.api)
