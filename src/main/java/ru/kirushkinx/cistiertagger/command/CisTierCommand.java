@@ -20,14 +20,14 @@ public class CisTierCommand {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
                 dispatcher.register(ClientCommandManager.literal("cistier")
                         .executes(ctx -> {
-                            mc.tell(() -> mc.setScreen(new SearchScreen())); // enqueue, not inline
+                            mc.execute(() -> mc.setScreen(new SearchScreen())); // enqueue, not inline
                             return 1;
                         })
                         .then(ClientCommandManager.argument("nickname", StringArgumentType.word())
                                 .suggests(ONLINE_PLAYERS)
                                 .executes(ctx -> {
                                     String nick = StringArgumentType.getString(ctx, "nickname");
-                                    mc.tell(() -> ProfileScreen.openFor(nick));
+                                    mc.execute(() -> ProfileScreen.openFor(nick));
                                     return 1;
                                 }))));
     }

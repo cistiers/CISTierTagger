@@ -129,7 +129,7 @@ public class SkinCache {
     }
 
     private static boolean isTransparent(@NotNull NativeImage img, int x, int y) {
-        return ((img.getPixelRGBA(x, y) >>> 24) & 0xFF) == 0;
+        return ((img.getPixel(x, y) >>> 24) & 0xFF) == 0;
     }
 
     private static void maybeDownloadHead(@NotNull HeadEntry entry, @NotNull String key, @NotNull String nickname) {
@@ -241,7 +241,7 @@ public class SkinCache {
         long hash = img.getWidth() * 31L + img.getHeight();
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) {
-                hash = hash * 31 + img.getPixelRGBA(x, y);
+                hash = hash * 31 + img.getPixel(x, y);
             }
         }
         return hash;
