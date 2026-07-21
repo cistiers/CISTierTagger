@@ -2,22 +2,22 @@ package ru.kirushkinx.cistiertagger.gui.screen;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
-import net.minecraft.client.gui.components.PlayerSkinWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.cache.SkinCache;
+import ru.kirushkinx.cistiertagger.gui.PlayerBodyWidget;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.gui.Layout;
@@ -79,8 +79,8 @@ public class ConfigScreen extends ModScreen {
     private static final int SKIN_W = 96;
     private static final int SKIN_H = 180;
 
-    private @Nullable PlayerSkinWidget skinWidget;
-    private @NotNull AtomicReference<Supplier<PlayerSkin>> skinSupplierRef = new AtomicReference<>();
+    private @Nullable PlayerBodyWidget skinWidget;
+    private @NotNull AtomicReference<@Nullable ResourceLocation> bodyRef = new AtomicReference<>();
     private int skinX;
     private int skinY;
     private int paneX;
@@ -95,9 +95,8 @@ public class ConfigScreen extends ModScreen {
     @Override
     protected void init() {
         if (skinWidget == null) {
-            skinSupplierRef = SkinCache.forClientPlayer();
-            skinWidget = new PlayerSkinWidget(SKIN_W, SKIN_H, mc.getEntityModels(),
-                    () -> skinSupplierRef.get().get());
+            bodyRef = SkinCache.bodyFor(mc.getUser().getName());
+            skinWidget = new PlayerBodyWidget(SKIN_W, SKIN_H, () -> bodyRef.get());
         }
         recomputeLayout();
         rebuild();
@@ -122,7 +121,6 @@ public class ConfigScreen extends ModScreen {
         }
         this.clearWidgets();
         skinWidget.setWidth(SKIN_W);
-        skinWidget.setHeight(SKIN_H);
         skinWidget.setPosition(skinX, skinY);
         this.addRenderableWidget(skinWidget);
 
@@ -198,7 +196,6 @@ public class ConfigScreen extends ModScreen {
     private void rebuildPriorityRows() {
         this.clearWidgets();
         skinWidget.setWidth(SKIN_W);
-        skinWidget.setHeight(SKIN_H);
         skinWidget.setPosition(skinX, skinY);
         this.addRenderableWidget(skinWidget);
 
@@ -334,6 +331,7 @@ public class ConfigScreen extends ModScreen {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
         graphics.drawCenteredString(this.font, TITLE, this.width / 2, 14, Layout.COLOR_TEXT);
         if (ServerRestrictions.isAnyRestricted()) {
@@ -411,7 +409,7 @@ public class ConfigScreen extends ModScreen {
     }
 
     private @NotNull Component buildPreviewName() {
-        String selfName = mc.getGameProfile().getName();
+        String selfName = mc.getUser().getName();
         Component base = Component.literal(selfName).withStyle(ChatFormatting.WHITE);
 
         ModConfig cfg = ConfigManager.get();

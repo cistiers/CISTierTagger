@@ -188,6 +188,7 @@ public class SearchScreen extends ModScreen {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
         graphics.drawCenteredString(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
         renderResults(graphics, mouseX, mouseY);
@@ -424,14 +425,14 @@ public class SearchScreen extends ModScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
         List<SearchResultEntry> snapshot = this.results;
         if (snapshot.size() > maxVisibleRows()) {
             int delta = scrollY > 0 ? -1 : 1;
             scrollOffset = Math.max(0, Math.min(snapshot.size() - maxVisibleRows(), scrollOffset + delta));
             return true;
         }
-        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+        return super.mouseScrolled(mouseX, mouseY, scrollY);
     }
 
     @Override
