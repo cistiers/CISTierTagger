@@ -1,11 +1,11 @@
 [versions]
-minecraft     = "1.21.4"
+minecraft     = "1.21.5"
 loader        = "0.18.4"
-fabric-api    = "0.119.3+1.21.4"
+fabric-api    = "0.128.2+1.21.5"
 loom          = "1.16-SNAPSHOT"
 lombok        = "1.18.44"
 annotations   = "26.1.0"
-modmenu       = "13.0.4"
+modmenu       = "14.0.2"
 
 [libraries]
 minecraft       = { group = "com.mojang",                name = "minecraft",                     version.ref = "minecraft"   }
