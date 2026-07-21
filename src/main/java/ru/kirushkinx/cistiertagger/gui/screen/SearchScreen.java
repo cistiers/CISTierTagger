@@ -10,7 +10,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -310,7 +310,7 @@ public class SearchScreen extends ModScreen {
     }
 
     private void drawHead(@NotNull GuiGraphics graphics, @NotNull String nickname, int x, int y) {
-        Identifier id = SkinCache.headFor(nickname).get();
+        ResourceLocation id = SkinCache.headFor(nickname).get();
         if (id != null) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0f, 0f,
                     HEAD_SIZE, HEAD_SIZE, HEAD_SIZE, HEAD_SIZE);

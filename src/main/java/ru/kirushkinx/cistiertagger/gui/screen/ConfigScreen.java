@@ -247,7 +247,7 @@ public class ConfigScreen extends ModScreen {
         for (int i = 0; i < all.length; i++) {
             Gamemode gm = all[i];
             int rowY = y + i * (Layout.BUTTON_HEIGHT + Layout.GAP_SMALL);
-            CycleButton<Boolean> toggle = CycleButton.<Boolean>builder(formatter, cfg.isGamemodeEnabled(gm))
+            CycleButton<Boolean> toggle = CycleButton.<Boolean>builder(formatter).withInitialValue(cfg.isGamemodeEnabled(gm))
                     .withValues(true, false)
                     .displayOnlyValue()
                     .create(paneX + PANE_W - toggleW, rowY, toggleW, Layout.BUTTON_HEIGHT,
@@ -287,7 +287,7 @@ public class ConfigScreen extends ModScreen {
                         .append(value ? ON.copy().withStyle(ChatFormatting.GREEN)
                                       : OFF.copy().withStyle(ChatFormatting.RED));
         Tooltip tip = Tooltip.create(tooltip);
-        CycleButton<Boolean> button = CycleButton.<Boolean>builder(formatter, initial)
+        CycleButton<Boolean> button = CycleButton.<Boolean>builder(formatter).withInitialValue(initial)
                 .withValues(true, false)
                 .withTooltip(value -> tip)
                 .displayOnlyValue()
@@ -319,7 +319,7 @@ public class ConfigScreen extends ModScreen {
                     .append(valueComp);
         };
         Tooltip tip = Tooltip.create(tooltip);
-        CycleButton<E> button = CycleButton.<E>builder(formatter, initial)
+        CycleButton<E> button = CycleButton.<E>builder(formatter).withInitialValue(initial)
                 .withValues(constants)
                 .withTooltip(value -> tip)
                 .displayOnlyValue()

@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.SkinTextureDownloader;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.PlayerModelType;
 import net.minecraft.world.entity.player.PlayerSkin;
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +76,7 @@ public class SkinCache {
     }
 
     /** 16x16 head texture id, or null while still loading. */
-    public static @NotNull AtomicReference<@Nullable Identifier> headFor(@NotNull String nickname) {
+    public static @NotNull AtomicReference<@Nullable ResourceLocation> headFor(@NotNull String nickname) {
         String key = Nickname.normalize(nickname);
         HeadEntry entry = heads.computeIfAbsent(key, k -> new HeadEntry());
         maybeDownloadHead(entry, key, nickname);
@@ -95,7 +95,7 @@ public class SkinCache {
         expireIfStale(cachePath);
 
         String url = SKIN_URL + URLEncoder.encode(nickname, StandardCharsets.UTF_8);
-        Identifier textureId = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/" + key);
+        ResourceLocation textureId = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/" + key);
 
         getDownloader().downloadAndRegisterSkin(textureId, cachePath, url, true)
                 .whenCompleteAsync((texture, err) -> {
@@ -149,7 +149,7 @@ public class SkinCache {
         expireIfStale(cachePath);
 
         String url = HEAD_URL + URLEncoder.encode(nickname, StandardCharsets.UTF_8) + "/" + HEAD_SIZE;
-        Identifier textureId = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "head/" + key);
+        ResourceLocation textureId = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "head/" + key);
 
         CompletableFuture.runAsync(() -> {
             NativeImage image = fetchHeadImage(url, cachePath);
@@ -210,7 +210,7 @@ public class SkinCache {
         synchronized (SkinCache.class) {
             if (fallbackSkinHash == null) {
                 Path probe = CacheDir.skins().resolve("__cistier_fallback__.png");
-                Identifier id = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/__cistier_fallback__");
+                ResourceLocation id = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "skin/__cistier_fallback__");
                 fallbackSkinHash = getDownloader()
                         .downloadAndRegisterSkin(id, probe, SKIN_URL + FALLBACK_PROBE, true)
                         .handle((tex, err) -> {
@@ -319,7 +319,7 @@ public class SkinCache {
     }
 
     private static final class HeadEntry {
-        final AtomicReference<@Nullable Identifier> id = new AtomicReference<>(null);
+        final AtomicReference<@Nullable ResourceLocation> id = new AtomicReference<>(null);
         final AtomicBoolean dispatched = new AtomicBoolean(false);
     }
 }
