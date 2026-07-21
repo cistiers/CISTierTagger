@@ -20,6 +20,6 @@ public class TextCompat {
     }
 
     public static @NotNull HoverEvent showText(@NotNull Component text) {
-        return new HoverEvent(HoverEvent.Action.SHOW_TEXT, text);
+        return new HoverEvent.ShowText(text);
     }
 }

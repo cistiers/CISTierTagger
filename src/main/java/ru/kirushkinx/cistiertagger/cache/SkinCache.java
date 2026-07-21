@@ -151,7 +151,7 @@ public class SkinCache {
                 return;
             }
             mc.execute(() -> {
-                mc.getTextureManager().register(textureId, new DynamicTexture(image));
+                mc.getTextureManager().register(textureId, new DynamicTexture(textureId::toString, image));
                 entry.id.set(textureId);
             });
         }, io);
