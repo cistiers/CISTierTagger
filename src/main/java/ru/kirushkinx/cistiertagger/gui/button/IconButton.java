@@ -19,9 +19,7 @@ public abstract class IconButton extends Button {
 
     private static final int FALLBACK = 16;
 
-    private static final ResourceLocation BUTTON = new ResourceLocation("widget/button");
-    private static final ResourceLocation BUTTON_DISABLED = new ResourceLocation("widget/button_disabled");
-    private static final ResourceLocation BUTTON_HIGHLIGHTED = new ResourceLocation("widget/button_highlighted");
+    private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
 
     protected final @NotNull ResourceLocation texture;
     private int texW = -1;
@@ -39,9 +37,9 @@ public abstract class IconButton extends Button {
     }
 
     static void renderButtonBackground(@NotNull GuiGraphics graphics, @NotNull AbstractWidget widget) {
-        ResourceLocation sprite = !widget.active ? BUTTON_DISABLED
-                : widget.isHoveredOrFocused() ? BUTTON_HIGHLIGHTED : BUTTON;
-        graphics.blitSprite(sprite, widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
+        int state = !widget.active ? 0 : widget.isHoveredOrFocused() ? 2 : 1;
+        graphics.blitNineSliced(WIDGETS, widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(),
+                20, 4, 200, 20, 0, 46 + state * 20);
     }
 
     private void ensureTextureSize() {
