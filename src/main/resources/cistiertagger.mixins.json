@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "ru.kirushkinx.cistiertagger.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
     "PlayerRendererMixin",
