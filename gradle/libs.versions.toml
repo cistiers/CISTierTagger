@@ -6,7 +6,7 @@ loom          = "1.16-SNAPSHOT"
 lombok        = "1.18.44"
 annotations   = "26.1.0"
 modmenu       = "8.0.1"
-parchment     = "2024.04.14"
+parchment     = "2023.12.10"
 
 [libraries]
 minecraft       = { group = "com.mojang",                name = "minecraft",                     version.ref = "minecraft"   }
@@ -15,7 +15,7 @@ fabric-api      = { group = "net.fabricmc.fabric-api",   name = "fabric-api",   
 lombok          = { group = "org.projectlombok",         name = "lombok",                        version.ref = "lombok"      }
 annotations     = { group = "org.jetbrains",             name = "annotations",                   version.ref = "annotations" }
 modmenu         = { group = "maven.modrinth",            name = "modmenu",                       version.ref = "modmenu"     }
-parchment       = { group = "org.parchmentmc.data",      name = "parchment-1.20.4",  version.ref = "parchment"   }
+parchment       = { group = "org.parchmentmc.data",      name = "parchment-1.20.2",  version.ref = "parchment"   }
 
 [plugins]
 loom = { id = "fabric-loom", version.ref = "loom" }
