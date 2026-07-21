@@ -1,0 +1,155 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Mod version"
+        required: true
+      versions:
+        description: "Branches to publish, space/comma separated (empty = all)"
+        required: false
+        default: ""
+      changelog:
+        description: "Changelog (markdown)"
+        required: false
+        default: ""
+      release_type:
+        description: "Release channel"
+        type: choice
+        options: [release, beta, alpha]
+        default: release
+      dry_run:
+        description: "Build only, do not publish"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.version }}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.gen.outputs.matrix }}
+    steps:
+      - name: Build matrix from selection
+        id: gen
+        env:
+          SELECTED: ${{ inputs.versions }}
+        run: |
+          ALL='[
+            {"branch":"1.20.2","mc":"1.20.2","java":"17","game_versions":"1.20.2"},
+            {"branch":"1.20.3","mc":"1.20.3","java":"17","game_versions":"1.20.3 1.20.4"},
+            {"branch":"1.20.5","mc":"1.20.5","java":"21","game_versions":"1.20.5 1.20.6"},
+            {"branch":"1.21","mc":"1.21","java":"21","game_versions":"1.21 1.21.1"},
+            {"branch":"1.21.2","mc":"1.21.2","java":"21","game_versions":"1.21.2 1.21.3"},
+            {"branch":"1.21.4","mc":"1.21.4","java":"21","game_versions":"1.21.4"},
+            {"branch":"1.21.5","mc":"1.21.5","java":"21","game_versions":"1.21.5"},
+            {"branch":"1.21.6","mc":"1.21.6","java":"21","game_versions":"1.21.6 1.21.7 1.21.8"},
+            {"branch":"1.21.9","mc":"1.21.9","java":"21","game_versions":"1.21.9 1.21.10"},
+            {"branch":"1.21.11","mc":"1.21.11","java":"21","game_versions":"1.21.11"},
+            {"branch":"26.1","mc":"26.1","java":"25","game_versions":"26.1"},
+            {"branch":"26.2","mc":"26.2","java":"25","game_versions":"26.2"}
+          ]'
+          if [ -z "$(echo "$SELECTED" | tr -d '[:space:]')" ] || [ "$SELECTED" = "all" ]; then
+            INCLUDE=$(echo "$ALL" | jq -c .)
+          else
+            SEL=$(echo "$SELECTED" | tr ',' ' ' | tr -s ' ' '\n' | jq -R . | jq -s -c 'map(select(length > 0))')
+            INCLUDE=$(echo "$ALL" | jq -c --argjson sel "$SEL" '[ .[] | select( .branch as $b | $sel | index($b) ) ]')
+          fi
+          echo "matrix={\"include\":$INCLUDE}" >> "$GITHUB_OUTPUT"
+          echo "Selected branches:"; echo "$INCLUDE" | jq -r '.[].branch'
+
+  create-release:
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ inputs.version }}" \
+            --repo "${{ github.repository }}" \
+            --title "CISTierTagger v${{ inputs.version }}" \
+            --notes "${{ inputs.changelog }}" \
+            --target "${{ github.sha }}" \
+            || echo "release v${{ inputs.version }} already exists, reusing"
+
+  publish:
+    needs: [setup, create-release]
+    if: ${{ always() && needs.setup.result == 'success' && (needs.create-release.result == 'success' || needs.create-release.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: gradle
+
+      - name: Build
+        run: |
+          chmod +x gradlew
+          ./gradlew build --no-daemon -Pmod_version=${{ inputs.version }}
+
+      - name: Stage jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar-${{ matrix.mc }}
+          path: |
+            build/libs/*.jar
+            !build/libs/*-sources.jar
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Publish
+        if: ${{ !inputs.dry_run }}
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: cistiertagger
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: ${{ vars.CURSEFORGE_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-tag: v${{ inputs.version }}
+          files: build/libs/!(*-sources).jar
+          name: "CISTierTagger ${{ inputs.version }} (MC ${{ matrix.mc }})"
+          version: "${{ inputs.version }}+${{ matrix.mc }}"
+          version-type: ${{ inputs.release_type }}
+          loaders: fabric
+          game-versions: ${{ matrix.game_versions }}
+          dependencies: |
+            fabric-api(required)
+            modmenu(optional)
+          java: ${{ matrix.java }}
+          retry-attempts: 3
+          changelog: ${{ inputs.changelog }}
+
+  collect:
+    needs: publish
+    if: ${{ always() && needs.publish.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built jars
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: jar-*
+          merge-multiple: true
+
+      - name: Bundle into one archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: cistiertagger-${{ inputs.version }}
+          path: dist
+          if-no-files-found: error
