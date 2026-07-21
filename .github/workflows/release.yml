@@ -45,6 +45,7 @@ jobs:
           SELECTED: ${{ inputs.versions }}
         run: |
           ALL='[
+            {"branch":"1.20","mc":"1.20.1","java":"17","runtime":"21","game_versions":"1.20 1.20.1"},
             {"branch":"1.20.2","mc":"1.20.2","java":"17","runtime":"21","game_versions":"1.20.2"},
             {"branch":"1.20.3","mc":"1.20.3","java":"17","runtime":"21","game_versions":"1.20.3 1.20.4"},
             {"branch":"1.20.5","mc":"1.20.5","java":"21","runtime":"21","game_versions":"1.20.5 1.20.6"},
