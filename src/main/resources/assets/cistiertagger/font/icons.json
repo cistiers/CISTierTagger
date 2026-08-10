@@ -55,6 +55,13 @@
       "ascent": 10,
       "height": 12,
       "chars": ["\uD83D\uDD28"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:icons/axe.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uD83E\uDE93"]
     }
   ]
 }
