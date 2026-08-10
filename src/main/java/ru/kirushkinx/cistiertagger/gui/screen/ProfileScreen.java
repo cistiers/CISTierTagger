@@ -185,7 +185,10 @@ public class ProfileScreen extends ModScreen {
             for (Map.Entry<Gamemode, Tier> entry : cached.tiers().entrySet()) {
                 Component badge = Badge.build(entry.getKey(), entry.getValue(), true,
                         ConfigManager.get().getBadgeMode());
-                StringWidget tierWidget = new StringWidget(badge, this.font);
+                Component tierLine = badge.copy()
+                        .append(Component.literal(" +" + entry.getValue().getPoints())
+                                .withStyle(ChatFormatting.DARK_GRAY));
+                StringWidget tierWidget = new StringWidget(tierLine, this.font);
                 tierWidget.setX(paneX);
                 tierWidget.setY(rowY);
                 this.addRenderableWidget(tierWidget);
