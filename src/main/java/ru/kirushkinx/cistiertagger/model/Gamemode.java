@@ -19,7 +19,8 @@ public enum Gamemode {
     UHC      ("UHC",           "❤",            0xF9E2AF),
     SMP      ("SMP",           "⛨",            0xFAB387),
     OP       ("OP",            "☄",            0x8BD5CA),
-    MACE     ("Mace",          "\uD83D\uDD28", 0xB4BEFE);
+    MACE     ("Mace",          "\uD83D\uDD28", 0xB4BEFE),
+    AXE      ("Axe",           "\uD83E\uDE93", 0x85C1DC);
 
     private static final Map<String, Gamemode> BY_API_KEY;
 
