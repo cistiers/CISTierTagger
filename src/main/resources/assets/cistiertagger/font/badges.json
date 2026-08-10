@@ -783,6 +783,104 @@
       "ascent": 7,
       "height": 8,
       "chars": ["\uE06F"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/ht1.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE070"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/lt1.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE071"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/ht2.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE072"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/lt2.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE073"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/ht3.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE074"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/lt3.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE075"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/ht4.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE076"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/lt4.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE077"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/ht5.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE078"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/lt5.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE079"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/rht1.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE07A"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/rlt1.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE07B"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/rht2.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE07C"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/axe/rlt2.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE07D"]
     }
   ]
 }
