@@ -172,7 +172,7 @@ jobs:
         if: ${{ !inputs.dry_run }}
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          modrinth-id: cis-tier-tagger
+          modrinth-id: cistiertagger
           modrinth-token: ${{ inputs.publish_modrinth && secrets.MODRINTH_TOKEN || '' }}
           curseforge-id: ${{ vars.CURSEFORGE_ID }}
           curseforge-token: ${{ inputs.publish_curseforge && secrets.CURSEFORGE_TOKEN || '' }}
