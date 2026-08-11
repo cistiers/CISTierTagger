@@ -21,6 +21,18 @@ on:
         type: choice
         options: [release, beta, alpha]
         default: release
+      publish_modrinth:
+        description: "Modrinth"
+        type: boolean
+        default: true
+      publish_curseforge:
+        description: "CurseForge"
+        type: boolean
+        default: true
+      publish_github:
+        description: "GitHub Releases"
+        type: boolean
+        default: true
       dry_run:
         description: "Build only, do not publish"
         type: boolean
@@ -69,17 +81,43 @@ jobs:
           echo "Selected branches:"; echo "$INCLUDE" | jq -r '.[].branch'
 
   create-release:
-    if: ${{ !inputs.dry_run }}
+    if: ${{ !inputs.dry_run && inputs.publish_github }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
+      - name: Compose release notes
+        id: notes
+        env:
+          CHANGELOG: ${{ inputs.changelog }}
+          REPO: ${{ github.repository }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          PREV=$(git tag --sort=-creatordate --list 'v*' | grep -v -x "v${VERSION}" | head -1 || true)
+          {
+            echo "body<<EOF"
+            printf '%s\n' "$CHANGELOG"
+            if [ -n "$PREV" ]; then
+              echo ""
+              echo "Full Changelog: https://github.com/${REPO}/compare/${PREV}...v${VERSION}"
+            else
+              echo ""
+              echo "Full Changelog: https://github.com/${REPO}/commits/v${VERSION}"
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create "v${{ inputs.version }}" \
             --repo "${{ github.repository }}" \
-            --title "CISTierTagger v${{ inputs.version }}" \
-            --notes "${{ inputs.changelog }}" \
+            --title "v${{ inputs.version }}" \
+            --notes "${{ steps.notes.outputs.body }}" \
             --target "${{ github.sha }}" \
             || echo "release v${{ inputs.version }} already exists, reusing"
 
@@ -121,22 +159,31 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+      - name: Format game versions
+        id: gv
+        run: |
+          {
+            echo "versions<<EOF"
+            echo "${{ matrix.game_versions }}" | tr ' ' '\n'
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Publish
         if: ${{ !inputs.dry_run }}
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          modrinth-id: cistiertagger
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-id: cis-tier-tagger
+          modrinth-token: ${{ inputs.publish_modrinth && secrets.MODRINTH_TOKEN || '' }}
           curseforge-id: ${{ vars.CURSEFORGE_ID }}
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          curseforge-token: ${{ inputs.publish_curseforge && secrets.CURSEFORGE_TOKEN || '' }}
+          github-token: ${{ inputs.publish_github && secrets.GITHUB_TOKEN || '' }}
           github-tag: v${{ inputs.version }}
           files: build/libs/!(*-sources).jar
           name: "CISTierTagger ${{ inputs.version }} (MC ${{ matrix.mc }})"
           version: "${{ inputs.version }}+${{ matrix.mc }}"
           version-type: ${{ inputs.release_type }}
           loaders: fabric
-          game-versions: ${{ matrix.game_versions }}
+          game-versions: ${{ steps.gv.outputs.versions }}
           dependencies: |
             fabric-api(required)
             modmenu(optional)
