@@ -213,7 +213,9 @@ jobs:
           name: "CISTierTagger ${{ inputs.version }} (MC ${{ matrix.mc }})"
           version: "${{ inputs.version }}+${{ matrix.mc }}"
           version-type: ${{ inputs.release_type }}
-          loaders: fabric
+          loaders: |
+            fabric
+            quilt
           game-versions: ${{ steps.gv.outputs.versions }}
           game-version-filter: none
           dependencies: |
