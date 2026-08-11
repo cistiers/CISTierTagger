@@ -80,51 +80,9 @@ jobs:
           echo "matrix={\"include\":$INCLUDE}" >> "$GITHUB_OUTPUT"
           echo "Selected branches:"; echo "$INCLUDE" | jq -r '.[].branch'
 
-  create-release:
-    if: ${{ !inputs.dry_run && inputs.publish_github }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-tags: true
-          fetch-depth: 0
-
-      - name: Compose release notes
-        id: notes
-        env:
-          CHANGELOG: ${{ inputs.changelog }}
-          REPO: ${{ github.repository }}
-          VERSION: ${{ inputs.version }}
-        run: |
-          PREV=$(git tag --sort=-creatordate --list 'v*' | grep -v -x "v${VERSION}" | head -1 || true)
-          {
-            echo "body<<EOF"
-            printf '%s\n' "$CHANGELOG"
-            if [ -n "$PREV" ]; then
-              echo ""
-              echo "Full Changelog: https://github.com/${REPO}/compare/${PREV}...v${VERSION}"
-            else
-              echo ""
-              echo "Full Changelog: https://github.com/${REPO}/commits/v${VERSION}"
-            fi
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Create GitHub release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create "v${{ inputs.version }}" \
-            --repo "${{ github.repository }}" \
-            --title "v${{ inputs.version }}" \
-            --notes "${{ steps.notes.outputs.body }}" \
-            --target "${{ github.sha }}" \
-            || echo "release v${{ inputs.version }} already exists, reusing"
-
-  publish:
-    name: ${{ matrix.mc }}
-    needs: [setup, create-release]
-    if: ${{ always() && needs.setup.result == 'success' && (needs.create-release.result == 'success' || needs.create-release.result == 'skipped') }}
+  build:
+    name: build ${{ matrix.mc }}
+    needs: setup
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -159,6 +117,82 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  create-release:
+    name: GitHub release
+    needs: build
+    if: ${{ !inputs.dry_run && inputs.publish_github }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
+      - name: Compose release notes
+        id: notes
+        env:
+          CHANGELOG: ${{ inputs.changelog }}
+          REPO: ${{ github.repository }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          PREV=$(git tag --sort=-creatordate --list 'v*' | grep -v -x "v${VERSION}" | head -1 || true)
+          {
+            echo "body<<EOF"
+            printf '%s\n' "$CHANGELOG"
+            echo ""
+            if [ -n "$PREV" ]; then
+              echo "Full Changelog: https://github.com/${REPO}/compare/${PREV}...v${VERSION}"
+            else
+              echo "Full Changelog: https://github.com/${REPO}/commits/v${VERSION}"
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Download built jars
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: jar-*
+          merge-multiple: true
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          gh release create "v${VERSION}" \
+            --repo "${{ github.repository }}" \
+            --title "v${VERSION}" \
+            --notes "${{ steps.notes.outputs.body }}" \
+            --target "${{ github.sha }}" \
+            || echo "release v${VERSION} already exists"
+
+      - name: Upload jars to GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          gh release upload "v${VERSION}" dist/*.jar --clobber --repo "${{ github.repository }}"
+
+  publish:
+    name: publish ${{ matrix.mc }}
+    needs: [setup, build, create-release]
+    if: ${{ always() && needs.setup.result == 'success' && needs.build.result == 'success' && !inputs.dry_run && (inputs.publish_modrinth || inputs.publish_curseforge) }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+
+      - name: Download built jar
+        uses: actions/download-artifact@v4
+        with:
+          name: jar-${{ matrix.mc }}
+          path: build/libs
+
       - name: Format game versions
         id: gv
         run: |
@@ -168,30 +202,30 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Publish
-        if: ${{ !inputs.dry_run }}
+      - name: Publish to Modrinth and CurseForge
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: cistiertagger
           modrinth-token: ${{ inputs.publish_modrinth && secrets.MODRINTH_TOKEN || '' }}
           curseforge-id: ${{ vars.CURSEFORGE_ID }}
           curseforge-token: ${{ inputs.publish_curseforge && secrets.CURSEFORGE_TOKEN || '' }}
-          github-token: ${{ inputs.publish_github && secrets.GITHUB_TOKEN || '' }}
-          github-tag: v${{ inputs.version }}
           files: build/libs/!(*-sources).jar
           name: "CISTierTagger ${{ inputs.version }} (MC ${{ matrix.mc }})"
           version: "${{ inputs.version }}+${{ matrix.mc }}"
           version-type: ${{ inputs.release_type }}
           loaders: fabric
           game-versions: ${{ steps.gv.outputs.versions }}
+          game-version-filter: none
           dependencies: |
             fabric-api(required)
             modmenu(optional)
           java: ${{ matrix.java }}
           retry-attempts: 3
+          fail-mode: warn
           changelog: ${{ inputs.changelog }}
 
   collect:
+    name: bundle
     needs: publish
     if: ${{ always() && needs.publish.result != 'skipped' }}
     runs-on: ubuntu-latest
