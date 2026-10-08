@@ -881,6 +881,104 @@
       "ascent": 7,
       "height": 8,
       "chars": ["\uE07D"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/ht1.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE07E"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/lt1.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE07F"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/ht2.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE080"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/lt2.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE081"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/ht3.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE082"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/lt3.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE083"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/ht4.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE084"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/lt4.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE085"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/ht5.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE086"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/lt5.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE087"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/rht1.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE088"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/rlt1.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE089"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/rht2.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE08A"]
+    },
+    {
+      "type": "bitmap",
+      "file": "cistiertagger:badges/spearmace/rlt2.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE08B"]
     }
   ]
 }
