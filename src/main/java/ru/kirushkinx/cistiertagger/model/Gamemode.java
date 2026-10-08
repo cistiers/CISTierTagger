@@ -20,7 +20,8 @@ public enum Gamemode {
     SMP      ("SMP",           "⛨",            0xFAB387),
     OP       ("OP",            "☄",            0x8BD5CA),
     MACE     ("Mace",          "\uD83D\uDD28", 0xB4BEFE),
-    AXE      ("Axe",           "\uD83E\uDE93", 0x85C1DC);
+    AXE      ("Axe",           "\uD83E\uDE93", 0x85C1DC),
+    SPEARMACE("Spear Mace",    "\uD83D\uDD31", 0x611E01);
 
     private static final Map<String, Gamemode> BY_API_KEY;
 
