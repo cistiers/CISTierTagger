@@ -47,7 +47,8 @@ public class CisTiersClient {
             .build();
 
     public static @NotNull CompletableFuture<DumpResponse> fetchDump() {
-        return get("api/dump", DumpResponse.class);
+        return send(URI.create("https://cdn.cistiers.com/api/dump.json"))
+                .thenApply(stream -> readJson(stream, DumpResponse.class));
     }
 
     public static @NotNull CompletableFuture<ProfileResponse> fetchProfile(@NotNull String nickname) {
@@ -83,7 +84,11 @@ public class CisTiersClient {
     }
 
     private static @NotNull CompletableFuture<InputStream> send(@NotNull String path) {
-        HttpRequest request = HttpRequest.newBuilder(URI.create(CisTierTagger.URL + path))
+        return send(URI.create(CisTierTagger.URL + path));
+    }
+
+    private static @NotNull CompletableFuture<InputStream> send(@NotNull URI uri) {
+        HttpRequest request = HttpRequest.newBuilder(uri)
                 .GET()
                 .timeout(REQUEST_TIMEOUT)
                 .header("Accept", "application/json")
@@ -95,7 +100,7 @@ public class CisTiersClient {
                     int status = response.statusCode();
                     if (status / 100 != 2) {
                         drain(response.body());
-                        throw new CisTiersHttpException(status, path);
+                        throw new CisTiersHttpException(status, uri.toString());
                     }
                     return wrapGzipIfNeeded(response);
                 });
