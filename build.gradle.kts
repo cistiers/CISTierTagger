@@ -34,6 +34,14 @@ dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
     compileOnly(libs.annotations)
+
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.launcher)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.processResources {
