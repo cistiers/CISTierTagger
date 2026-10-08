@@ -59,8 +59,8 @@
     {
       "type": "bitmap",
       "file": "cistiertagger:icons/axe.png",
-      "ascent": 7,
-      "height": 8,
+      "ascent": 10,
+      "height": 12,
       "chars": ["\uD83E\uDE93"]
     },
     {
