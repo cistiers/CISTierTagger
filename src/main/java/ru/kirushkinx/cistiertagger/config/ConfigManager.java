@@ -7,6 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.decorate.Badge;
+import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.util.Json;
 
 import java.io.IOException;
@@ -42,6 +43,12 @@ public class ConfigManager {
         try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             ModConfig parsed = Json.PRETTY.fromJson(reader, ModConfig.class);
             if (parsed != null) {
+                for (Gamemode gamemode : Gamemode.values()) {
+                    if (!parsed.getPriorityOrder().contains(gamemode)) {
+                        parsed.getPriorityOrder().add(gamemode);
+                        parsed.getEnabledGamemodes().add(gamemode);
+                    }
+                }
                 config = parsed;
             }
         } catch (IOException | JsonSyntaxException e) {
