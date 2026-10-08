@@ -1,6 +1,7 @@
 package ru.kirushkinx.cistiertagger.network;
 
 import lombok.experimental.UtilityClass;
+import net.minecraft.network.Connection;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -9,6 +10,8 @@ import ru.kirushkinx.cistiertagger.CisTierTagger;
 
 @UtilityClass
 public class RestrictionNetworking {
+
+    private final ConnectionNoticeState<Connection> notice = new ConnectionNoticeState<>();
 
     private final ResourceLocation HANDSHAKE = new ResourceLocation(CisTierTagger.MOD_ID, "handshake");
     private final ResourceLocation RESTRICT = new ResourceLocation(CisTierTagger.MOD_ID, "restrict");
@@ -20,14 +23,22 @@ public class RestrictionNetworking {
             boolean chat = buf.readBoolean();
             client.execute(() -> {
                 ServerRestrictions.apply(nametag, tab, chat);
-                if (ServerRestrictions.isAnyRestricted() && client.player != null) {
+                if (ServerRestrictions.isAnyRestricted()
+                        && client.player != null
+                        && notice.shouldNotify(handler.getConnection())) {
                     client.player.displayClientMessage(RestrictionNotice.message(), false);
                 }
             });
         });
 
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) ->
-                ClientPlayNetworking.send(HANDSHAKE, PacketByteBufs.create()));
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            // Channel registration follows join
+            client.tell(() -> {
+                if (client.getConnection() == handler && handler.getConnection().isConnected()) {
+                    ClientPlayNetworking.send(HANDSHAKE, PacketByteBufs.create());
+                }
+            });
+        });
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ServerRestrictions.clear());
     }
 }
