@@ -50,7 +50,21 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.gen.outputs.matrix }}
+      changelog: ${{ steps.changelog.outputs.text }}
     steps:
+      - name: Format changelog
+        id: changelog
+        env:
+          RAW_CHANGELOG: ${{ inputs.changelog }}
+        run: |
+          CHANGELOG="${RAW_CHANGELOG//\\n/$'\n'}"
+          DELIMITER="changelog-$(openssl rand -hex 16)"
+          {
+            echo "text<<${DELIMITER}"
+            printf '%s\n' "$CHANGELOG"
+            echo "$DELIMITER"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Build matrix from selection
         id: gen
         env:
@@ -119,7 +133,7 @@ jobs:
 
   create-release:
     name: GitHub release
-    needs: build
+    needs: [setup, build]
     if: ${{ !inputs.dry_run && inputs.publish_github }}
     runs-on: ubuntu-latest
     steps:
@@ -131,13 +145,14 @@ jobs:
       - name: Compose release notes
         id: notes
         env:
-          CHANGELOG: ${{ inputs.changelog }}
+          CHANGELOG: ${{ needs.setup.outputs.changelog }}
           REPO: ${{ github.repository }}
           VERSION: ${{ inputs.version }}
         run: |
+          DELIMITER="notes-$(openssl rand -hex 16)"
           PREV=$(git tag --sort=-creatordate --list 'v*' | grep -v -x "v${VERSION}" | head -1 || true)
           {
-            echo "body<<EOF"
+            echo "body<<${DELIMITER}"
             printf '%s\n' "$CHANGELOG"
             echo ""
             if [ -n "$PREV" ]; then
@@ -145,7 +160,7 @@ jobs:
             else
               echo "Full Changelog: https://github.com/${REPO}/commits/v${VERSION}"
             fi
-            echo "EOF"
+            echo "$DELIMITER"
           } >> "$GITHUB_OUTPUT"
 
       - name: Download built jars
@@ -159,11 +174,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ inputs.version }}
+          RELEASE_NOTES: ${{ steps.notes.outputs.body }}
         run: |
           gh release create "v${VERSION}" \
             --repo "${{ github.repository }}" \
             --title "v${VERSION}" \
-            --notes "${{ steps.notes.outputs.body }}" \
+            --notes "$RELEASE_NOTES" \
             --target "${{ github.sha }}" \
             || echo "release v${VERSION} already exists"
 
@@ -224,7 +240,7 @@ jobs:
           java: ${{ matrix.java }}
           retry-attempts: 3
           fail-mode: warn
-          changelog: ${{ inputs.changelog }}
+          changelog: ${{ needs.setup.outputs.changelog }}
 
   collect:
     name: bundle
