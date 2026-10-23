@@ -3,6 +3,8 @@ package ru.kirushkinx.cistiertagger.gui.screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.AlertScreen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -30,6 +32,12 @@ public abstract class ModScreen extends Screen {
     protected ModScreen(@NotNull Component title, @Nullable Screen parent) {
         super(title);
         this.parent = parent;
+    }
+
+    public static Screen assetsUnavailable(@Nullable Screen parent) {
+        return new AlertScreen(() -> mc.setScreen(parent),
+                Component.translatable("cistiertagger.assets.unavailable.title").withStyle(ChatFormatting.RED),
+                Component.translatable("cistiertagger.assets.unavailable.description"));
     }
 
     protected void returnToParent() {
