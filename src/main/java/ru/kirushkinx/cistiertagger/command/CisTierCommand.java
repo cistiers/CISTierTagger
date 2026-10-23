@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import ru.kirushkinx.cistiertagger.gui.screen.ProfileScreen;
+import ru.kirushkinx.cistiertagger.gui.screen.ModScreen;
+import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.gui.screen.SearchScreen;
 import ru.kirushkinx.cistiertagger.util.Nickname;
 
@@ -20,7 +22,8 @@ public class CisTierCommand {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(ClientCommandManager.literal("cistier")
                     .executes(ctx -> {
-                        mc.schedule(() -> mc.setScreen(new SearchScreen()));
+                        mc.schedule(() -> mc.setScreen(CatalogService.isAvailable()
+                                ? new SearchScreen() : ModScreen.assetsUnavailable(null)));
                         return 1;
                     })
                     .then(ClientCommandManager.argument("nickname", StringArgumentType.word())

@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.LinkedHashSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -34,9 +35,9 @@ public class ModConfig {
 
     private @NotNull BadgeMode badgeMode = BadgeMode.IMAGE;
 
-    private @NotNull List<Gamemode> priorityOrder = new ArrayList<>(EnumSet.allOf(Gamemode.class));
+    private @NotNull List<Gamemode> priorityOrder = new ArrayList<>(Arrays.asList(Gamemode.values()));
 
-    private @NotNull Set<Gamemode> enabledGamemodes = EnumSet.allOf(Gamemode.class);
+    private @NotNull Set<Gamemode> enabledGamemodes = new LinkedHashSet<>(Arrays.asList(Gamemode.values()));
 
     private boolean showInNametag = true;
 

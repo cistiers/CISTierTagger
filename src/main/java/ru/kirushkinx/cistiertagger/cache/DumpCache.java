@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.api.CisTiersClient;
 import ru.kirushkinx.cistiertagger.api.dto.DumpResponse;
+import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.decorate.Badge;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
@@ -17,8 +18,8 @@ import ru.kirushkinx.cistiertagger.util.Nickname;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,8 +32,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 @UtilityClass
 public class DumpCache {
-
-    private static final Duration REFRESH_INTERVAL = Duration.ofMinutes(10);
 
     private static final @NotNull ScheduledExecutorService scheduler = Async.daemonScheduler(1, "cistiers-cache");
     private static final @NotNull PersistentCache disk = new PersistentCache();
@@ -55,8 +54,7 @@ public class DumpCache {
             log.info("Loaded persistent cache: {} players", store.get().size());
         });
         stopRefresh();
-        refreshTask = scheduler.scheduleWithFixedDelay(
-                DumpCache::refreshSilently, 0L, REFRESH_INTERVAL.toSeconds(), TimeUnit.SECONDS);
+        refreshTask = scheduler.schedule(DumpCache::refreshSilently, 0L, TimeUnit.SECONDS);
     }
 
     public static synchronized void shutdown() {
@@ -110,6 +108,9 @@ public class DumpCache {
         try {
             refresh().get(60, TimeUnit.SECONDS);
         } catch (Exception ignored) {
+        } finally {
+            if (!scheduler.isShutdown()) refreshTask = scheduler.schedule(DumpCache::refreshSilently,
+                    CatalogService.refreshSeconds(), TimeUnit.SECONDS);
         }
     }
 
@@ -119,7 +120,7 @@ public class DumpCache {
             String nickname = entry.getKey();
             DumpResponse.RawPlayer raw = entry.getValue();
             if (raw == null || raw.tiers() == null) continue;
-            Map<Gamemode, Tier> tiers = new EnumMap<>(Gamemode.class);
+            Map<Gamemode, Tier> tiers = new LinkedHashMap<>();
             for (Map.Entry<String, String> tierEntry : raw.tiers().entrySet()) {
                 Gamemode gm = Gamemode.fromApiKey(tierEntry.getKey()).orElse(null);
                 Tier tier = Tier.fromApiKey(tierEntry.getValue()).orElse(null);
