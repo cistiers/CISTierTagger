@@ -16,6 +16,7 @@ import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.cache.ProfileCache;
 import ru.kirushkinx.cistiertagger.cache.SkinCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
+import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.decorate.Badge;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
@@ -60,6 +61,10 @@ public class ProfileScreen extends ModScreen {
     }
 
     public static void openFor(@NotNull String nickname, @Nullable Screen parent) {
+        if (!CatalogService.isAvailable()) {
+            mc.setScreen(assetsUnavailable(parent));
+            return;
+        }
         PlayerSkinWidget widget = new PlayerSkinWidget(SKIN_WIDTH, SKIN_HEIGHT, mc.getEntityModels(),
                 () -> SkinCache.forNickname(nickname).get().get());
         ProfileScreen screen = new ProfileScreen(nickname, widget, parent);
@@ -85,6 +90,10 @@ public class ProfileScreen extends ModScreen {
 
     @Override
     protected void init() {
+        rebuildBody();
+    }
+
+    public void onCatalogChanged() {
         rebuildBody();
     }
 

@@ -3,7 +3,7 @@ package ru.kirushkinx.cistiertagger.model;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,18 +22,19 @@ public record PlayerTierData(
 
     public @NotNull Optional<Map.Entry<Gamemode, Tier>> selectByPriority(@NotNull List<Gamemode> priority) {
         for (Gamemode gm : priority) {
+            if (gm.definition().isEmpty()) continue;
             Tier tier = tiers.get(gm);
             if (tier != null) {
                 return Optional.of(Map.entry(gm, tier));
             }
         }
-        return tiers.entrySet().stream().findFirst();
+        return Optional.empty();
     }
 
     public @NotNull Optional<Map.Entry<Gamemode, Tier>> selectHighest() {
         Map.Entry<Gamemode, Tier> best = null;
         for (Map.Entry<Gamemode, Tier> e : tiers.entrySet()) {
-            if (e.getValue().isRetired()) continue;
+            if (e.getKey().definition().isEmpty() || e.getValue().isRetired()) continue;
             if (best == null || e.getValue().isBetterThan(best.getValue())) {
                 best = e;
             }
@@ -44,7 +45,7 @@ public record PlayerTierData(
     public @NotNull Optional<Map.Entry<Gamemode, Tier>> selectHighest(@NotNull Set<Gamemode> allowed) {
         Map.Entry<Gamemode, Tier> best = null;
         for (Map.Entry<Gamemode, Tier> e : tiers.entrySet()) {
-            if (e.getValue().isRetired()) continue;
+            if (e.getKey().definition().isEmpty() || e.getValue().isRetired()) continue;
             if (!allowed.contains(e.getKey())) continue;
             if (best == null || e.getValue().isBetterThan(best.getValue())) {
                 best = e;
@@ -58,6 +59,6 @@ public record PlayerTierData(
     }
 
     public static @NotNull PlayerTierData empty(@NotNull String nickname) {
-        return new PlayerTierData(nickname, new EnumMap<>(Gamemode.class), null, "default");
+        return new PlayerTierData(nickname, new LinkedHashMap<>(), null, "default");
     }
 }
