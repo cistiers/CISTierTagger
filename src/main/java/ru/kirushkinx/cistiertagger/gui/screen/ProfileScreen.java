@@ -61,6 +61,7 @@ public class ProfileScreen extends ModScreen {
     }
 
     public static void openFor(@NotNull String nickname, @Nullable Screen parent) {
+        if (!nickname.matches("[a-zA-Z0-9_]{1,16}")) return;
         if (!CatalogService.isAvailable()) {
             mc.setScreen(assetsUnavailable(parent));
             return;
