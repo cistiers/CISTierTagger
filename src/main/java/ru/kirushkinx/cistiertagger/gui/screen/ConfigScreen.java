@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.cache.SkinCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
+import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
@@ -28,7 +29,7 @@ import ru.kirushkinx.cistiertagger.decorate.Badge;
 import ru.kirushkinx.cistiertagger.network.ServerRestrictions;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -187,6 +188,15 @@ public class ConfigScreen extends ModScreen {
                 .tooltip(Tooltip.create(TIP_GAMEMODES)).build());
     }
 
+    public void onCatalogChanged() {
+        if (view == View.PRIORITY) {
+            for (Gamemode mode : Gamemode.values()) {
+                if (!editingOrder.contains(mode)) editingOrder.add(mode);
+            }
+            rebuildPriorityRows();
+        } else rebuild();
+    }
+
     private void buildPriority() {
         editingOrder = new ArrayList<>(ConfigManager.get().getPriorityOrder());
         for (Gamemode gm : Gamemode.values()) {
@@ -266,7 +276,7 @@ public class ConfigScreen extends ModScreen {
     private void applyEnabled(@NotNull Gamemode gm, boolean value) {
         ModConfig config = ConfigManager.get();
         Set<Gamemode> current = config.getEnabledGamemodes();
-        Set<Gamemode> next = current.isEmpty() ? EnumSet.noneOf(Gamemode.class) : EnumSet.copyOf(current);
+        Set<Gamemode> next = new LinkedHashSet<>(current);
         if (value) next.add(gm); else next.remove(gm);
         config.setEnabledGamemodes(next);
         Badge.bumpGeneration();
@@ -424,7 +434,10 @@ public class ConfigScreen extends ModScreen {
             return decorated != null ? decorated : base;
         }
 
-        return Badge.preview(Gamemode.VANILLA, Tier.LT3,
+        Gamemode[] modes = Gamemode.values();
+        if (modes.length == 0) return base;
+
+        return Badge.preview(modes[0], Tier.LT3,
                 cfg.getPosition() == ModConfig.Position.LEFT,
                 cfg.getBadgeMode(), base);
     }
@@ -444,7 +457,7 @@ public class ConfigScreen extends ModScreen {
     }
 
     public static @NotNull Screen create(@Nullable Screen parent) {
-        return new ConfigScreen(parent);
+        return CatalogService.isAvailable() ? new ConfigScreen(parent) : assetsUnavailable(parent);
     }
 
     private enum View {
