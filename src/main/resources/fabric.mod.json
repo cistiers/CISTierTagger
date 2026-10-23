@@ -22,7 +22,8 @@
     ]
   },
   "mixins": [
-    "cistiertagger.mixins.json"
+    "cistiertagger.mixins.json",
+    "cistiertagger.modmenu.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
