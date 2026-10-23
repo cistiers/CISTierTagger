@@ -17,7 +17,7 @@ public abstract class AvatarRendererStateMixin {
         method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V",
         at = @At("TAIL")
     )
-    private void cistier$decorateNametag(Avatar entity, AvatarRenderState state, float partialTick, CallbackInfo ci) {
+    private void cistiertagger$decorateNametag(Avatar entity, AvatarRenderState state, float partialTick, CallbackInfo ci) {
         Component current = state.nameTag;
         if (current == null) return;
         Component decorated = Badge.decorate(entity.getName().getString(), current, Badge.DisplaySurface.NAMETAG);
