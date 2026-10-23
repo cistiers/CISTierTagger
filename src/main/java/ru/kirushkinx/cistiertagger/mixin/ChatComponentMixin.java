@@ -15,7 +15,7 @@ public abstract class ChatComponentMixin {
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V",
             at = @At("HEAD"), argsOnly = true)
-    private Component cistier$decorateChatMessage(Component original,
+    private Component cistiertagger$decorateChatMessage(Component original,
                                                   Component originalArg,
                                                   @Nullable MessageSignature signature,
                                                   @Nullable GuiMessageTag tag) {
