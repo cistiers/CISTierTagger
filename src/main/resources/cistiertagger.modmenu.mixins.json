@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "ru.kirushkinx.cistiertagger.modmenu.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ModMenuEntryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}
