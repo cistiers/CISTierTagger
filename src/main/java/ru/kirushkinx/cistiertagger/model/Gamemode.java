@@ -1,54 +1,68 @@
 package ru.kirushkinx.cistiertagger.model;
 
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.kirushkinx.cistiertagger.catalog.TierCatalog;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Getter
-public enum Gamemode {
+@EqualsAndHashCode(of = "id")
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public final class Gamemode {
+    private static final Map<String, Gamemode> identities = new ConcurrentHashMap<>();
+    private static volatile TierCatalog catalog = TierCatalog.empty();
+    private final String id;
 
-    VANILLA  ("Vanilla",       "✦",            0xAE8FD6),
-    SWORD    ("Sword",         "\uD83D\uDDE1",  0x7DC4E4),
-    NETHERITE("Netherite Pot", "☠",            0xD20F39),
-    DPOT     ("Diamond Pot",   "⚗",            0xF38BA8),
-    UHC      ("UHC",           "❤",            0xF9E2AF),
-    SMP      ("SMP",           "⛨",            0xFAB387),
-    OP       ("OP",            "☄",            0x8BD5CA),
-    MACE     ("Mace",          "\uD83D\uDD28", 0xB4BEFE),
-    AXE      ("Axe",           "\uD83E\uDE93", 0x85C1DC),
-    SPEARMACE("Spear Mace",    "\uD83D\uDD31", 0x611E01);
-
-    private static final Map<String, Gamemode> BY_API_KEY;
-
-    static {
-        HashMap<String, Gamemode> map = new HashMap<>();
-        for (Gamemode gm : values()) {
-            map.put(gm.apiKey(), gm);
-        }
-        BY_API_KEY = Map.copyOf(map);
+    public String apiKey() {
+        return id;
     }
 
-    private final @NotNull String displayName;
-    private final @NotNull String iconString;
-    private final int color;
-
-    Gamemode(@NotNull String displayName, @NotNull String iconString, int color) {
-        this.displayName = displayName;
-        this.iconString = iconString;
-        this.color = color;
+    public String getDisplayName() {
+        return definition().map(TierCatalog.Mode::displayName).orElse(id);
     }
 
-    public @NotNull String apiKey() {
-        return name().toLowerCase(Locale.ROOT);
+    public String getIconString() {
+        return definition().map(TierCatalog.Mode::textIcon).orElse("?");
+    }
+
+    public int getColor() {
+        return definition().map(mode -> Integer.parseInt(mode.color().substring(1), 16)).orElse(0xFFFFFF);
+    }
+
+    public boolean isActive() {
+        return definition().map(TierCatalog.Mode::isActive).orElse(false);
+    }
+
+    public Optional<TierCatalog.Mode> definition() {
+        return Optional.ofNullable(catalog.tierlists().get(id));
+    }
+
+    public static TierCatalog catalog() {
+        return catalog;
+    }
+
+    public static void install(TierCatalog value) {
+        catalog = value;
+    }
+
+    public static Gamemode[] values() {
+        return catalog.tierlists().keySet().stream().map(Gamemode::of).toArray(Gamemode[]::new);
+    }
+
+    public static Gamemode of(String key) {
+        String id = key.toLowerCase(Locale.ROOT);
+        if (!id.matches("[a-z0-9][a-z0-9_]{0,63}")) throw new IllegalArgumentException("Invalid tierlist id");
+        return identities.computeIfAbsent(id, Gamemode::new);
     }
 
     public static @NotNull Optional<Gamemode> fromApiKey(@Nullable String key) {
-        if (key == null) return Optional.empty();
-        return Optional.ofNullable(BY_API_KEY.get(key.toLowerCase(Locale.ROOT)));
+        if (key == null || !key.toLowerCase(Locale.ROOT).matches("[a-z0-9][a-z0-9_]{0,63}")) return Optional.empty();
+        return Optional.of(of(key));
     }
 }
