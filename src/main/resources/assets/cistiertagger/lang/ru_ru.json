@@ -69,6 +69,9 @@
   "cistiertagger.profile.tiers_header": "Тиры",
   "cistiertagger.profile.history_header": "История",
 
+  "cistiertagger.assets.unavailable.title": "CISTierTagger недоступен",
+  "cistiertagger.assets.unavailable.description": "Не удалось загрузить данные.\nПроверьте подключение к интернету и повторите попытку.",
+
   "cistiertagger.update.toast.description": "Доступна версия %s",
   "cistiertagger.update.button": "Обновить CISTierTagger",
   "cistiertagger.update.info.title": "CISTierTagger обновился!",

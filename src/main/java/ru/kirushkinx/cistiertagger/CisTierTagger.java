@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import ru.kirushkinx.cistiertagger.api.CisTiersClient;
 import ru.kirushkinx.cistiertagger.api.UpdateChecker;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
+import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.command.CisTierCommand;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.network.RestrictionNetworking;
@@ -25,6 +26,7 @@ public final class CisTierTagger implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        CatalogService.prepare();
         ConfigManager.load();
         DumpCache.init();
         UpdateChecker.checkAsync();
@@ -32,13 +34,17 @@ public final class CisTierTagger implements ClientModInitializer {
         CisTierCommand.register();
         RestrictionNetworking.register();
 
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> mc = client);
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            mc = client;
+            CatalogService.start(client);
+        });
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> shutdown());
 
         logger.info("CisTierTagger initialised");
     }
 
     private void shutdown() {
+        CatalogService.shutdown();
         DumpCache.shutdown();
         UpdateChecker.shutdown();
         CisTiersClient.shutdown();

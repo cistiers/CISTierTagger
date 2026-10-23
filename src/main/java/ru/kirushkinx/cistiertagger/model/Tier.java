@@ -3,6 +3,7 @@ package ru.kirushkinx.cistiertagger.model;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -63,12 +64,21 @@ public enum Tier {
         return n.startsWith("HT") || n.startsWith("RHT");
     }
 
+    public int getPoints() {
+        return CatalogService.settings().tierPoints().getOrDefault(apiKey(), points);
+    }
+
     public boolean isRetired() {
-        return name().startsWith("R");
+        var retired = CatalogService.settings().retiredTiers();
+        return retired.isEmpty() ? name().startsWith("R") : retired.contains(apiKey());
     }
 
     public boolean isBetterThan(@NotNull Tier other) {
-        return this.points > other.points;
+        var order = CatalogService.settings().tierOrder();
+        int current = order.indexOf(apiKey());
+        int compared = order.indexOf(other.apiKey());
+        if (current >= 0 && compared >= 0) return current < compared;
+        return getPoints() > other.getPoints();
     }
 
     public static @NotNull Optional<Tier> fromApiKey(@Nullable String key) {
