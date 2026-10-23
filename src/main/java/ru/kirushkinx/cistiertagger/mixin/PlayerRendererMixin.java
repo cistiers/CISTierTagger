@@ -15,7 +15,7 @@ public abstract class PlayerRendererMixin {
 
     @Inject(method = "extractRenderState(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;F)V",
             at = @At("TAIL"))
-    private void cistier$decorateNametag(AbstractClientPlayer entity, PlayerRenderState state, float partialTick, CallbackInfo ci) {
+    private void cistiertagger$decorateNametag(AbstractClientPlayer entity, PlayerRenderState state, float partialTick, CallbackInfo ci) {
         Component current = state.nameTag;
         if (current == null) return;
         Component decorated = Badge.decorate(entity.getName().getString(), current, Badge.DisplaySurface.NAMETAG);
