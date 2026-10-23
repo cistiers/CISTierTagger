@@ -14,7 +14,7 @@ import ru.kirushkinx.cistiertagger.decorate.Badge;
 public abstract class PlayerRendererMixin {
 
     @ModifyVariable(method = "renderNameTag*", at = @At("HEAD"), argsOnly = true)
-    private Component cistier$decorateNametag(@Nullable Component displayName, @Local(argsOnly = true) AbstractClientPlayer entity) {
+    private Component cistiertagger$decorateNametag(@Nullable Component displayName, @Local(argsOnly = true) AbstractClientPlayer entity) {
         if (displayName == null) return null;
         Component decorated = Badge.decorate(entity.getName().getString(), displayName, Badge.DisplaySurface.NAMETAG);
         return decorated != null ? decorated : displayName;
