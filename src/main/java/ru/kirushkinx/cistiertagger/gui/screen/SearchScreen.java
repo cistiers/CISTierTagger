@@ -1,5 +1,6 @@
 package ru.kirushkinx.cistiertagger.gui.screen;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.api.CisTiersClient;
 import ru.kirushkinx.cistiertagger.api.dto.LeaderboardEntry;
 import ru.kirushkinx.cistiertagger.api.dto.SearchResultEntry;
@@ -38,6 +40,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_ENTER;
 import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
+@Slf4j
 public class SearchScreen extends ModScreen {
 
     private static final Component TITLE = Component.translatable("cistiertagger.screen.search.title");
@@ -46,6 +49,8 @@ public class SearchScreen extends ModScreen {
     private static final Component STATUS_SEARCHING = Component.translatable("cistiertagger.status.searching");
     private static final Component STATUS_NOT_FOUND = Component.translatable("cistiertagger.status.not_found");
     private static final Component STATUS_TOP_LEADERBOARD = Component.translatable("cistiertagger.status.top_leaderboard");
+    private static final Component DATA_UNAVAILABLE = Component.translatable("cistiertagger.unavailable.title");
+    private static final Component DATA_UNAVAILABLE_DESCRIPTION = Component.translatable("cistiertagger.unavailable.description");
     private static final Component NO_TIER = Component.translatable("cistiertagger.status.no_tier");
     private static final Component TIP_SETTINGS = Component.translatable("cistiertagger.tooltip.open_settings");
 
@@ -60,7 +65,7 @@ public class SearchScreen extends ModScreen {
     private volatile int totalMatched;
     private volatile boolean loading;
     private volatile boolean showingTop;
-    private volatile @org.jetbrains.annotations.Nullable Component errorMessage;
+    private volatile @Nullable Component errorMessage;
     private int scrollOffset;
     private boolean draggingScrollbar;
     private int dragGrabOffset;
@@ -103,6 +108,7 @@ public class SearchScreen extends ModScreen {
         lastQueryAt.set(requestedAt);
         loading = true;
         showingTop = true;
+        errorMessage = null;
         CisTiersClient.fetchLeaderboard(1).whenComplete((response, error) ->
                 mc.execute(() -> applyTopLeaderboard(requestedAt, response, error)));
     }
@@ -110,15 +116,15 @@ public class SearchScreen extends ModScreen {
     private void applyTopLeaderboard(long requestedAt, Map<Integer, List<LeaderboardEntry>> response, Throwable error) {
         if (lastQueryAt.get() != requestedAt) return;
         loading = false;
-        if (error != null) {
-            errorMessage = Component.translatable("cistiertagger.status.error", error.getMessage());
+        if (error != null || response == null) {
+            if (error != null) log.warn("Cannot load leaderboard", error);
+            errorMessage = DATA_UNAVAILABLE;
             results = Collections.emptyList();
+            totalMatched = 0;
+            scrollOffset = 0;
             return;
         }
-        if (response == null) {
-            results = Collections.emptyList();
-            return;
-        }
+        errorMessage = null;
         List<SearchResultEntry> next = new ArrayList<>();
         response.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
@@ -168,6 +174,7 @@ public class SearchScreen extends ModScreen {
         if (lastQueryAt.get() != requestedAt) return;
         loading = false;
         totalMatched = matches.size();
+        errorMessage = DumpCache.size() == 0 ? DATA_UNAVAILABLE : null;
         results = matches.stream()
                 .limit(MAX_RESULTS)
                 .map(SearchScreen::dumpEntryToResult)
@@ -191,12 +198,10 @@ public class SearchScreen extends ModScreen {
     }
 
     private void renderStatus(@NotNull GuiGraphicsExtractor graphics) {
+        if (errorMessage != null) return;
         Component statusComponent;
         int color;
-        if (errorMessage != null) {
-            statusComponent = errorMessage;
-            color = Layout.COLOR_ERROR;
-        } else if (loading) {
+        if (loading) {
             statusComponent = STATUS_SEARCHING;
             color = Layout.COLOR_WARN;
         } else if (showingTop && !results.isEmpty()) {
@@ -215,7 +220,10 @@ public class SearchScreen extends ModScreen {
 
     private void renderResults(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         List<SearchResultEntry> snapshot = this.results;
-        if (snapshot.isEmpty()) return;
+        if (snapshot.isEmpty()) {
+            if (errorMessage != null) renderDataUnavailable(graphics);
+            return;
+        }
 
         int x = Layout.LIST_HORIZONTAL_MARGIN;
         int rowWidth = this.width - Layout.LIST_HORIZONTAL_MARGIN * 2;
@@ -243,6 +251,19 @@ public class SearchScreen extends ModScreen {
         }
 
         renderScrollbar(graphics, mouseX, mouseY, snapshot);
+    }
+
+    private void renderDataUnavailable(@NotNull GuiGraphicsExtractor graphics) {
+        int textWidth = Math.max(1, Math.min(360, this.width - Layout.SCREEN_EDGE_MARGIN * 2));
+        var lines = this.font.split(DATA_UNAVAILABLE_DESCRIPTION, textWidth);
+        int bottom = this.height - Layout.LIST_BOTTOM_RESERVE;
+        int y = Math.max(Layout.LIST_TOP_OFFSET, (Layout.LIST_TOP_OFFSET + bottom - 20 - lines.size() * 12) / 2);
+        graphics.centeredText(this.font, errorMessage, this.width / 2, y, Layout.COLOR_ERROR);
+        y += 20;
+        for (var line : lines) {
+            graphics.text(this.font, line, (this.width - this.font.width(line)) / 2, y, Layout.COLOR_DIM, false);
+            y += 12;
+        }
     }
 
     private void renderScrollbar(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY,

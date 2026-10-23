@@ -36,8 +36,8 @@ public abstract class ModScreen extends Screen {
 
     public static Screen assetsUnavailable(@Nullable Screen parent) {
         return new AlertScreen(() -> mc.setScreen(parent),
-                Component.translatable("cistiertagger.assets.unavailable.title").withStyle(ChatFormatting.RED),
-                Component.translatable("cistiertagger.assets.unavailable.description").withStyle(ChatFormatting.GRAY));
+                Component.translatable("cistiertagger.unavailable.title").withStyle(ChatFormatting.RED),
+                Component.translatable("cistiertagger.unavailable.description").withStyle(ChatFormatting.GRAY));
     }
 
     protected void returnToParent() {
