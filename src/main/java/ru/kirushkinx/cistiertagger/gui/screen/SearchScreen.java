@@ -14,6 +14,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.api.CisTiersClient;
 import ru.kirushkinx.cistiertagger.api.dto.LeaderboardEntry;
 import ru.kirushkinx.cistiertagger.api.dto.SearchResultEntry;
@@ -65,7 +66,7 @@ public class SearchScreen extends ModScreen {
     private volatile int totalMatched;
     private volatile boolean loading;
     private volatile boolean showingTop;
-    private volatile @org.jetbrains.annotations.Nullable Component errorMessage;
+    private volatile @Nullable Component errorMessage;
     private int scrollOffset;
     private boolean draggingScrollbar;
     private int dragGrabOffset;
