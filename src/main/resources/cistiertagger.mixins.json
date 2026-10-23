@@ -9,7 +9,9 @@
     "PlayerTabOverlayMixin",
     "ChatComponentMixin",
     "TextDisplayRendererMixin",
-    "TitleScreenMixin"
+    "TitleScreenMixin",
+    "ClientResourceManagerMixin",
+    "ClientResourceReloadMixin"
   ],
   "injectors": {
     "defaultRequire": 1
