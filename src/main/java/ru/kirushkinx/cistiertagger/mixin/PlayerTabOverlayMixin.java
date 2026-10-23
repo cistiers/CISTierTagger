@@ -15,7 +15,7 @@ import ru.kirushkinx.cistiertagger.decorate.Badge;
 public abstract class PlayerTabOverlayMixin {
 
     @ModifyReturnValue(method = "getNameForDisplay", at = @At("RETURN"))
-    private Component cistier$decorateTabName(Component original, @Local(argsOnly = true) PlayerInfo entry) {
+    private Component cistiertagger$decorateTabName(Component original, @Local(argsOnly = true) PlayerInfo entry) {
         String nickname = nicknameOf(entry);
         if (nickname == null) return original;
         Component decorated = Badge.decorate(nickname, original, Badge.DisplaySurface.TAB);
