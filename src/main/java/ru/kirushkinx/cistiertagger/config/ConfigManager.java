@@ -17,6 +17,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Objects;
 
 @Slf4j
 @UtilityClass
@@ -43,17 +46,28 @@ public class ConfigManager {
         try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             ModConfig parsed = Json.PRETTY.fromJson(reader, ModConfig.class);
             if (parsed != null) {
-                for (Gamemode gamemode : Gamemode.values()) {
-                    if (!parsed.getPriorityOrder().contains(gamemode)) {
-                        parsed.getPriorityOrder().add(gamemode);
-                        parsed.getEnabledGamemodes().add(gamemode);
-                    }
-                }
                 config = parsed;
+                syncCatalog();
             }
         } catch (IOException | JsonSyntaxException e) {
             log.warn("Failed to read config, falling back to defaults", e);
         }
+    }
+
+    public static synchronized void syncCatalog() {
+        var order = new ArrayList<>(config.getPriorityOrder());
+        order.removeIf(Objects::isNull);
+        order = new ArrayList<>(new LinkedHashSet<>(order));
+        var enabled = new LinkedHashSet<>(config.getEnabledGamemodes());
+        enabled.remove(null);
+        for (Gamemode mode : Gamemode.values()) {
+            if (!order.contains(mode)) {
+                order.add(mode);
+                if (mode.isActive()) enabled.add(mode);
+            }
+        }
+        config.setPriorityOrder(order);
+        config.setEnabledGamemodes(enabled);
     }
 
     public static synchronized void save() {

@@ -31,7 +31,6 @@ public class Badge {
 
     public static final @NotNull ResourceLocation ICON_FONT = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "icons");
     private static final @NotNull ResourceLocation BADGE_FONT = ResourceLocation.fromNamespaceAndPath(CisTierTagger.MOD_ID, "badges");
-    private static final int BADGE_CHAR_BASE = 0xE000; // PUA, range of U+E000 to U+F8FF
 
     /** Per-frame selection cache for the hot mixin render path. */
     private static final @NotNull ConcurrentHashMap<String, CachedSelection> SELECTION_CACHE = new ConcurrentHashMap<>();
@@ -73,6 +72,7 @@ public class Badge {
         if (selection == null) return null;
 
         Gamemode gamemode = selection.getKey();
+        if (gamemode.definition().isEmpty()) return null;
         Tier tier = selection.getValue();
 
         return cfg.getPosition() == ModConfig.Position.LEFT
@@ -172,17 +172,19 @@ public class Badge {
     }
 
     private static @NotNull MutableComponent badgeImage(@NotNull Gamemode gamemode, @NotNull Tier tier) {
-        int code = BADGE_CHAR_BASE + gamemode.ordinal() * Tier.values().length + tier.ordinal();
-        return Component.literal(new String(Character.toChars(code)))
+        var glyph = gamemode.definition().map(d -> d.badges().get(tier.apiKey()));
+        if (glyph.isEmpty()) return Component.literal(gamemode.getIconString() + " " + tier.displayName());
+        return Component.literal(glyph.get().text())
                 .setStyle(TextCompat.applyFont(Style.EMPTY, BADGE_FONT).withColor(ChatFormatting.WHITE));
     }
 
     private static @NotNull Component modeIcon(@NotNull Gamemode gamemode, @NotNull ModConfig.BadgeMode mode) {
-        return switch (mode) {
-            case IMAGE -> Component.literal(gamemode.getIconString()).setStyle(TextCompat.applyFont(Style.EMPTY, ICON_FONT));
-            case TEXT -> Component.literal(gamemode.getIconString())
-                    .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(gamemode.getColor())));
-        };
+        if (mode == ModConfig.BadgeMode.IMAGE && gamemode.definition().isPresent()) {
+            return Component.literal(gamemode.definition().orElseThrow().icon().text())
+                    .setStyle(TextCompat.applyFont(Style.EMPTY, ICON_FONT).withColor(ChatFormatting.WHITE));
+        }
+        return Component.literal(gamemode.getIconString())
+                .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(gamemode.getColor())));
     }
 
     private static @NotNull Component divider(@NotNull ModConfig.BadgeMode mode, boolean leadingSpace, boolean trailingSpace) {

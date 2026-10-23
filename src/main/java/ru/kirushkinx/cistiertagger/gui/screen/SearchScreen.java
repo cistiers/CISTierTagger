@@ -31,7 +31,6 @@ import ru.kirushkinx.cistiertagger.decorate.Badge;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -352,7 +351,7 @@ public class SearchScreen extends ModScreen {
 
     private static @NotNull PlayerTierData toPlayerTierData(@NotNull String nickname,
                                                             @NotNull Map<String, String> rawTiers) {
-        EnumMap<Gamemode, Tier> tiers = new EnumMap<>(Gamemode.class);
+        Map<Gamemode, Tier> tiers = new LinkedHashMap<>();
         for (Map.Entry<String, String> e : rawTiers.entrySet()) {
             Optional<Gamemode> gm = Gamemode.fromApiKey(e.getKey());
             Optional<Tier> tier = Tier.fromApiKey(e.getValue());
