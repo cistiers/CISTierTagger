@@ -62,7 +62,7 @@ public class UpdateChecker {
                 .GET()
                 .timeout(TIMEOUT)
                 .header("Accept", "application/vnd.github+json")
-                .header("User-Agent", "CisTierTagger/" + currentMod)
+                .header("User-Agent", HttpTransport.getUserAgent())
                 .build();
         http.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                 .thenApply(response -> findUpdate(response, currentMod, currentMc))
