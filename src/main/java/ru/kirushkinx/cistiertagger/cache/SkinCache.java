@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
+import ru.kirushkinx.cistiertagger.api.HttpTransport;
 import ru.kirushkinx.cistiertagger.util.Async;
 import ru.kirushkinx.cistiertagger.util.Nickname;
 
@@ -173,6 +174,7 @@ public class SkinCache {
     private static byte @NotNull [] downloadBytes(@NotNull String url, @NotNull Path cachePath) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) URI.create(url).toURL()
                 .openConnection(mc.getProxy());
+        conn.setRequestProperty("User-Agent", HttpTransport.getUserAgent());
         conn.setConnectTimeout(5_000);
         conn.setReadTimeout(10_000);
         try (InputStream is = conn.getInputStream()) {
@@ -251,6 +253,7 @@ public class SkinCache {
         try {
             HttpURLConnection conn = (HttpURLConnection) URI.create(url).toURL()
                     .openConnection(mc.getProxy());
+            conn.setRequestProperty("User-Agent", HttpTransport.getUserAgent());
             conn.setConnectTimeout(5_000);
             conn.setReadTimeout(10_000);
             try (InputStream is = conn.getInputStream()) {
