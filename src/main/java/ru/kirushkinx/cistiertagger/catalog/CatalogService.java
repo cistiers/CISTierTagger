@@ -100,8 +100,8 @@ public class CatalogService {
                 worker.execute(() -> persist(initialCatalog));
 //            } else {
 //                SystemToast.add(client.gui.toastManager(), new SystemToast.SystemToastId(),
-//                        Component.translatable("cistiertagger.assets.unavailable.title"),
-//                        Component.translatable("cistiertagger.assets.unavailable.description"));
+//                        Component.translatable("cistiertagger.unavailable.title"),
+//                        Component.translatable("cistiertagger.unavailable.description"));
             }
             worker.schedule(CatalogService::update, settings.refreshSeconds(), TimeUnit.SECONDS);
         }, client);

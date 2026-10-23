@@ -51,7 +51,7 @@ public abstract class ModMenuEntryMixin {
         if (hovered) {
             Minecraft client = Minecraft.getInstance();
             int textWidth = Math.clamp(client.getWindow().getGuiScaledWidth() - 24, 1, 240);
-            var lines = client.font.split(Component.translatable("cistiertagger.assets.unavailable.description")
+            var lines = client.font.split(Component.translatable("cistiertagger.unavailable.description")
                     .withStyle(ChatFormatting.RED), textWidth);
             graphics.setTooltipForNextFrame(lines, mouseX, mouseY);
         }
