@@ -457,10 +457,7 @@ public class SearchScreen extends ModScreen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW_KEY_ENTER || keyCode == GLFW_KEY_KP_ENTER) {
-            submit();
-            return true;
-        }
+        if (keyCode == GLFW_KEY_ENTER || keyCode == GLFW_KEY_KP_ENTER) return true;
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
