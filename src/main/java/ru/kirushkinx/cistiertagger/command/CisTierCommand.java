@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import ru.kirushkinx.cistiertagger.gui.screen.ProfileScreen;
+import ru.kirushkinx.cistiertagger.gui.screen.ModScreen;
+import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.gui.screen.SearchScreen;
 import ru.kirushkinx.cistiertagger.util.Nickname;
 
@@ -17,19 +19,21 @@ import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 public class CisTierCommand {
 
     public static void register() {
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
-                dispatcher.register(ClientCommandManager.literal("cistier")
-                        .executes(ctx -> {
-                            mc.tell(() -> mc.setScreen(new SearchScreen())); // enqueue, not inline
-                            return 1;
-                        })
-                        .then(ClientCommandManager.argument("nickname", StringArgumentType.word())
-                                .suggests(ONLINE_PLAYERS)
-                                .executes(ctx -> {
-                                    String nick = StringArgumentType.getString(ctx, "nickname");
-                                    mc.tell(() -> ProfileScreen.openFor(nick));
-                                    return 1;
-                                }))));
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(ClientCommandManager.literal("cistier")
+                    .executes(ctx -> {
+                        mc.tell(() -> mc.setScreen(CatalogService.isAvailable()
+                                ? new SearchScreen() : ModScreen.assetsUnavailable(null)));
+                        return 1;
+                    })
+                    .then(ClientCommandManager.argument("nickname", StringArgumentType.word())
+                            .suggests(ONLINE_PLAYERS)
+                            .executes(ctx -> {
+                                String nick = StringArgumentType.getString(ctx, "nickname");
+                                mc.tell(() -> ProfileScreen.openFor(nick));
+                                return 1;
+                            })));
+        });
     }
 
     private static final SuggestionProvider<FabricClientCommandSource> ONLINE_PLAYERS = (ctx, builder) -> {
