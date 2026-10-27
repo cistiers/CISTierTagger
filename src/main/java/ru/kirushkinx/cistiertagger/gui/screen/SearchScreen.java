@@ -5,12 +5,47 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+//? if >=26.1 {
 import net.minecraft.client.gui.components.PlayerFaceExtractor;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+//?}
+//? if >=1.21.9 <26.1 {
+/*import net.minecraft.client.gui.components.PlayerFaceExtractor;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
+*///?}
+//? if =1.21.6 {
+/*import net.minecraft.client.gui.components.PlayerFaceExtractor;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.renderer.RenderPipelines;
+*///?}
+//? if >=1.21.4 <1.21.6 {
+/*import net.minecraft.client.gui.components.PlayerFaceExtractor;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.renderer.RenderType;
+*///?}
+//? if =1.21.2 {
+/*import net.minecraft.client.gui.components.PlayerFaceExtractor;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.gui.components.Tooltip;
+*///?}
+//? if <1.21.2 {
+/*import net.minecraft.client.gui.components.PlayerFaceExtractor;
+import net.minecraft.client.gui.components.Tooltip;
+*///?}
 import net.minecraft.network.chat.Component;
+//? if >=26.1 {
 import net.minecraft.resources.Identifier;
+//?}
+//? if <26.1 {
+/*import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+*///?}
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.api.CisTiersClient;
@@ -21,6 +56,9 @@ import ru.kirushkinx.cistiertagger.cache.SkinCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.gui.Layout;
+//? if <26.1 {
+/*import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
+*///?}
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
 import ru.kirushkinx.cistiertagger.model.Tier;
@@ -90,11 +128,23 @@ public class SearchScreen extends ModScreen {
                         .bounds(centerX + boxWidth / 2 + 8, 44, 60, 22)
                         .build());
 
+//? if >=26.1 {
         addCornerIconButton(
                 this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET,
                 Layout.CONFIG_ICON_TEXTURE,
                 btn -> mc.gui.setScreen(ConfigScreen.create(this)),
+//?}
+//? if <26.1 {
+        /*ItemIconButton settingsButton = new ItemIconButton(
+                this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET, Layout.CORNER_BUTTON_SIZE,
+                new ItemStack(Items.COMPARATOR),
+                btn -> mc.gui.setScreen(ConfigScreen.create(this)),
+*///?}
                 TIP_SETTINGS);
+//? if <26.1 {
+        /*settingsButton.setTooltip(Tooltip.create(TIP_SETTINGS));
+        this.addRenderableWidget(settingsButton);
+*///?}
 
         addCornerSiteButton(this.width - Layout.CORNER_BUTTON_INSET,
                 this.height - Layout.CORNER_BUTTON_INSET - Layout.CORNER_BUTTON_STACK);
@@ -190,9 +240,22 @@ public class SearchScreen extends ModScreen {
     }
 
     @Override
+//? if >=26.1 {
     public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         graphics.centeredText(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
+//?}
+//? if >=1.20.2 <26.1 {
+    /*public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
+*///?}
+//? if =1.20.1 {
+    /*public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
+*///?}
         renderResults(graphics, mouseX, mouseY);
         renderStatus(graphics);
     }
@@ -326,7 +389,18 @@ public class SearchScreen extends ModScreen {
     private void drawHead(@NotNull GuiGraphicsExtractor graphics, @NotNull String nickname, int x, int y) {
         Identifier id = SkinCache.headFor(nickname).get();
         if (id != null) {
+//? if >=1.21.9 {
             graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0f, 0f,
+//?}
+//? if =1.21.6 {
+            /*graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0.0F, 0.0F,
+*///?}
+//? if >=1.21.2 <1.21.6 {
+            /*graphics.blit(RenderType::guiTextured, id, x, y, 0.0F, 0.0F,
+*///?}
+//? if <1.21.2 {
+            /*graphics.blit(id, x, y, HEAD_SIZE, HEAD_SIZE, 0.0F, 0.0F,
+*///?}
                     HEAD_SIZE, HEAD_SIZE, HEAD_SIZE, HEAD_SIZE);
         } else {
             PlayerFaceExtractor.extractRenderState(graphics, SkinCache.defaultSkinFor(nickname), x, y, HEAD_SIZE);
@@ -377,24 +451,46 @@ public class SearchScreen extends ModScreen {
     }
 
     @Override
+//? if >=1.21.9 {
     public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubleClicked) {
+//?}
+//? if <1.21.9 {
+    /*public boolean mouseClicked(double mouseX, double mouseY, int button) {
+*///?}
         List<SearchResultEntry> snapshot = this.results;
+//? if >=1.21.9 {
         if (event.button() == 0 && !snapshot.isEmpty()) {
             if (handleScrollbarClick(event.x(), event.y(), snapshot)) return true;
+//?}
+//? if <1.21.9 {
+        /*if (button == 0 && !snapshot.isEmpty()) {
+            if (handleScrollbarClick(mouseX, mouseY, snapshot)) return true;
+*///?}
 
             int x = Layout.LIST_HORIZONTAL_MARGIN;
             int rowWidth = this.width - Layout.LIST_HORIZONTAL_MARGIN * 2;
             int visible = Math.min(maxVisibleRows(), snapshot.size() - scrollOffset);
             for (int i = 0; i < visible; i++) {
                 int rowY = Layout.LIST_TOP_OFFSET + i * Layout.LIST_ROW_HEIGHT;
+//? if >=1.21.9 {
                 if (event.x() >= x && event.x() <= x + rowWidth
                         && event.y() >= rowY && event.y() <= rowY + Layout.LIST_ROW_HEIGHT - 2) {
+//?}
+//? if <1.21.9 {
+                /*if (mouseX >= x && mouseX <= x + rowWidth
+                        && mouseY >= rowY && mouseY <= rowY + Layout.LIST_ROW_HEIGHT - 2) {
+*///?}
                     openProfile(snapshot.get(scrollOffset + i).nickname());
                     return true;
                 }
             }
         }
+//? if >=1.21.9 {
         return super.mouseClicked(event, doubleClicked);
+//?}
+//? if <1.21.9 {
+        /*return super.mouseClicked(mouseX, mouseY, button);
+*///?}
     }
 
     private boolean handleScrollbarClick(double mouseX, double mouseY,
@@ -423,39 +519,85 @@ public class SearchScreen extends ModScreen {
     }
 
     @Override
+//? if >=1.21.9 {
     public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
+//?}
+//? if <1.21.9 {
+    /*public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+*///?}
         if (draggingScrollbar) {
+//? if >=1.21.9 {
             setScrollFromY(event.y(), this.results);
+//?}
+//? if <1.21.9 {
+            /*setScrollFromY(mouseY, this.results);
+*///?}
             return true;
         }
+//? if >=1.21.9 {
         return super.mouseDragged(event, dragX, dragY);
+//?}
+//? if <1.21.9 {
+        /*return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+*///?}
     }
 
     @Override
+//? if >=1.21.9 {
     public boolean mouseReleased(@NotNull MouseButtonEvent event) {
         if (draggingScrollbar && event.button() == 0) {
+//?}
+//? if <1.21.9 {
+    /*public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (draggingScrollbar && button == 0) {
+*///?}
             draggingScrollbar = false;
             return true;
         }
+//? if >=1.21.9 {
         return super.mouseReleased(event);
+//?}
+//? if <1.21.9 {
+        /*return super.mouseReleased(mouseX, mouseY, button);
+*///?}
     }
 
     @Override
+//? if >=1.20.2 {
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+//?}
+//? if =1.20.1 {
+    /*public boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
+*///?}
         List<SearchResultEntry> snapshot = this.results;
         if (snapshot.size() > maxVisibleRows()) {
             int delta = scrollY > 0 ? -1 : 1;
             scrollOffset = Math.max(0, Math.min(snapshot.size() - maxVisibleRows(), scrollOffset + delta));
             return true;
         }
+//? if >=1.20.2 {
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+//?}
+//? if =1.20.1 {
+        /*return super.mouseScrolled(mouseX, mouseY, scrollY);
+*///?}
     }
 
     @Override
+//? if >=1.21.9 {
     public boolean keyPressed(@NotNull KeyEvent event) {
         int keyCode = event.key();
+//?}
+//? if <1.21.9 {
+    /*public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+*///?}
         if (keyCode == GLFW_KEY_ENTER || keyCode == GLFW_KEY_KP_ENTER) return true;
+//? if >=1.21.9 {
         return super.keyPressed(event);
+//?}
+//? if <1.21.9 {
+        /*return super.keyPressed(keyCode, scanCode, modifiers);
+*///?}
     }
 
     private void submit() {

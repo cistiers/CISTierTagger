@@ -1,3 +1,4 @@
+//? if >=1.20.5 {
 package ru.kirushkinx.cistiertagger.modmenu;
 
 import com.terraformersmc.modmenu.api.UpdateChannel;
@@ -34,3 +35,4 @@ public class UpdateInfoImpl implements UpdateInfo {
         return UpdateChecker.available();
     }
 }
+//?}

@@ -3,6 +3,9 @@ package ru.kirushkinx.cistiertagger.decorate;
 import lombok.experimental.UtilityClass;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+//? if >=1.21.9 {
+import net.minecraft.network.chat.FontDescription;
+//?}
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -11,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
-import ru.kirushkinx.cistiertagger.util.TextCompat;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.model.Gamemode;
@@ -29,8 +31,14 @@ import java.util.concurrent.atomic.AtomicLong;
 @UtilityClass
 public class Badge {
 
+//? if >=1.21 {
     public static final @NotNull Identifier ICON_FONT = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "icons");
     private static final @NotNull Identifier BADGE_FONT = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "badges");
+//?}
+//? if <1.21 {
+    /*public static final @NotNull Identifier ICON_FONT = new Identifier(CisTierTagger.MOD_ID, "icons");
+    private static final @NotNull Identifier BADGE_FONT = new Identifier(CisTierTagger.MOD_ID, "badges");
+*///?}
 
     /** Per-frame selection cache for the hot mixin render path. */
     private static final @NotNull ConcurrentHashMap<String, CachedSelection> SELECTION_CACHE = new ConcurrentHashMap<>();
@@ -158,7 +166,11 @@ public class Badge {
     private static void append(@NotNull MutableComponent target, @NotNull Gamemode gamemode,
                                @NotNull Tier tier, @NotNull ModConfig.BadgeMode mode, boolean iconFirst) {
         if (mode == ModConfig.BadgeMode.IMAGE) {
-            target.append(badgeImage(gamemode, tier).withStyle(TextCompat::noShadow));
+            MutableComponent image = badgeImage(gamemode, tier);
+//? if >=1.21.6 {
+            image.withStyle(style -> style.withShadowColor(0));
+//?}
+            target.append(image);
             return;
         }
         Component icon = modeIcon(gamemode, mode);
@@ -175,13 +187,27 @@ public class Badge {
         var glyph = gamemode.definition().map(d -> d.badges().get(tier.apiKey()));
         if (glyph.isEmpty()) return Component.literal(gamemode.getIconString() + " " + tier.displayName());
         return Component.literal(glyph.get().text())
-                .setStyle(TextCompat.applyFont(Style.EMPTY, BADGE_FONT).withColor(ChatFormatting.WHITE));
+                .setStyle(Style.EMPTY
+//? if >=1.21.9 {
+                        .withFont(new FontDescription.Resource(BADGE_FONT))
+//?}
+//? if <1.21.9 {
+                        /*.withFont(BADGE_FONT)
+*///?}
+                        .withColor(ChatFormatting.WHITE));
     }
 
     private static @NotNull Component modeIcon(@NotNull Gamemode gamemode, @NotNull ModConfig.BadgeMode mode) {
         if (mode == ModConfig.BadgeMode.IMAGE && gamemode.definition().isPresent()) {
             return Component.literal(gamemode.definition().orElseThrow().icon().text())
-                    .setStyle(TextCompat.applyFont(Style.EMPTY, ICON_FONT).withColor(ChatFormatting.WHITE));
+                    .setStyle(Style.EMPTY
+//? if >=1.21.9 {
+                            .withFont(new FontDescription.Resource(ICON_FONT))
+//?}
+//? if <1.21.9 {
+                            /*.withFont(ICON_FONT)
+*///?}
+                            .withColor(ChatFormatting.WHITE));
         }
         return Component.literal(gamemode.getIconString())
                 .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(gamemode.getColor())));

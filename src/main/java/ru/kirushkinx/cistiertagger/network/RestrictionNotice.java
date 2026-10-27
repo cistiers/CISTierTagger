@@ -2,11 +2,11 @@ package ru.kirushkinx.cistiertagger.network;
 
 import lombok.experimental.UtilityClass;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.NotNull;
-import ru.kirushkinx.cistiertagger.util.TextCompat;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 
 @UtilityClass
@@ -22,11 +22,18 @@ public class RestrictionNotice {
         if (ServerRestrictions.isTabRestricted()) hover.append(surface("tab"));
         if (ServerRestrictions.isChatRestricted()) hover.append(surface("chat"));
 
+//? if >=1.21.5 {
+        HoverEvent hoverEvent = new HoverEvent.ShowText(hover);
+//?}
+//? if <1.21.5 {
+        /*HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover);
+*///?}
+
         return Component.literal("ℹ ")
                 .append(Component.translatable("cistiertagger.restriction.chat"))
                 .setStyle(Style.EMPTY
                         .withColor(TextColor.fromRgb(ACCENT))
-                        .withHoverEvent(TextCompat.showText(hover)));
+                        .withHoverEvent(hoverEvent));
     }
 
     private static @NotNull Component surface(@NotNull String key) {

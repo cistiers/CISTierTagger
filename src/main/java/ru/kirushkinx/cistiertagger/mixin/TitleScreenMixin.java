@@ -16,7 +16,9 @@ import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 import ru.kirushkinx.cistiertagger.gui.button.IconTextButton;
 
+//? if >=1.21 {
 import java.net.URI;
+//?}
 
 import static ru.kirushkinx.cistiertagger.CisTierTagger.mc;
 
@@ -44,12 +46,26 @@ public abstract class TitleScreenMixin extends Screen {
         int top = this.height - 45;
         this.addRenderableWidget(new IconTextButton(this.width / 2 - 100, top, 200, 20,
                 UPDATE_BUTTON, 0xFFFFFFFF, Layout.LOGO_TEXTURE,
+//? if >=1.21 {
                 b -> ConfirmLinkScreen.confirmLinkNow(this, URI.create(update.url()))));
+//?}
+//? if >=1.20.3 <1.21 {
+                /*b -> ConfirmLinkScreen.confirmLinkNow(this, update.url())));
+*///?}
+//? if <1.20.3 {
+                /*b -> ConfirmLinkScreen.confirmLinkNow(update.url(), this, false)));
+*///?}
         cistiertagger$infoY = top - 20;
     }
 
+//? if >=26.1 {
     @Inject(method = "extractRenderState", at = @At("TAIL"))
     private void cistiertagger$renderInfo(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+//?}
+//? if <26.1 {
+    /*@Inject(method = "render", at = @At("TAIL"))
+    private void cistiertagger$renderInfo(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+*///?}
         if (cistiertagger$infoY <= 0 || mc.getWindow().getGuiScale() >= 4) return;
         graphics.centeredText(this.font, INFO_TITLE, this.width / 2, cistiertagger$infoY, Layout.COLOR_WARN);
         graphics.centeredText(this.font, INFO_SUBTITLE, this.width / 2, cistiertagger$infoY + 11, Layout.COLOR_DIM);
