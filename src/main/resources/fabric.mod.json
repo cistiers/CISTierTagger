@@ -4,7 +4,9 @@
   "version": "${version}",
   "name": "CISTierTagger",
   "description": "Displays player tiers from CISTiers within the game.",
-  "authors": ["kirushkinx"],
+  "authors": [
+    "kirushkinx"
+  ],
   "contact": {
     "homepage": "https://modrinth.com/mod/cistiertagger",
     "sources": "https://github.com/cistiers/cistiertagger",
@@ -28,6 +30,6 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": "~${minecraft_version}"
+    "minecraft": "${minecraft_range}"
   }
 }

@@ -1,43 +1,61 @@
 plugins {
-    java
-    alias(libs.plugins.loom)
+    `java-library`
+    id("dev.kikugie.stonecutter")
+    id("dev.kikugie.loom-back-compat")
 }
 
-group = providers.gradleProperty("maven_group").get()
-version = "${providers.gradleProperty("mod_version").get()}+${libs.versions.minecraft.get()}"
+val target = stonecutter.properties
+val minecraftVersion = stonecutter.current.version
+val loaderVersion = target["deps.fabric_loader"]
+val fabricApiVersion = target["deps.fabric_api"]
+val modMenuVersion = target["deps.modmenu"]
+val lombokVersion = target["deps.lombok"]
+val annotationsVersion = target["deps.annotations"]
+val junitVersion = target["deps.junit"]
+val javaVersion = target.getAs<Int>("mod.java_version")
+
+group = target["mod.group"]
+version = "${providers.gradleProperty("mod.version").getOrElse(target["mod.version"])}+$minecraftVersion"
 
 base {
-    archivesName.set(providers.gradleProperty("archives_base_name").get())
+    archivesName.set(target["mod.archive"])
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(javaVersion))
     withSourcesJar()
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    options.release.set(25)
+    options.release.set(javaVersion)
 }
 
 repositories {
     maven("https://api.modrinth.com/maven")
+    maven("https://maven.parchmentmc.org")
 }
 
 dependencies {
-    minecraft(libs.minecraft)
+    minecraft("com.mojang:minecraft:$minecraftVersion")
+    if (!project.loomx.isUnobfuscated) {
+        val parchmentMappings = target["deps.parchment"]
+        mappings(loom.layered {
+            officialMojangMappings()
+            parchment(parchmentMappings)
+        })
+    }
+    modApi("net.fabricmc:fabric-loader:$loaderVersion")
+    modApi("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+    modApi("maven.modrinth:modmenu:$modMenuVersion")
 
-    api(libs.fabric.loader)
-    api(libs.fabric.api)
-    api(libs.modmenu)
-
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
-    compileOnly(libs.annotations)
-
-    testImplementation(platform(libs.junit.bom))
-    testImplementation(libs.junit.jupiter)
-    testRuntimeOnly(libs.junit.launcher)
+    val lombok = "org.projectlombok:lombok:$lombokVersion"
+    compileOnly(lombok)
+    annotationProcessor(lombok)
+    compileOnly("org.jetbrains:annotations:$annotationsVersion")
+    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
@@ -46,14 +64,16 @@ tasks.test {
 
 tasks.processResources {
     val properties = mapOf(
-        "version"            to project.version.toString(),
-        "minecraft_version"  to libs.versions.minecraft.get(),
-        "loader_version"     to libs.versions.loader.get(),
-        "archives_base_name" to providers.gradleProperty("archives_base_name").get()
+        "version" to project.version.toString(),
+        "minecraft_version" to minecraftVersion,
+        "minecraft_range" to target["mod.minecraft_range"],
+        "loader_version" to loaderVersion,
+        "archives_base_name" to base.archivesName.get(),
+        "mixin_compatibility" to "JAVA_$javaVersion"
     )
     inputs.properties(properties)
     filteringCharset = "UTF-8"
-    filesMatching("fabric.mod.json") {
+    filesMatching(listOf("fabric.mod.json", "cistiertagger.mixins.json", "cistiertagger.modmenu.mixins.json")) {
         expand(properties)
     }
 }
@@ -62,4 +82,8 @@ tasks.jar {
     from(rootProject.file("license")) {
         rename { "${it}_${base.archivesName.get()}" }
     }
+}
+
+loom.runs.configureEach {
+    runDirectory.set(rootProject.layout.projectDirectory.dir("runs/$minecraftVersion"))
 }

@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+//? if <26.2 {
+/*import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.network.chat.Component;
+*///?}
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.gui.screen.ConfigScreen;
 import ru.kirushkinx.cistiertagger.gui.screen.ProfileScreen;
@@ -98,10 +102,7 @@ public class CatalogService {
             if (initialCatalog != null && CatalogResources.archive.equals(CatalogResources.getAttachedArchive())) {
                 applyCatalog(initialCatalog);
                 worker.execute(() -> persist(initialCatalog));
-//            } else {
-//                SystemToast.add(client.gui.toastManager(), new SystemToast.SystemToastId(),
-//                        Component.translatable("cistiertagger.unavailable.title"),
-//                        Component.translatable("cistiertagger.unavailable.description"));
+
             }
             worker.schedule(CatalogService::update, settings.refreshSeconds(), TimeUnit.SECONDS);
         }, client);
@@ -263,8 +264,14 @@ public class CatalogService {
         ConfigManager.syncCatalog();
         log.info("Loaded tier catalog {}: {} modes", catalog.version(), catalog.tierlists().size());
         Badge.bumpGeneration();
+//? if =26.2 {
         if (client.gui.screen() instanceof ConfigScreen screen) screen.onCatalogChanged();
         else if (client.gui.screen() instanceof ProfileScreen screen) screen.onCatalogChanged();
+//?}
+//? if <26.2 {
+        /*if (client.screen instanceof ConfigScreen screen) screen.onCatalogChanged();
+        else if (client.screen instanceof ProfileScreen screen) screen.onCatalogChanged();
+*///?}
     }
 
     public static void shutdown() {

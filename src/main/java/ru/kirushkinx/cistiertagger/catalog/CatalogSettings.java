@@ -70,7 +70,12 @@ public record CatalogSettings(List<URI> mirrors, List<URI> dumps, int timeoutMs,
     }
 
     private static int bounded(JsonObject value, String key, int fallback, int min, int max) {
+//? if >=1.20.5 {
         return value.has(key) ? Math.clamp(value.get(key).getAsInt(), min, max) : fallback;
+//?}
+//? if <1.20.5 {
+        //return value.has(key) ? Math.max(min, Math.min(max, value.get(key).getAsInt())) : fallback;
+//?}
     }
 
     private static List<URI> urls(JsonObject object, String key, List<URI> fallback, boolean base) {
@@ -87,7 +92,12 @@ public record CatalogSettings(List<URI> mirrors, List<URI> dumps, int timeoutMs,
         if (result.isEmpty()) throw new IllegalArgumentException("Empty mirror list");
         URI gcore = URI.create(base ? "https://gcore-cdn.cistiers.com/" : "https://gcore-cdn.cistiers.com/api/dump.json");
         result.remove(gcore);
+//? if >=1.20.5 {
         result.addFirst(gcore);
+//?}
+//? if <1.20.5 {
+        //result.add(0, gcore);
+//?}
         return List.copyOf(result);
     }
 }

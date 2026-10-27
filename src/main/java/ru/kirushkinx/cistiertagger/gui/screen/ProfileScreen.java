@@ -3,7 +3,9 @@ package ru.kirushkinx.cistiertagger.gui.screen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+//? if >=1.20.2 {
 import net.minecraft.client.gui.components.PlayerSkinWidget;
+//?}
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,6 +21,9 @@ import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.decorate.Badge;
 import ru.kirushkinx.cistiertagger.gui.Layout;
+//? if =1.20.1 {
+//import ru.kirushkinx.cistiertagger.gui.PlayerBodyWidget;
+//?}
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
 import ru.kirushkinx.cistiertagger.model.Tier;
@@ -44,13 +49,23 @@ public class ProfileScreen extends ModScreen {
     private static final int PANE_W = 200;
 
     private final @NotNull String nickname;
+//? if >=1.20.2 {
     private final @NotNull PlayerSkinWidget skinWidget;
+//?}
+//? if =1.20.1 {
+    //private final @NotNull PlayerBodyWidget skinWidget;
+//?}
 
     private @Nullable ProfileResponse profile;
     private @NotNull LoadState state = LoadState.LOADING;
     private @Nullable String errorMessage;
 
+//? if >=1.20.2 {
     private ProfileScreen(@NotNull String nickname, @NotNull PlayerSkinWidget skinWidget, @Nullable Screen parent) {
+//?}
+//? if =1.20.1 {
+    //private ProfileScreen(@NotNull String nickname, @NotNull PlayerBodyWidget skinWidget, @Nullable Screen parent) {
+//?}
         super(TITLE, parent);
         this.nickname = nickname;
         this.skinWidget = skinWidget;
@@ -66,8 +81,14 @@ public class ProfileScreen extends ModScreen {
             mc.gui.setScreen(assetsUnavailable(parent));
             return;
         }
+//? if >=1.20.2 {
         PlayerSkinWidget widget = new PlayerSkinWidget(SKIN_WIDTH, SKIN_HEIGHT, mc.getEntityModels(),
                 () -> SkinCache.forNickname(nickname).get().get());
+//?}
+//? if =1.20.1 {
+        /*PlayerBodyWidget widget = new PlayerBodyWidget(SKIN_WIDTH, SKIN_HEIGHT,
+                SkinCache.bodyFor(nickname)::get);
+*///?}
         ProfileScreen screen = new ProfileScreen(nickname, widget, parent);
         mc.gui.setScreen(screen);
 
@@ -250,9 +271,22 @@ public class ProfileScreen extends ModScreen {
     }
 
     @Override
+//? if >=26.1 {
     public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         graphics.centeredText(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
+//?}
+//? if >=1.20.2 <26.1 {
+    /*public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
+*///?}
+//? if =1.20.1 {
+    /*public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(this.font, TITLE, this.width / 2, 16, Layout.COLOR_TEXT);
+*///?}
         graphics.fill(20, 38, this.width - 20, 39, Layout.COLOR_ROW_HOVER);
     }
 

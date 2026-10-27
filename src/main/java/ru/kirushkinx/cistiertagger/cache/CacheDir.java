@@ -14,8 +14,14 @@ public class CacheDir {
         return FabricLoader.getInstance().getGameDir().resolve("cache").resolve(CisTierTagger.MOD_ID);
     }
 
+//? if >=1.20.2 {
     public static @NotNull Path skins() {
         return root().resolve("skins");
+//?}
+//? if =1.20.1 {
+    /*public static @NotNull Path bodies() {
+        return root().resolve("bodies");
+*///?}
     }
 
     public static @NotNull Path heads() {

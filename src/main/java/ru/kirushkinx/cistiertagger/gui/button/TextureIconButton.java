@@ -17,8 +17,18 @@ public class TextureIconButton extends IconButton {
     }
 
     @Override
+//? if >=26.1 {
     protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         extractDefaultSprite(graphics);
+//?}
+//? if =1.21.11 {
+    /*protected void renderContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        renderDefaultSprite(graphics);
+*///?}
+//? if <1.21.11 {
+    /*protected void renderWidget(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        renderButtonBackground(graphics, this);
+*///?}
         int iconX = getX() + (getWidth() - iconSize) / 2;
         int iconY = getY() + (getHeight() - iconSize) / 2;
         blitIcon(graphics, iconX, iconY, iconSize);

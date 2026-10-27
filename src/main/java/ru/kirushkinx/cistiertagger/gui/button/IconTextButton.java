@@ -22,8 +22,18 @@ public class IconTextButton extends IconButton {
     }
 
     @Override
+//? if >=26.1 {
     protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         extractDefaultSprite(graphics);
+//?}
+//? if =1.21.11 {
+    /*protected void renderContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        renderDefaultSprite(graphics);
+*///?}
+//? if <1.21.11 {
+    /*protected void renderWidget(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        renderButtonBackground(graphics, this);
+*///?}
         Font font = mc.font;
         int total = ICON + GAP + font.width(getMessage());
         int startX = getX() + (getWidth() - total) / 2;

@@ -1,21 +1,43 @@
 package ru.kirushkinx.cistiertagger.gui.screen;
 
 import net.minecraft.ChatFormatting;
+//? if >=1.20.2 {
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+//?}
+//? if =1.20.1 {
+/*import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
+*///?}
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
+//? if >=1.20.2 {
 import net.minecraft.client.gui.components.PlayerSkinWidget;
+//?}
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+//? if >=26.1 {
 import net.minecraft.world.entity.player.PlayerSkin;
+//?}
+//? if >=1.20.2 <26.1 {
+/*import net.minecraft.world.entity.player.PlayerSkin;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+*///?}
+//? if =1.20.1 {
+/*import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+*///?}
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.cache.SkinCache;
+//? if =1.20.1 {
+//import ru.kirushkinx.cistiertagger.gui.PlayerBodyWidget;
+//?}
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
@@ -78,8 +100,14 @@ public class ConfigScreen extends ModScreen {
     private static final int SKIN_W = 96;
     private static final int SKIN_H = 180;
 
+//? if >=1.20.2 {
     private @Nullable PlayerSkinWidget skinWidget;
     private @NotNull AtomicReference<Supplier<PlayerSkin>> skinSupplierRef = new AtomicReference<>();
+//?}
+//? if =1.20.1 {
+    /*private @Nullable PlayerBodyWidget skinWidget;
+    private @NotNull AtomicReference<@Nullable Identifier> bodyRef = new AtomicReference<>();
+*///?}
     private int skinX;
     private int skinY;
     private int paneX;
@@ -94,9 +122,15 @@ public class ConfigScreen extends ModScreen {
     @Override
     protected void init() {
         if (skinWidget == null) {
+//? if >=1.20.2 {
             skinSupplierRef = SkinCache.forClientPlayer();
             skinWidget = new PlayerSkinWidget(SKIN_W, SKIN_H, mc.getEntityModels(),
                     () -> skinSupplierRef.get().get());
+//?}
+//? if =1.20.1 {
+            /*bodyRef = SkinCache.bodyFor(mc.getUser().getName());
+            skinWidget = new PlayerBodyWidget(SKIN_W, SKIN_H, () -> bodyRef.get());
+*///?}
         }
         recomputeLayout();
         rebuild();
@@ -120,7 +154,16 @@ public class ConfigScreen extends ModScreen {
             return;
         }
         this.clearWidgets();
+//? if >=1.20.3 {
         skinWidget.setSize(SKIN_W, SKIN_H);
+//?}
+//? if =1.20.2 {
+        /*skinWidget.setWidth(SKIN_W);
+        skinWidget.setHeight(SKIN_H);
+*///?}
+//? if =1.20.1 {
+        //skinWidget.setWidth(SKIN_W);
+//?}
         skinWidget.setPosition(skinX, skinY);
         this.addRenderableWidget(skinWidget);
 
@@ -139,10 +182,21 @@ public class ConfigScreen extends ModScreen {
         this.addRenderableWidget(Button.builder(LBL_SAVE, btn -> closeAndSave())
                 .bounds(saveX, saveY, Layout.FOOTER_BUTTON_WIDTH, Layout.BUTTON_HEIGHT).build());
 
+//? if >=26.1 {
         addCornerIconButton(
+//?}
+//? if <26.1 {
+        //addCornerItemButton(
+//?}
                 this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET,
+//? if >=26.1 {
                 Layout.SEARCH_ICON_TEXTURE,
                 btn -> mc.gui.setScreen(new SearchScreen()),
+//?}
+//? if <26.1 {
+                /*new ItemStack(Items.SPYGLASS),
+                btn -> mc.gui.setScreen(new SearchScreen()),
+*///?}
                 TIP_OPEN_SEARCH);
 
         addCornerSiteButton(this.width - Layout.CORNER_BUTTON_INSET,
@@ -204,7 +258,16 @@ public class ConfigScreen extends ModScreen {
 
     private void rebuildPriorityRows() {
         this.clearWidgets();
+//? if >=1.20.3 {
         skinWidget.setSize(SKIN_W, SKIN_H);
+//?}
+//? if =1.20.2 {
+        /*skinWidget.setWidth(SKIN_W);
+        skinWidget.setHeight(SKIN_H);
+*///?}
+//? if =1.20.1 {
+        //skinWidget.setWidth(SKIN_W);
+//?}
         skinWidget.setPosition(skinX, skinY);
         this.addRenderableWidget(skinWidget);
 
@@ -255,7 +318,12 @@ public class ConfigScreen extends ModScreen {
         for (int i = 0; i < all.length; i++) {
             Gamemode gm = all[i];
             int rowY = y + i * (Layout.BUTTON_HEIGHT + Layout.GAP_SMALL);
+//? if >=1.21.11 {
             CycleButton<Boolean> toggle = CycleButton.<Boolean>builder(formatter, cfg.isGamemodeEnabled(gm))
+//?}
+//? if <1.21.11 {
+            //CycleButton<Boolean> toggle = CycleButton.<Boolean>builder(formatter).withInitialValue(cfg.isGamemodeEnabled(gm))
+//?}
                     .withValues(true, false)
                     .displayOnlyValue()
                     .create(paneX + PANE_W - toggleW, rowY, toggleW, Layout.BUTTON_HEIGHT,
@@ -295,7 +363,12 @@ public class ConfigScreen extends ModScreen {
                         .append(value ? ON.copy().withStyle(ChatFormatting.GREEN)
                                       : OFF.copy().withStyle(ChatFormatting.RED));
         Tooltip tip = Tooltip.create(tooltip);
+//? if >=1.21.11 {
         CycleButton<Boolean> button = CycleButton.<Boolean>builder(formatter, initial)
+//?}
+//? if <1.21.11 {
+        //CycleButton<Boolean> button = CycleButton.<Boolean>builder(formatter).withInitialValue(initial)
+//?}
                 .withValues(true, false)
                 .withTooltip(value -> tip)
                 .displayOnlyValue()
@@ -327,7 +400,12 @@ public class ConfigScreen extends ModScreen {
                     .append(valueComp);
         };
         Tooltip tip = Tooltip.create(tooltip);
+//? if >=1.21.11 {
         CycleButton<E> button = CycleButton.<E>builder(formatter, initial)
+//?}
+//? if <1.21.11 {
+        //CycleButton<E> button = CycleButton.<E>builder(formatter).withInitialValue(initial)
+//?}
                 .withValues(constants)
                 .withTooltip(value -> tip)
                 .displayOnlyValue()
@@ -339,9 +417,22 @@ public class ConfigScreen extends ModScreen {
     }
 
     @Override
+//? if >=26.1 {
     public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         graphics.centeredText(this.font, TITLE, this.width / 2, 14, Layout.COLOR_TEXT);
+//?}
+//? if >=1.20.2 <26.1 {
+    /*public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(this.font, TITLE, this.width / 2, 14, Layout.COLOR_TEXT);
+*///?}
+//? if =1.20.1 {
+    /*public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(this.font, TITLE, this.width / 2, 14, Layout.COLOR_TEXT);
+*///?}
         if (ServerRestrictions.isAnyRestricted()) {
             int noticeY = (14 + this.font.lineHeight + paneTop) / 2 - this.font.lineHeight / 2;
             graphics.centeredText(this.font, RESTRICTED, this.width / 2, noticeY, Layout.COLOR_WARN);
@@ -409,15 +500,32 @@ public class ConfigScreen extends ModScreen {
         float scale = 1.4f;
 
         var pose = graphics.pose();
+//? if >=1.21.6 {
         pose.pushMatrix();
         pose.translate(previewCenterX, previewY);
         pose.scale(scale, scale);
         graphics.text(this.font, preview, -textWidth / 2, 0, Layout.COLOR_TEXT, true);
         pose.popMatrix();
+//?}
+//? if <1.21.6 {
+        /*pose.pushPose();
+        pose.translate(previewCenterX, previewY, 0.0);
+        pose.scale(scale, scale, 1.0F);
+        graphics.text(this.font, preview, -textWidth / 2, 0, Layout.COLOR_TEXT, true);
+        pose.popPose();
+*///?}
     }
 
     private @NotNull Component buildPreviewName() {
+//? if >=1.21.9 {
         String selfName = mc.getGameProfile().name();
+//?}
+//? if >=1.20.2 <1.21.9 {
+        //String selfName = mc.getGameProfile().getName();
+//?}
+//? if =1.20.1 {
+        //String selfName = mc.getUser().getName();
+//?}
         Component base = Component.literal(selfName).withStyle(ChatFormatting.WHITE);
 
         ModConfig cfg = ConfigManager.get();
