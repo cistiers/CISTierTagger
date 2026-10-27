@@ -33,5 +33,33 @@ The mod also allows you to search for players on the leaderboard using the searc
 - Search screen with preview - `/cistier <nickname>` opens the full profile (rank, points, levels, history).
 - Servers can hide the badges over a plugin message - see [restriction.md](docs/restriction.md).
 
+### Build
+
+All supported Minecraft versions share one branch through [Stonecutter](https://stonecutter.kikugie.dev/).
+Targets and dependency versions are defined in [stonecutter.properties.toml](stonecutter.properties.toml).
+
+Build all versions:
+```sh
+./gradlew clean build
+```
+
+Build one version or several selected versions:
+```sh
+./gradlew :26.2:build
+./gradlew :1.20.1:build :26.2:build
+```
+
+Run a client for a specific version:
+```sh
+./gradlew :26.2:runClient
+```
+
+Run clients for multiple versions in parallel:
+```sh
+./gradlew :1.20.1:runClient :26.2:runClient --parallel
+```
+
+Built JARs are in `versions/<minecraft>/build/libs/`, client data is in `runs/<minecraft>/`.
+
 ### License
 This project is distributed under the [GPL-3.0 license](license).

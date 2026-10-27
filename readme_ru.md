@@ -33,5 +33,33 @@ CISTierTagger - мод для отображения тира игрока в р
 - Экран поиска с превью - `/cistier <ник>` открывает полный профиль (ранг, очки, тиры, история).
 - Серверы могут скрыть бейджи через plugin message - см. [restriction.md](docs/restriction_ru.md).
 
+### Сборка
+
+Все поддерживаемые версии Minecraft используют одну ветку благодаря [Stonecutter](https://stonecutter.kikugie.dev/).
+Версии сборки и версии зависимостей заданы в [stonecutter.properties.toml](stonecutter.properties.toml).
+
+Собрать все версии:
+```sh
+./gradlew clean build
+```
+
+Собрать одну или несколько заданных версий:
+```sh
+./gradlew :26.2:build
+./gradlew :1.20.1:build :26.2:build
+```
+
+Запустить клиент конкретной версии:
+```sh
+./gradlew :26.2:runClient
+```
+
+Запустить клиенты нескольких версий параллельно:
+```sh
+./gradlew :1.20.1:runClient :26.2:runClient --parallel
+```
+
+Готовые JAR находятся в `versions/<minecraft>/build/libs/`, данные клиентов - в `runs/<minecraft>/`.
+
 ### Лицензия
 Проект распространяется под лицензией [GPL-3.0](license).
