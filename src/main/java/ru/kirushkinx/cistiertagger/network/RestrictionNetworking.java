@@ -2,8 +2,8 @@ package ru.kirushkinx.cistiertagger.network;
 
 import lombok.experimental.UtilityClass;
 //? if <26.2 {
-/*import net.minecraft.network.Connection;
-*///?}
+//import net.minecraft.network.Connection;
+//?}
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 //? if =26.2 {
@@ -84,15 +84,15 @@ public class RestrictionNetworking {
             client.schedule(() -> {
 //?}
 //? if <1.21.2 {
-            /*client.tell(() -> {
-*///?}
+            //client.tell(() -> {
+//?}
                 if (client.getConnection() == handler && handler.getConnection().isConnected()) {
 //? if >=1.20.5 {
                     sender.sendPacket(HandshakePayload.INSTANCE);
 //?}
 //? if <1.20.5 {
-                    /*ClientPlayNetworking.send(HANDSHAKE, PacketByteBufs.create());
-*///?}
+                    //ClientPlayNetworking.send(HANDSHAKE, PacketByteBufs.create());
+//?}
                 }
             });
         });

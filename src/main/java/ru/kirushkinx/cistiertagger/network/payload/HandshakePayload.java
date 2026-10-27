@@ -1,4 +1,3 @@
-//? if >=1.20.5 {
 package ru.kirushkinx.cistiertagger.network.payload;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,8 +18,8 @@ public record HandshakePayload() implements CustomPacketPayload {
     public static final @NotNull Type<HandshakePayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "handshake"));
 //?}
 //? if =1.20.5 {
-    /*public static final @NotNull Type<HandshakePayload> TYPE = new Type<>(new Identifier(CisTierTagger.MOD_ID, "handshake"));
-*///?}
+    //public static final @NotNull Type<HandshakePayload> TYPE = new Type<>(new Identifier(CisTierTagger.MOD_ID, "handshake"));
+//?}
 
     public static final @NotNull StreamCodec<RegistryFriendlyByteBuf, HandshakePayload> CODEC = StreamCodec.unit(INSTANCE);
 
@@ -29,4 +28,3 @@ public record HandshakePayload() implements CustomPacketPayload {
         return TYPE;
     }
 }
-//?}

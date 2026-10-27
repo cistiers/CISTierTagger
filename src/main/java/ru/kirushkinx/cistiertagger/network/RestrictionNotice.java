@@ -26,8 +26,8 @@ public class RestrictionNotice {
         HoverEvent hoverEvent = new HoverEvent.ShowText(hover);
 //?}
 //? if <1.21.5 {
-        /*HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover);
-*///?}
+        //HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover);
+//?}
 
         return Component.literal("ℹ ")
                 .append(Component.translatable("cistiertagger.restriction.chat"))

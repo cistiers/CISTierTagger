@@ -1,4 +1,3 @@
-//? if >=1.20.5 {
 package ru.kirushkinx.cistiertagger.network.payload;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -17,8 +16,8 @@ public record RestrictionPayload(boolean nametag, boolean tab, boolean chat) imp
     public static final @NotNull Type<RestrictionPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "restrict"));
 //?}
 //? if =1.20.5 {
-    /*public static final @NotNull Type<RestrictionPayload> TYPE = new Type<>(new Identifier(CisTierTagger.MOD_ID, "restrict"));
-*///?}
+    //public static final @NotNull Type<RestrictionPayload> TYPE = new Type<>(new Identifier(CisTierTagger.MOD_ID, "restrict"));
+//?}
 
     public static final @NotNull StreamCodec<RegistryFriendlyByteBuf, RestrictionPayload> CODEC = StreamCodec.of(
             (buf, payload) -> {
@@ -33,4 +32,3 @@ public record RestrictionPayload(boolean nametag, boolean tab, boolean chat) imp
         return TYPE;
     }
 }
-//?}

@@ -36,8 +36,8 @@ import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.cache.SkinCache;
 //? if =1.20.1 {
-/*import ru.kirushkinx.cistiertagger.gui.PlayerBodyWidget;
-*///?}
+//import ru.kirushkinx.cistiertagger.gui.PlayerBodyWidget;
+//?}
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
@@ -162,8 +162,8 @@ public class ConfigScreen extends ModScreen {
         skinWidget.setHeight(SKIN_H);
 *///?}
 //? if =1.20.1 {
-        /*skinWidget.setWidth(SKIN_W);
-*///?}
+        //skinWidget.setWidth(SKIN_W);
+//?}
         skinWidget.setPosition(skinX, skinY);
         this.addRenderableWidget(skinWidget);
 
@@ -186,8 +186,8 @@ public class ConfigScreen extends ModScreen {
         addCornerIconButton(
 //?}
 //? if <26.1 {
-        /*addCornerItemButton(
-*///?}
+        //addCornerItemButton(
+//?}
                 this.width - Layout.CORNER_BUTTON_INSET, this.height - Layout.CORNER_BUTTON_INSET,
 //? if >=26.1 {
                 Layout.SEARCH_ICON_TEXTURE,
@@ -266,8 +266,8 @@ public class ConfigScreen extends ModScreen {
         skinWidget.setHeight(SKIN_H);
 *///?}
 //? if =1.20.1 {
-        /*skinWidget.setWidth(SKIN_W);
-*///?}
+        //skinWidget.setWidth(SKIN_W);
+//?}
         skinWidget.setPosition(skinX, skinY);
         this.addRenderableWidget(skinWidget);
 
@@ -322,8 +322,8 @@ public class ConfigScreen extends ModScreen {
             CycleButton<Boolean> toggle = CycleButton.<Boolean>builder(formatter, cfg.isGamemodeEnabled(gm))
 //?}
 //? if <1.21.11 {
-            /*CycleButton<Boolean> toggle = CycleButton.<Boolean>builder(formatter).withInitialValue(cfg.isGamemodeEnabled(gm))
-*///?}
+            //CycleButton<Boolean> toggle = CycleButton.<Boolean>builder(formatter).withInitialValue(cfg.isGamemodeEnabled(gm))
+//?}
                     .withValues(true, false)
                     .displayOnlyValue()
                     .create(paneX + PANE_W - toggleW, rowY, toggleW, Layout.BUTTON_HEIGHT,
@@ -367,8 +367,8 @@ public class ConfigScreen extends ModScreen {
         CycleButton<Boolean> button = CycleButton.<Boolean>builder(formatter, initial)
 //?}
 //? if <1.21.11 {
-        /*CycleButton<Boolean> button = CycleButton.<Boolean>builder(formatter).withInitialValue(initial)
-*///?}
+        //CycleButton<Boolean> button = CycleButton.<Boolean>builder(formatter).withInitialValue(initial)
+//?}
                 .withValues(true, false)
                 .withTooltip(value -> tip)
                 .displayOnlyValue()
@@ -404,8 +404,8 @@ public class ConfigScreen extends ModScreen {
         CycleButton<E> button = CycleButton.<E>builder(formatter, initial)
 //?}
 //? if <1.21.11 {
-        /*CycleButton<E> button = CycleButton.<E>builder(formatter).withInitialValue(initial)
-*///?}
+        //CycleButton<E> button = CycleButton.<E>builder(formatter).withInitialValue(initial)
+//?}
                 .withValues(constants)
                 .withTooltip(value -> tip)
                 .displayOnlyValue()
@@ -521,11 +521,11 @@ public class ConfigScreen extends ModScreen {
         String selfName = mc.getGameProfile().name();
 //?}
 //? if >=1.20.2 <1.21.9 {
-        /*String selfName = mc.getGameProfile().getName();
-*///?}
+        //String selfName = mc.getGameProfile().getName();
+//?}
 //? if =1.20.1 {
-        /*String selfName = mc.getUser().getName();
-*///?}
+        //String selfName = mc.getUser().getName();
+//?}
         Component base = Component.literal(selfName).withStyle(ChatFormatting.WHITE);
 
         ModConfig cfg = ConfigManager.get();

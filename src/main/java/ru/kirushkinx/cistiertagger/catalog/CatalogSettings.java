@@ -74,8 +74,8 @@ public record CatalogSettings(List<URI> mirrors, List<URI> dumps, int timeoutMs,
         return value.has(key) ? Math.clamp(value.get(key).getAsInt(), min, max) : fallback;
 //?}
 //? if <1.20.5 {
-        /*return value.has(key) ? Math.max(min, Math.min(max, value.get(key).getAsInt())) : fallback;
-*///?}
+        //return value.has(key) ? Math.max(min, Math.min(max, value.get(key).getAsInt())) : fallback;
+//?}
     }
 
     private static List<URI> urls(JsonObject object, String key, List<URI> fallback, boolean base) {
@@ -96,8 +96,8 @@ public record CatalogSettings(List<URI> mirrors, List<URI> dumps, int timeoutMs,
         result.addFirst(gcore);
 //?}
 //? if <1.20.5 {
-        /*result.add(0, gcore);
-*///?}
+        //result.add(0, gcore);
+//?}
         return List.copyOf(result);
     }
 }

@@ -45,14 +45,14 @@ public abstract class ModMenuEntryMixin {
     @ModifyExpressionValue(method = "extractContent(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIZF)V",
 //?}
 //? if =26.1 {
-    /*@ModifyExpressionValue(method = "extractContent",
-*///?}
+    //@ModifyExpressionValue(method = "extractContent",
+//?}
 //? if >=1.21.9 <26.1 {
-    /*@ModifyExpressionValue(method = "renderContent",
-*///?}
+    //@ModifyExpressionValue(method = "renderContent",
+//?}
 //? if <1.21.9 {
-    /*@ModifyExpressionValue(method = "render",
-*///?}
+    //@ModifyExpressionValue(method = "render",
+//?}
             at = @At(value = "INVOKE", target = "Lcom/terraformersmc/modmenu/util/mod/Mod;getId()Ljava/lang/String;"),
             require = 0, expect = 0)
     private String cistiertagger$identifyEntry(String id) {
@@ -89,11 +89,11 @@ public abstract class ModMenuEntryMixin {
     private void cistiertagger$showAssetWarning(GuiGraphicsExtractor graphics, RenderPipeline pipeline, Identifier texture,
 //?}
 //? if >=1.21.2 <1.21.6 {
-    /*private void cistiertagger$showAssetWarning(GuiGraphicsExtractor graphics, Function<Identifier, RenderType> pipeline, Identifier texture,
-*///?}
+    //private void cistiertagger$showAssetWarning(GuiGraphicsExtractor graphics, Function<Identifier, RenderType> pipeline, Identifier texture,
+//?}
 //? if <1.21.2 {
-    /*private void cistiertagger$showAssetWarning(GuiGraphicsExtractor graphics, Identifier texture,
-*///?}
+    //private void cistiertagger$showAssetWarning(GuiGraphicsExtractor graphics, Identifier texture,
+//?}
                                                int x, int y, float u, float v, int width, int height,
 //? if >=1.21.9 {
                                                int textureWidth, int textureHeight, int color, Operation<Void> original,
@@ -116,11 +116,11 @@ public abstract class ModMenuEntryMixin {
             original.call(graphics, pipeline, texture, x, y, u, v, width, height, textureWidth, textureHeight, color);
 //?}
 //? if >=1.21.2 <1.21.6 {
-            /*original.call(graphics, pipeline, texture, x, y, u, v, width, height, textureWidth, textureHeight);
-*///?}
+            //original.call(graphics, pipeline, texture, x, y, u, v, width, height, textureWidth, textureHeight);
+//?}
 //? if <1.21.2 {
-            /*original.call(graphics, texture, x, y, u, v, width, height, textureWidth, textureHeight);
-*///?}
+            //original.call(graphics, texture, x, y, u, v, width, height, textureWidth, textureHeight);
+//?}
             return;
         }
         boolean hovered = mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
@@ -146,16 +146,16 @@ public abstract class ModMenuEntryMixin {
             int textWidth = Math.clamp(client.getWindow().getGuiScaledWidth() - 24, 1, 240);
 //?}
 //? if <26.2 {
-            /*int textWidth = Math.max(1, Math.min(240, client.getWindow().getGuiScaledWidth() - 24));
-*///?}
+            //int textWidth = Math.max(1, Math.min(240, client.getWindow().getGuiScaledWidth() - 24));
+//?}
             var lines = client.font.split(Component.translatable("cistiertagger.unavailable.description")
                     .withStyle(ChatFormatting.RED), textWidth);
 //? if >=1.21.6 {
             graphics.setTooltipForNextFrame(lines, mouseX, mouseY);
 //?}
 //? if <1.21.6 {
-            /*if (client.screen != null) client.screen.setTooltipForNextRenderPass(lines);
-*///?}
+            //if (client.screen != null) client.screen.setTooltipForNextRenderPass(lines);
+//?}
         }
     }
 }

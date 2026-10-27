@@ -1,7 +1,3 @@
-plugins {
-    id("dev.kikugie.stonecutter")
-}
-
 stonecutter active "26.2"
 
 stonecutter parameters {
@@ -9,13 +5,23 @@ stonecutter parameters {
         tags(current.version)
     }
 
+    files {
+        disable(current.version != "1.20.1", "java/**/gui/PlayerBodyWidget.java")
+        disable(current.parsed >= "26.1", "java/**/gui/button/ItemIconButton.java")
+        disable(current.parsed < "1.20.5", "java/**/network/payload/*.java")
+        disable(current.parsed < "1.20.5", "java/**/modmenu/UpdateInfoImpl.java")
+    }
+
     replacements {
         string(current.parsed >= "1.21.2") {
             replace("mc.tell(", "mc.schedule(")
         }
         string(current.parsed >= "1.21.9") {
+            include("java/**/mixin/NametagRendererMixin.java")
             replace("PlayerRenderer", "AvatarRenderer")
             replace("PlayerRenderState", "AvatarRenderState")
+        }
+        string(current.parsed >= "1.21.9") {
             replace("client.resources.PlayerSkin", "world.entity.player.PlayerSkin")
             replace(".getProfile().getName()", ".getProfile().name()")
         }

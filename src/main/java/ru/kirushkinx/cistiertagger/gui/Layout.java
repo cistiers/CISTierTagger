@@ -39,11 +39,11 @@ public class Layout {
     public static final Identifier CONFIG_ICON_TEXTURE = Identifier.withDefaultNamespace("textures/item/comparator.png");
 //?}
 //? if >=1.21 <26.1 {
-    /*public static final Identifier LOGO_TEXTURE = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "textures/logo.png");
-*///?}
+    //public static final Identifier LOGO_TEXTURE = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "textures/logo.png");
+//?}
 //? if <1.21 {
-    /*public static final Identifier LOGO_TEXTURE = new Identifier(CisTierTagger.MOD_ID, "textures/logo.png");
-*///?}
+    //public static final Identifier LOGO_TEXTURE = new Identifier(CisTierTagger.MOD_ID, "textures/logo.png");
+//?}
 
     public static final int COLOR_TEXT = 0xFFFFFFFF;
     public static final int COLOR_HEADER = 0xFFCCCCCC;

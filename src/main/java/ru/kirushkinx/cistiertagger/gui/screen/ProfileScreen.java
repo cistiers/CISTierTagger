@@ -22,8 +22,8 @@ import ru.kirushkinx.cistiertagger.catalog.CatalogService;
 import ru.kirushkinx.cistiertagger.decorate.Badge;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 //? if =1.20.1 {
-/*import ru.kirushkinx.cistiertagger.gui.PlayerBodyWidget;
-*///?}
+//import ru.kirushkinx.cistiertagger.gui.PlayerBodyWidget;
+//?}
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
 import ru.kirushkinx.cistiertagger.model.Tier;
@@ -53,8 +53,8 @@ public class ProfileScreen extends ModScreen {
     private final @NotNull PlayerSkinWidget skinWidget;
 //?}
 //? if =1.20.1 {
-    /*private final @NotNull PlayerBodyWidget skinWidget;
-*///?}
+    //private final @NotNull PlayerBodyWidget skinWidget;
+//?}
 
     private @Nullable ProfileResponse profile;
     private @NotNull LoadState state = LoadState.LOADING;
@@ -64,8 +64,8 @@ public class ProfileScreen extends ModScreen {
     private ProfileScreen(@NotNull String nickname, @NotNull PlayerSkinWidget skinWidget, @Nullable Screen parent) {
 //?}
 //? if =1.20.1 {
-    /*private ProfileScreen(@NotNull String nickname, @NotNull PlayerBodyWidget skinWidget, @Nullable Screen parent) {
-*///?}
+    //private ProfileScreen(@NotNull String nickname, @NotNull PlayerBodyWidget skinWidget, @Nullable Screen parent) {
+//?}
         super(TITLE, parent);
         this.nickname = nickname;
         this.skinWidget = skinWidget;

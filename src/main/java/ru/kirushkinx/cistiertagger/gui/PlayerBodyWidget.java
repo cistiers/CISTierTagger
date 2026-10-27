@@ -1,5 +1,5 @@
-//? if =1.20.1 {
-/*package ru.kirushkinx.cistiertagger.gui;
+/*!stonecutter-disabled
+package ru.kirushkinx.cistiertagger.gui;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -49,4 +49,4 @@ public class PlayerBodyWidget extends AbstractWidget {
     protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
     }
 }
-*///?}
+*/

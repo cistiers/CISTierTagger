@@ -5,8 +5,8 @@ import lombok.Getter;
 import net.minecraft.resources.Identifier;
 //?}
 //? if <1.20.5 {
-/*import lombok.experimental.UtilityClass;
-*///?}
+//import lombok.experimental.UtilityClass;
+//?}
 import net.minecraft.server.packs.PackResources;
 //? if >=1.20.5 {
 import net.minecraft.server.packs.PackType;
@@ -31,8 +31,8 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 //?}
 //? if <1.20.5 {
-/*import java.util.ArrayList;
-*///?}
+//import java.util.ArrayList;
+//?}
 import java.util.List;
 import java.util.Objects;
 //? if >=1.20.5 {

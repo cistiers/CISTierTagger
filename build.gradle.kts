@@ -6,19 +6,19 @@ plugins {
 
 val target = stonecutter.properties
 val minecraftVersion = stonecutter.current.version
-val loaderVersion: String = target["deps.fabric_loader"]
-val fabricApiVersion: String = target["deps.fabric_api"]
-val modMenuVersion: String = target["deps.modmenu"]
-val lombokVersion: String = target["deps.lombok"]
-val annotationsVersion: String = target["deps.annotations"]
-val junitVersion: String = target["deps.junit"]
-val javaVersion: Int = target["mod.java_version"]
+val loaderVersion = target["deps.fabric_loader"]
+val fabricApiVersion = target["deps.fabric_api"]
+val modMenuVersion = target["deps.modmenu"]
+val lombokVersion = target["deps.lombok"]
+val annotationsVersion = target["deps.annotations"]
+val junitVersion = target["deps.junit"]
+val javaVersion = target.getAs<Int>("mod.java_version")
 
-group = target.get<String>("mod.group")
-version = "${providers.gradleProperty("mod.version").getOrElse(target.get<String>("mod.version"))}+$minecraftVersion"
+group = target["mod.group"]
+version = "${providers.gradleProperty("mod.version").getOrElse(target["mod.version"])}+$minecraftVersion"
 
 base {
-    archivesName.set(target.get<String>("mod.archive"))
+    archivesName.set(target["mod.archive"])
 }
 
 java {
@@ -39,7 +39,7 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
     if (!project.loomx.isUnobfuscated) {
-        val parchmentMappings: String = target["deps.parchment"]
+        val parchmentMappings = target["deps.parchment"]
         mappings(loom.layered {
             officialMojangMappings()
             parchment(parchmentMappings)
@@ -66,7 +66,7 @@ tasks.processResources {
     val properties = mapOf(
         "version" to project.version.toString(),
         "minecraft_version" to minecraftVersion,
-        "minecraft_range" to target.get<String>("mod.minecraft_range"),
+        "minecraft_range" to target["mod.minecraft_range"],
         "loader_version" to loaderVersion,
         "archives_base_name" to base.archivesName.get(),
         "mixin_compatibility" to "JAVA_$javaVersion"

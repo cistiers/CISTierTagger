@@ -1,11 +1,11 @@
 package ru.kirushkinx.cistiertagger.mixin;
 
 //? if <1.21.2 {
-/*import com.llamalad7.mixinextras.sugar.Local;
-*///?}
+//import com.llamalad7.mixinextras.sugar.Local;
+//?}
 //? if <1.21.9 {
-/*import net.minecraft.client.player.AbstractClientPlayer;
-*///?}
+//import net.minecraft.client.player.AbstractClientPlayer;
+//?}
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 //? if >=1.21.2 {
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
@@ -15,8 +15,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Avatar;
 //?}
 //? if <1.21.2 {
-/*import org.jetbrains.annotations.Nullable;
-*///?}
+//import org.jetbrains.annotations.Nullable;
+//?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 //? if >=1.21.2 {
@@ -24,8 +24,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 //?}
 //? if <1.21.2 {
-/*import org.spongepowered.asm.mixin.injection.ModifyVariable;
-*///?}
+//import org.spongepowered.asm.mixin.injection.ModifyVariable;
+//?}
 import ru.kirushkinx.cistiertagger.decorate.Badge;
 
 @Mixin(AvatarRenderer.class)

@@ -14,8 +14,8 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 //? if <1.21.4 {
-/*import org.spongepowered.asm.mixin.Shadow;
-*///?}
+//import org.spongepowered.asm.mixin.Shadow;
+//?}
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -63,8 +63,8 @@ public class TextDisplayRendererMixin {
         if (!(entity.getVehicle() instanceof Player player)) return;
 //?}
 //? if <1.21.4 {
-        /*if (!(((Display.TextDisplay) (Object) this).getVehicle() instanceof Player player)) return;
-*///?}
+        //if (!(((Display.TextDisplay) (Object) this).getVehicle() instanceof Player player)) return;
+//?}
 
         String playerName = player.getScoreboardName();
         if (playerName == null || playerName.isBlank()) return;

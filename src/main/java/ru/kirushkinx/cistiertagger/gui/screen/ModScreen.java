@@ -11,15 +11,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 //?}
 //? if <26.1 {
-/*import net.minecraft.world.item.ItemStack;
-*///?}
+//import net.minecraft.world.item.ItemStack;
+//?}
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 //? if <26.1 {
-/*import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
-*///?}
+//import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
+//?}
 import ru.kirushkinx.cistiertagger.gui.button.TextureIconButton;
 
 //? if >=1.21 {

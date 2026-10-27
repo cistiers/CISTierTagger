@@ -13,8 +13,8 @@ import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 *///?}
 //? if <1.20.3 {
-/*import net.minecraft.network.chat.contents.LiteralContents;
-*///?}
+//import net.minecraft.network.chat.contents.LiteralContents;
+//?}
 import org.jetbrains.annotations.NotNull;
 import ru.kirushkinx.cistiertagger.cache.DumpCache;
 import ru.kirushkinx.cistiertagger.config.ConfigManager;
@@ -46,8 +46,8 @@ public class Chat {
         if (component.getContents() instanceof PlainTextContents.LiteralContents literal) {
 //?}
 //? if <1.20.3 {
-        /*if (component.getContents() instanceof LiteralContents literal) {
-*///?}
+        //if (component.getContents() instanceof LiteralContents literal) {
+//?}
             rebuilt = decorateLiteral(literal.text(), style);
 //? if >=1.21.4 <1.21.9 {
         /*} else if (component.getContents() instanceof TranslatableContents translatable) {

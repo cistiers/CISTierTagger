@@ -13,8 +13,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
 //?}
 //? if >=1.21.2 <1.21.6 {
-/*import net.minecraft.client.renderer.RenderType;
-*///?}
+//import net.minecraft.client.renderer.RenderType;
+//?}
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;

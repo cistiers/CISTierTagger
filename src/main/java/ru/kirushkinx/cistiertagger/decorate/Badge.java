@@ -192,8 +192,8 @@ public class Badge {
                         .withFont(new FontDescription.Resource(BADGE_FONT))
 //?}
 //? if <1.21.9 {
-                        /*.withFont(BADGE_FONT)
-*///?}
+                        //.withFont(BADGE_FONT)
+//?}
                         .withColor(ChatFormatting.WHITE));
     }
 
@@ -205,8 +205,8 @@ public class Badge {
                             .withFont(new FontDescription.Resource(ICON_FONT))
 //?}
 //? if <1.21.9 {
-                            /*.withFont(ICON_FONT)
-*///?}
+                            //.withFont(ICON_FONT)
+//?}
                             .withColor(ChatFormatting.WHITE));
         }
         return Component.literal(gamemode.getIconString())

@@ -50,11 +50,11 @@ public abstract class TitleScreenMixin extends Screen {
                 b -> ConfirmLinkScreen.confirmLinkNow(this, URI.create(update.url()))));
 //?}
 //? if >=1.20.3 <1.21 {
-                /*b -> ConfirmLinkScreen.confirmLinkNow(this, update.url())));
-*///?}
+                //b -> ConfirmLinkScreen.confirmLinkNow(this, update.url())));
+//?}
 //? if <1.20.3 {
-                /*b -> ConfirmLinkScreen.confirmLinkNow(update.url(), this, false)));
-*///?}
+                //b -> ConfirmLinkScreen.confirmLinkNow(update.url(), this, false)));
+//?}
         cistiertagger$infoY = top - 20;
     }
 

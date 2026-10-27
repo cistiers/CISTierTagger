@@ -10,8 +10,8 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.SkinTextureDownloader;
 //?}
 //? if >=1.20.2 <1.21.4 {
-/*import net.minecraft.client.renderer.texture.HttpTexture;
-*///?}
+//import net.minecraft.client.renderer.texture.HttpTexture;
+//?}
 import net.minecraft.client.resources.DefaultPlayerSkin;
 //? if >=1.21.9 {
 import net.minecraft.resources.Identifier;
@@ -23,8 +23,8 @@ import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.resources.Identifier;
 *///?}
 //? if =1.20.1 {
-/*import net.minecraft.resources.Identifier;
-*///?}
+//import net.minecraft.resources.Identifier;
+//?}
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.kirushkinx.cistiertagger.CisTierTagger;
@@ -65,8 +65,8 @@ public class SkinCache {
     private static final String SKIN_URL = "https://mc-heads.net/skin/";
 //?}
 //? if =1.20.1 {
-    /*private static final String BODY_URL = "https://mc-heads.net/body/";
-*///?}
+    //private static final String BODY_URL = "https://mc-heads.net/body/";
+//?}
     private static final String HEAD_URL = "https://mc-heads.net/avatar/";
     private static final Duration DISK_TTL = Duration.ofHours(6); // cache-control: public, max-age=21600
     private static final String FALLBACK_PROBE = "00000000-0000-0000-0000-000000000000"; // nil uuid
@@ -75,8 +75,8 @@ public class SkinCache {
     private static final @NotNull ConcurrentHashMap<String, SkinEntry> skins = new ConcurrentHashMap<>();
 //?}
 //? if =1.20.1 {
-    /*private static final @NotNull ConcurrentHashMap<String, BodyEntry> bodies = new ConcurrentHashMap<>();
-*///?}
+    //private static final @NotNull ConcurrentHashMap<String, BodyEntry> bodies = new ConcurrentHashMap<>();
+//?}
     private static final @NotNull ConcurrentHashMap<String, HeadEntry> heads = new ConcurrentHashMap<>();
     private static final @NotNull ExecutorService io = Async.daemonExecutor(4, "cistiers-skin");
 //? if >=1.21.9 {
@@ -84,8 +84,8 @@ public class SkinCache {
     private volatile @Nullable CompletableFuture<@Nullable Long> fallbackSkinHash;
 //?}
 //? if >=1.20.2 <1.21.9 {
-    /*private volatile @Nullable CompletableFuture<@Nullable Long> fallbackSkinHash;
-*///?}
+    //private volatile @Nullable CompletableFuture<@Nullable Long> fallbackSkinHash;
+//?}
     private volatile @Nullable CompletableFuture<@Nullable Long> fallbackHeadHash;
 
 //? if >=1.20.2 {
@@ -165,16 +165,16 @@ public class SkinCache {
     private static void maybeDownloadSkin(@NotNull SkinEntry entry, @NotNull String key, @NotNull String nickname) {
 //?}
 //? if =1.20.1 {
-    /*private static void maybeDownloadBody(@NotNull BodyEntry entry, @NotNull String key, @NotNull String nickname) {
-*///?}
+    //private static void maybeDownloadBody(@NotNull BodyEntry entry, @NotNull String key, @NotNull String nickname) {
+//?}
         if (!entry.dispatched.compareAndSet(false, true)) return;
 
 //? if >=1.20.2 {
         Path cachePath = CacheDir.skins().resolve(key + ".png");
 //?}
 //? if =1.20.1 {
-        /*Path cachePath = CacheDir.bodies().resolve(key + ".png");
-*///?}
+        //Path cachePath = CacheDir.bodies().resolve(key + ".png");
+//?}
         expireIfStale(cachePath);
 
 //? if >=1.21.4 {
@@ -371,16 +371,16 @@ public class SkinCache {
         Identifier textureId = Identifier.fromNamespaceAndPath(CisTierTagger.MOD_ID, "head/" + key);
 //?}
 //? if <1.21 {
-        /*Identifier textureId = new Identifier(CisTierTagger.MOD_ID, "head/" + key);
-*///?}
+        //Identifier textureId = new Identifier(CisTierTagger.MOD_ID, "head/" + key);
+//?}
 
         CompletableFuture.runAsync(() -> {
 //? if >=1.20.2 {
             NativeImage image = fetchHeadImage(url, cachePath);
 //?}
 //? if =1.20.1 {
-            /*NativeImage image = fetchImage(url, cachePath);
-*///?}
+            //NativeImage image = fetchImage(url, cachePath);
+//?}
             if (image == null) {
                 entry.dispatched.set(false);
                 return;
@@ -395,8 +395,8 @@ public class SkinCache {
                 mc.getTextureManager().register(textureId, new DynamicTexture(textureId::toString, image));
 //?}
 //? if <1.21.5 {
-                /*mc.getTextureManager().register(textureId, new DynamicTexture(image));
-*///?}
+                //mc.getTextureManager().register(textureId, new DynamicTexture(image));
+//?}
                 entry.id.set(textureId);
             });
         }, io);
@@ -406,8 +406,8 @@ public class SkinCache {
     private static @Nullable NativeImage fetchHeadImage(@NotNull String url, @NotNull Path cachePath) {
 //?}
 //? if =1.20.1 {
-    /*private static @Nullable NativeImage fetchImage(@NotNull String url, @NotNull Path cachePath) {
-*///?}
+    //private static @Nullable NativeImage fetchImage(@NotNull String url, @NotNull Path cachePath) {
+//?}
         try {
             byte[] bytes = Files.exists(cachePath)
                     ? Files.readAllBytes(cachePath)
@@ -544,8 +544,8 @@ public class SkinCache {
                 hash = hash * 31 + img.getPixel(x, y);
 //?}
 //? if <1.21.2 {
-                /*hash = hash * 31 + img.getPixelRGBA(x, y);
-*///?}
+                //hash = hash * 31 + img.getPixelRGBA(x, y);
+//?}
             }
         }
         return hash;

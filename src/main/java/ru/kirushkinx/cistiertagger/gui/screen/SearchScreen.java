@@ -57,8 +57,8 @@ import ru.kirushkinx.cistiertagger.config.ConfigManager;
 import ru.kirushkinx.cistiertagger.config.ModConfig;
 import ru.kirushkinx.cistiertagger.gui.Layout;
 //? if <26.1 {
-/*import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
-*///?}
+//import ru.kirushkinx.cistiertagger.gui.button.ItemIconButton;
+//?}
 import ru.kirushkinx.cistiertagger.model.Gamemode;
 import ru.kirushkinx.cistiertagger.model.PlayerTierData;
 import ru.kirushkinx.cistiertagger.model.Tier;
@@ -393,14 +393,14 @@ public class SearchScreen extends ModScreen {
             graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0f, 0f,
 //?}
 //? if =1.21.6 {
-            /*graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0.0F, 0.0F,
-*///?}
+            //graphics.blit(RenderPipelines.GUI_TEXTURED, id, x, y, 0.0F, 0.0F,
+//?}
 //? if >=1.21.2 <1.21.6 {
-            /*graphics.blit(RenderType::guiTextured, id, x, y, 0.0F, 0.0F,
-*///?}
+            //graphics.blit(RenderType::guiTextured, id, x, y, 0.0F, 0.0F,
+//?}
 //? if <1.21.2 {
-            /*graphics.blit(id, x, y, HEAD_SIZE, HEAD_SIZE, 0.0F, 0.0F,
-*///?}
+            //graphics.blit(id, x, y, HEAD_SIZE, HEAD_SIZE, 0.0F, 0.0F,
+//?}
                     HEAD_SIZE, HEAD_SIZE, HEAD_SIZE, HEAD_SIZE);
         } else {
             PlayerFaceExtractor.extractRenderState(graphics, SkinCache.defaultSkinFor(nickname), x, y, HEAD_SIZE);
@@ -455,8 +455,8 @@ public class SearchScreen extends ModScreen {
     public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubleClicked) {
 //?}
 //? if <1.21.9 {
-    /*public boolean mouseClicked(double mouseX, double mouseY, int button) {
-*///?}
+    //public boolean mouseClicked(double mouseX, double mouseY, int button) {
+//?}
         List<SearchResultEntry> snapshot = this.results;
 //? if >=1.21.9 {
         if (event.button() == 0 && !snapshot.isEmpty()) {
@@ -489,8 +489,8 @@ public class SearchScreen extends ModScreen {
         return super.mouseClicked(event, doubleClicked);
 //?}
 //? if <1.21.9 {
-        /*return super.mouseClicked(mouseX, mouseY, button);
-*///?}
+        //return super.mouseClicked(mouseX, mouseY, button);
+//?}
     }
 
     private boolean handleScrollbarClick(double mouseX, double mouseY,
@@ -523,23 +523,23 @@ public class SearchScreen extends ModScreen {
     public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
 //?}
 //? if <1.21.9 {
-    /*public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-*///?}
+    //public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+//?}
         if (draggingScrollbar) {
 //? if >=1.21.9 {
             setScrollFromY(event.y(), this.results);
 //?}
 //? if <1.21.9 {
-            /*setScrollFromY(mouseY, this.results);
-*///?}
+            //setScrollFromY(mouseY, this.results);
+//?}
             return true;
         }
 //? if >=1.21.9 {
         return super.mouseDragged(event, dragX, dragY);
 //?}
 //? if <1.21.9 {
-        /*return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-*///?}
+        //return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+//?}
     }
 
     @Override
@@ -558,8 +558,8 @@ public class SearchScreen extends ModScreen {
         return super.mouseReleased(event);
 //?}
 //? if <1.21.9 {
-        /*return super.mouseReleased(mouseX, mouseY, button);
-*///?}
+        //return super.mouseReleased(mouseX, mouseY, button);
+//?}
     }
 
     @Override
@@ -567,8 +567,8 @@ public class SearchScreen extends ModScreen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
 //?}
 //? if =1.20.1 {
-    /*public boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
-*///?}
+    //public boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
+//?}
         List<SearchResultEntry> snapshot = this.results;
         if (snapshot.size() > maxVisibleRows()) {
             int delta = scrollY > 0 ? -1 : 1;
@@ -579,8 +579,8 @@ public class SearchScreen extends ModScreen {
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 //?}
 //? if =1.20.1 {
-        /*return super.mouseScrolled(mouseX, mouseY, scrollY);
-*///?}
+        //return super.mouseScrolled(mouseX, mouseY, scrollY);
+//?}
     }
 
     @Override
@@ -589,15 +589,15 @@ public class SearchScreen extends ModScreen {
         int keyCode = event.key();
 //?}
 //? if <1.21.9 {
-    /*public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-*///?}
+    //public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+//?}
         if (keyCode == GLFW_KEY_ENTER || keyCode == GLFW_KEY_KP_ENTER) return true;
 //? if >=1.21.9 {
         return super.keyPressed(event);
 //?}
 //? if <1.21.9 {
-        /*return super.keyPressed(keyCode, scanCode, modifiers);
-*///?}
+        //return super.keyPressed(keyCode, scanCode, modifiers);
+//?}
     }
 
     private void submit() {

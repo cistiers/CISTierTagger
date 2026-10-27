@@ -1,5 +1,5 @@
-//? if <26.1 {
-/*package ru.kirushkinx.cistiertagger.gui.button;
+/*!stonecutter-disabled
+package ru.kirushkinx.cistiertagger.gui.button;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -31,4 +31,4 @@ public class ItemIconButton extends Button {
         graphics.renderItem(icon, iconX, iconY);
     }
 }
-*///?}
+*/
