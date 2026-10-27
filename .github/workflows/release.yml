@@ -9,7 +9,7 @@ on:
         description: "Mod version"
         required: true
       versions:
-        description: "Branches to publish, space/comma separated (empty = all)"
+        description: "Minecraft targets to publish, space/comma separated (empty = all)"
         required: false
         default: ""
       changelog:
@@ -52,6 +52,8 @@ jobs:
       matrix: ${{ steps.gen.outputs.matrix }}
       changelog: ${{ steps.changelog.outputs.text }}
     steps:
+      - uses: actions/checkout@v4
+
       - name: Format changelog
         id: changelog
         env:
@@ -69,30 +71,7 @@ jobs:
         id: gen
         env:
           SELECTED: ${{ inputs.versions }}
-        run: |
-          ALL='[
-            {"branch":"1.20","mc":"1.20.1","java":"17","runtime":"21","game_versions":"1.20 1.20.1"},
-            {"branch":"1.20.2","mc":"1.20.2","java":"17","runtime":"21","game_versions":"1.20.2"},
-            {"branch":"1.20.3","mc":"1.20.3","java":"17","runtime":"21","game_versions":"1.20.3 1.20.4"},
-            {"branch":"1.20.5","mc":"1.20.5","java":"21","runtime":"21","game_versions":"1.20.5 1.20.6"},
-            {"branch":"1.21","mc":"1.21","java":"21","runtime":"21","game_versions":"1.21 1.21.1"},
-            {"branch":"1.21.2","mc":"1.21.2","java":"21","runtime":"21","game_versions":"1.21.2 1.21.3"},
-            {"branch":"1.21.4","mc":"1.21.4","java":"21","runtime":"21","game_versions":"1.21.4"},
-            {"branch":"1.21.5","mc":"1.21.5","java":"21","runtime":"21","game_versions":"1.21.5"},
-            {"branch":"1.21.6","mc":"1.21.6","java":"21","runtime":"21","game_versions":"1.21.6 1.21.7 1.21.8"},
-            {"branch":"1.21.9","mc":"1.21.9","java":"21","runtime":"21","game_versions":"1.21.9 1.21.10"},
-            {"branch":"1.21.11","mc":"1.21.11","java":"21","runtime":"21","game_versions":"1.21.11"},
-            {"branch":"26.1","mc":"26.1","java":"25","runtime":"25","game_versions":"26.1"},
-            {"branch":"26.2","mc":"26.2","java":"25","runtime":"25","game_versions":"26.2"}
-          ]'
-          if [ -z "$(echo "$SELECTED" | tr -d '[:space:]')" ] || [ "$SELECTED" = "all" ]; then
-            INCLUDE=$(echo "$ALL" | jq -c .)
-          else
-            SEL=$(echo "$SELECTED" | tr ',' ' ' | tr -s ' ' '\n' | jq -R . | jq -s -c 'map(select(length > 0))')
-            INCLUDE=$(echo "$ALL" | jq -c --argjson sel "$SEL" '[ .[] | select( .branch as $b | $sel | index($b) ) ]')
-          fi
-          echo "matrix={\"include\":$INCLUDE}" >> "$GITHUB_OUTPUT"
-          echo "Selected branches:"; echo "$INCLUDE" | jq -r '.[].branch'
+        run: python3 scripts/release_matrix.py
 
   build:
     name: build ${{ matrix.mc }}
@@ -103,15 +82,14 @@ jobs:
       matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ matrix.branch }}
 
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: |
-            ${{ matrix.java }}
-            ${{ matrix.runtime }}
+            17
+            21
+            25
           cache: gradle
 
       - name: Build
@@ -119,15 +97,15 @@ jobs:
           mkdir -p ~/.gradle
           echo "org.gradle.java.installations.fromEnv=JAVA_HOME_17_X64,JAVA_HOME_21_X64,JAVA_HOME_25_X64" >> ~/.gradle/gradle.properties
           chmod +x gradlew
-          ./gradlew build --no-daemon -Pmod_version=${{ inputs.version }}
+          ./gradlew :${{ matrix.mc }}:build --configure-on-demand --no-daemon -Pmod.version=${{ inputs.version }}
 
       - name: Stage jar
         uses: actions/upload-artifact@v4
         with:
           name: jar-${{ matrix.mc }}
           path: |
-            build/libs/*.jar
-            !build/libs/*-sources.jar
+            versions/${{ matrix.mc }}/build/libs/*.jar
+            !versions/${{ matrix.mc }}/build/libs/*-sources.jar
           if-no-files-found: error
           retention-days: 1
 
@@ -200,8 +178,6 @@ jobs:
       matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ matrix.branch }}
 
       - name: Download built jar
         uses: actions/download-artifact@v4
@@ -244,8 +220,8 @@ jobs:
 
   collect:
     name: bundle
-    needs: publish
-    if: ${{ always() && needs.publish.result != 'skipped' }}
+    needs: [build, publish]
+    if: ${{ always() && needs.build.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Download built jars
@@ -262,7 +238,7 @@ jobs:
           path: dist
           if-no-files-found: error
 
-      - name: Remove per-branch artifacts
+      - name: Remove per-target artifacts
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
